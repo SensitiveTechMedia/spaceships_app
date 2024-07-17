@@ -7,8 +7,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:spaceships/colorcode.dart';
 import 'package:spaceships/screen/addview/map.dart';
 class JvAddProperty extends StatefulWidget {
@@ -69,8 +71,24 @@ class _CategoryScreenState extends State<JvAddProperty> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text( "Add Property"),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(60.0),
+        child: Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.6),
+                spreadRadius: 12,
+                blurRadius: 8,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
+          child:AppBar( backgroundColor: ColorUtils.primaryColor(),
+
+            title: Text('Sell Category',style: TextStyle(color: Colors.white),),
+            iconTheme: IconThemeData(color: Colors.white),
+          ),),
       ),
       backgroundColor: Colors.white,
       body: Center(
@@ -109,7 +127,7 @@ class _CategoryScreenState extends State<JvAddProperty> {
                         decoration: BoxDecoration(
                           color: isSelected ? customTeal : Colors.white,
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all( color: ColorUtils.primaryColor(),),
+                          border: Border.all(color: ColorUtils.primaryColor(),),
                         ),
                         child: Row(
                           children: [
@@ -154,8 +172,8 @@ class _CategoryScreenState extends State<JvAddProperty> {
                     Row(
                       children: [
                         Container(
-                          width: 40, // Adjust width to change circle size
-                          height: 40, // Adjust height to change circle size
+                          width: 36, // Adjust width to change circle size
+                          height: 39, // Adjust height to change circle size
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: ColorUtils.primaryColor(), // Background color of the circle
@@ -180,11 +198,11 @@ class _CategoryScreenState extends State<JvAddProperty> {
                         ),
                         SizedBox(width: 10,),
                         Container(
-                          width: 40, // Adjust width to change circle size
-                          height: 40, // Adjust height to change circle size
+                          width: 36, // Adjust width to change circle size
+                          height: 39, // Adjust height to change circle size
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: ColorUtils.primaryColor(),// Background color of the circle
+                            color: ColorUtils.primaryColor(), // Background color of the circle
                           ),
                           child: IconButton(
                             icon: Icon(Icons.add, color: Colors.white), // Icon with custom teal color
@@ -235,7 +253,7 @@ class _CategoryScreenState extends State<JvAddProperty> {
                               decoration: BoxDecoration(
                                 color: isSelected ? customTeal : Colors.white,
                                 borderRadius: BorderRadius.circular(8),
-                                border: Border.all( color: ColorUtils.primaryColor(),),
+                                border: Border.all(color: ColorUtils.primaryColor(),),
                               ),
                               child: Text(
                                 propertyTypes[subcategories[_selectedSubcategoryIndex]["name"]]![index],
@@ -255,99 +273,121 @@ class _CategoryScreenState extends State<JvAddProperty> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.horizontal(left: Radius.circular(20)), // Adjust the border radius as needed
-                      color: ColorUtils.primaryColor(), // Your custom background color (teal)
-                    ),
-                    child: SizedBox(
-                      width: 165, // Adjust width as needed
-                      height: 50, // Adjust height as needed
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:   ColorUtils.primaryColor(), // Text color (white)
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.arrow_back, color: Colors.white), // Replace with your desired back icon
-                            SizedBox(width: 8), // Adjust the spacing between icon and text as needed
-                            Text(
-                              "Back",
-                              style: TextStyle(color: Colors.white), // Text color (white)
-                            ),
-                          ],
-                        ),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.horizontal(left: Radius.circular(20)),
+                        color: ColorUtils.primaryColor(),
                       ),
-                    ),
-                  ),
-
-
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.horizontal(right: Radius.circular(20)), // Adjust the border radius as needed
-                      color: ColorUtils.primaryColor(),// Your custom background color (teal)
-                    ),
-                    child: SizedBox(
-                      width: 163, // Adjust width as needed
-                      height: 50, // Adjust height as needed
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (_selectedSubcategoryIndex != -1) {
-                            String selectedSubcategory = subcategories[_selectedSubcategoryIndex]["name"];
-                            String selectedPropertyType = subcategories[_selectedSubcategoryIndex]["name"] == "Flat"
-                                ? '$bhkValue BHK'
-                                : _selectedPropertyType.isNotEmpty
-                                ? _selectedPropertyType
-                                : "Select Property Type";
-
-                            print("Selected Subcategory: $selectedSubcategory, Property Type: $selectedPropertyType");
-
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => PropertyDetailsScreen(
-
-
-                                  subcategory: selectedSubcategory,
-                                  propertyType: selectedPropertyType,
-                                ),
+                      child: SizedBox(
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorUtils.primaryColor(),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.arrow_back, color: Colors.white),
+                              SizedBox(width: 8),
+                              Text(
+                                "Back",
+                                style: TextStyle(color: Colors.white),
                               ),
-                            );
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:  ColorUtils.primaryColor(), // Background color
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
+                            ],
                           ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              "Next",
-                              style: TextStyle(color: Colors.white), // Text color (white)
-                            ),
-                            Icon(Icons.arrow_forward, color: Colors.white), // Replace with your desired forward icon
-                          ],
                         ),
                       ),
                     ),
                   ),
+                  SizedBox(width: 1), // Adjust the spacing between the buttons as needed
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.horizontal(right: Radius.circular(20)),
+                        color: ColorUtils.primaryColor(),
+                      ),
+                      child: SizedBox(
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_selectedSubcategoryIndex == -1) {
+                              _showToast( "Please select a subcategory.");
+                            } else if (_selectedPropertyType.isEmpty &&
+                                subcategories[_selectedSubcategoryIndex]["name"] != "Flat") {
+                              _showToast( "Please select a property type.");
+                            } else {
+                              String selectedSubcategory = subcategories[_selectedSubcategoryIndex]["name"];
+                              String selectedPropertyType = subcategories[_selectedSubcategoryIndex]["name"] == "Flat"
+                                  ? '$bhkValue BHK'
+                                  : _selectedPropertyType.isNotEmpty
+                                  ? _selectedPropertyType
+                                  : "Select Property Type";
 
+                              print("Selected Subcategory: $selectedSubcategory, Property Type: $selectedPropertyType");
+
+                              print("Selected Subcategory: $selectedSubcategory, Property Type: $selectedPropertyType");
+
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PropertyDetailsScreen(
+
+                                    subcategory: selectedSubcategory,
+                                    propertyType: selectedPropertyType, category: 'Sell',
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorUtils.primaryColor(),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                "Next",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              Icon(Icons.arrow_forward, color: Colors.white),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
+
             ],
           ),
         ),
       ),
+    );
+  }
+
+
+  void _showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.black54,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
   }
 
@@ -411,12 +451,12 @@ class CategoryItem extends StatelessWidget {
   }
 }
 class PropertyDetailsScreen extends StatefulWidget {
-
+  final String category;
   final String subcategory;
   final String propertyType;
 
   PropertyDetailsScreen({
-
+    required this.category,
     required this.subcategory,
     required this.propertyType,
   });
@@ -426,8 +466,7 @@ class PropertyDetailsScreen extends StatefulWidget {
 
 class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
   TextEditingController propertyOwnerController = TextEditingController();
-  TextEditingController propertyTitleController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
+  TextEditingController possesiontypeController = TextEditingController();
   TextEditingController furnishingTypeController = TextEditingController();
   TextEditingController totalAreaController = TextEditingController();
   TextEditingController  dimensionController = TextEditingController();
@@ -442,6 +481,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
   String areaType = 'Sq.Ft'; // Initial value
   int yearsOld = 0;
   bool isCornerArea = false;
+  bool freshproperty = false;
 
   List<String> areaTypes = ['Sq.Ft', 'Acre', 'Cents', 'Guntha']; // List of types
   List<String> propertyFacing = [];
@@ -458,7 +498,17 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
     super.initState();
     paymentRows.add(PaymentRow(categoryOptions, typeOptions));
   }
-
+  void _showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.black54,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
   void addPaymentRow() {
     setState(() {
       paymentRows.add(PaymentRow(categoryOptions, typeOptions));
@@ -473,9 +523,130 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool showBalconyAndBathroom = !(widget.subcategory == 'Plot / Land' || widget.subcategory == 'Commercial Space'|| widget.subcategory == 'Hostel/PG/Service Apartment');
+    bool facingdata = !(widget.subcategory == 'Hostel/PG/Service Apartment');
+    // bool possiontype = !(widget.subcategory == 'Plot / Land' || widget.subcategory == 'Hostel/PG/Service Apartment');
+    bool yearsolddata = !(widget.subcategory == 'Plot / Land' || widget.subcategory == 'Hostel/PG/Service Apartment');
+    bool possesion = !(widget.subcategory == 'Plot / Land'|| widget.category == 'Rent' || widget.category == 'Lease'|| widget.subcategory == 'Hostel/PG/Service Apartment');
+    bool cornerarea = !(widget.subcategory == 'Flat'|| widget.subcategory == 'Villa / Independent House'|| widget.category == 'Rent' || widget.category == 'Lease'|| widget.subcategory == 'Hostel/PG/Service Apartment');
+    bool totalarea = !( widget.category == 'Rent' || widget.category == 'Lease'|| widget.subcategory == 'Hostel/PG/Service Apartment');
+    bool undividedshare  = !( widget.subcategory == 'Villa / Independent House'||widget.subcategory == 'Plot / Land'|| widget.category == 'Rent' || widget.category == 'Lease'|| widget.subcategory == 'Hostel/PG/Service Apartment');
+    bool superbuild = !( widget.subcategory == 'Villa / Independent House'|| widget.subcategory == 'Commercial Space'|| widget.category == 'Rent' || widget.category == 'Lease'|| widget.subcategory == 'Hostel/PG/Service Apartment'|| widget.subcategory == 'Plot / Land');
+    bool dimensionroad  = !(widget.subcategory == 'Flat'|| widget.category == 'Rent' || widget.category == 'Lease'|| widget.subcategory == 'Hostel/PG/Service Apartment');
+    bool furnishing = !(widget.subcategory == 'Plot / Land' || widget.subcategory == 'Commercial Space'|| widget.subcategory == 'Hostel/PG/Service Apartment');
+    bool _validateFields() {
+      List<String> missingFields = [];
+
+      // Check if property owner or consultant is selected
+      if (propertyOwnerController.text.isEmpty) {
+        missingFields.add(" Please select Property Owner or Consultant");
+      }
+
+      // Check required fields based on category and subcategory
+      if (widget.subcategory == 'Flat' || widget.subcategory == 'Villa / Independent House') {
+        if (balconyController.text.isEmpty) {
+          missingFields.add("Please enter the Number of Balconies");
+        }
+        if (bathroomController.text.isEmpty) {
+          missingFields.add("Please enter the Number of Bathrooms");
+        }
+      }
+
+      if (widget.subcategory == 'Flat' || widget.subcategory == 'Commercial Space' || widget.subcategory == 'Villa / Independent House') {
+        if (yearsOld <= 0) { // Assuming you want to check for non-positive values
+          missingFields.add("Years Old (must be greater than 0)");
+        }
+      }
+      if (widget.subcategory == 'Flat' ||
+          widget.subcategory == 'Villa / Independent House' ||
+          widget.subcategory == 'Commercial Space' ||
+          widget.subcategory == 'Plot / Land') {
+
+        if (widget.category == 'Sell' && totalAreaController.text.isEmpty) {
+          missingFields.add("Please enter the Total Area");
+        }
+      }
+
+      if (widget.subcategory == 'Flat' || widget.subcategory == 'Villa / Independent House' ||widget.subcategory == 'Commercial Space' || widget.subcategory == 'Plot / Land') {
+        if (propertyFacing.isEmpty) {
+          missingFields.add("Please Select Property Facing");
+        }
+      }
+      if (widget.subcategory == 'Flat'  || widget.subcategory == 'Commercial Space' || widget.subcategory == 'Villa / Independent House') {
+        if (widget.category == 'Sell' &&possesiontypeController.text.isEmpty) {
+          missingFields.add("please select possesion type");
+        }
+      }
+      if (widget.subcategory == 'Flat'  || widget.subcategory == 'Villa / Independent House') {
+        if (furnishingTypeController.text.isEmpty) {
+          missingFields.add("please select Furnishing Type");
+        }
+      }
+      if (widget.subcategory == 'Commercial Space' || widget.subcategory == 'Plot / Land') {
+        if (isCornerArea == null) { // Assuming a radio button or similar control
+          missingFields.add("please select Is this a Corner Area?");
+        }
+
+      }
+      if ( widget.subcategory == 'Villa / Independent House' ||widget.subcategory == 'Commercial Space' || widget.subcategory == 'Plot / Land') {
+        if (widget.category == 'sell' && dimensionController.text.isEmpty) {
+          missingFields.add("Dimension");
+        }
+
+        // Check road length
+        if (widget.category == 'sell' && roadController.text.isEmpty) {
+          missingFields.add("Road Length");
+        }
+      }
+
+      if (widget.subcategory == 'Flat' ||widget.subcategory == 'Flat' ) {
+        if (widget.category == 'Sell' && superbuildupController.text.isEmpty) {
+          missingFields.add("please enter Superbuildup Area");
+        }
+
+      }
+      // Additional checks can be added here based on other categories or subcategories
+      if (widget.subcategory == 'Commercial Space' || widget.subcategory == 'Flat') {
+        if (widget.category == 'Sell' &&undividedController.text.isEmpty) {
+          missingFields.add("please enter Undivided Share");
+        }
+      }
+      // Check if payment type is selected
+      if (paymentRows.isEmpty) {
+        missingFields.add("please enter Payment Type");
+      }
+
+      if (missingFields.isNotEmpty) {
+        String message = "Please fill  the following details:\n-${missingFields.join('\n-')}";
+        _showToast( message);
+        return false; // Validation failed
+      }
+
+      return true; // All validations passed
+    }
+
+
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Property Details'),
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(60.0),
+          child: Container(
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.6),
+                  spreadRadius: 12,
+                  blurRadius: 8,
+                  offset: Offset(0, 3), // changes position of shadow
+                ),
+              ],
+            ),
+            child: AppBar(
+              backgroundColor: ColorUtils.primaryColor(),
+              iconTheme: IconThemeData(color: Colors.white),
+              title: Text('Property Details',style: TextStyle(color: Colors.white),),
+            ),
+          )
       ),
       backgroundColor: Colors.white,
       body: Padding(
@@ -501,7 +672,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                           ? ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
-                          backgroundColor:  ColorUtils.primaryColor(),
+                          backgroundColor: ColorUtils.primaryColor(),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(15),
@@ -521,8 +692,8 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                       )
                           : OutlinedButton(
                         style: OutlinedButton.styleFrom(
-                          foregroundColor:   ColorUtils.primaryColor(),
-                          side: BorderSide( color: ColorUtils.primaryColor(),),
+                          foregroundColor: ColorUtils.primaryColor(),
+                          side: BorderSide(color: ColorUtils.primaryColor(),),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(15),
@@ -537,7 +708,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                         },
                         child: Text(
                           'Property Owner',
-                          style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
+                          style: TextStyle(fontSize: 16, color: ColorUtils.primaryColor(),),
                         ),
                       ),
                     ),
@@ -569,8 +740,8 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                       )
                           : OutlinedButton(
                         style: OutlinedButton.styleFrom(
-                          foregroundColor:  ColorUtils.primaryColor(),
-                          side: BorderSide( color: ColorUtils.primaryColor(),),
+                          foregroundColor: ColorUtils.primaryColor(),
+                          side: BorderSide(color: ColorUtils.primaryColor(),),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
                               bottomRight: Radius.circular(15),
@@ -585,61 +756,32 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                         },
                         child: Text(
                           'Consultant',
-                          style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
+                          style: TextStyle(fontSize: 16, color: ColorUtils.primaryColor(),),
                         ),
                       ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 20),
-              Text(
-                'Property Title :',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: ColorUtils.primaryColor(),
+              if (showBalconyAndBathroom) ...[
+                TextField(
+                  keyboardType: TextInputType.number,
+                  controller: balconyController,
+                  decoration: InputDecoration(labelText: "Enter number of Balcony",
+                    hintText: 'Enter number of Balcony',
+                    border: UnderlineInputBorder(),
+                  ),
                 ),
-              ),
-              SizedBox(height: 10),
-              TextField(
-                controller: propertyTitleController,
-                decoration: InputDecoration(
-                  labelText: "Property Title",
-                  hintText: 'Enter property title',
-                  border: UnderlineInputBorder(),
+                SizedBox(height: 10),
+                TextField(
+                  keyboardType: TextInputType.number,
+                  controller: bathroomController,
+                  decoration: InputDecoration(labelText: "Enter number of bathroom",
+                    hintText: 'Enter  number of bathroom',
+                    border: UnderlineInputBorder(),
+                  ),
                 ),
-              ),
-
-              SizedBox(height: 10),
-              TextField(
-                controller: descriptionController,
-                maxLines: 4,
-                decoration: InputDecoration(
-                  labelText: "Enter property description",
-                  hintText: 'Enter property description',
-                  border: UnderlineInputBorder(),
-                ),
-              ),
-
-              SizedBox(height: 10),
-              TextField(
-                keyboardType: TextInputType.number,
-                controller: balconyController,
-                decoration: InputDecoration(labelText: "Enter number of Balcony",
-                  hintText: 'Enter number of Balcony',
-                  border: UnderlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 10),
-              TextField(
-                keyboardType: TextInputType.number,
-                controller: bathroomController,
-                decoration: InputDecoration(labelText: "Enter number of bathroom",
-                  hintText: 'Enter  number of bathroom',
-                  border: UnderlineInputBorder(),
-                ),
-              ),
+              ],
               SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -776,457 +918,520 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                 ],
               ),
               SizedBox(height: 20),
-              Text(
-                'Years old* :',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: ColorUtils.primaryColor(),
-                ),
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: ColorUtils.primaryColor(), // Replace with your desired background color
-                    ),
-                    child: IconButton(
-                      icon: Icon(Icons.remove,color: Colors.white,),
-                      onPressed: () {
-                        setState(() {
-                          if (yearsOld > 0) {
-                            yearsOld--;
-                          }
-                        });
-                      },
-                      // Icon color
-                    ),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    '$yearsOld',
-                    style: TextStyle(
-                      fontSize: 18,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: ColorUtils.primaryColor(), // Replace with your desired background color
-                    ),
-                    child: IconButton(
-                      icon: Icon(Icons.add,color: Colors.white,),
-                      onPressed: () {
-                        setState(() {
-                          yearsOld++;
-                        });
-                      },
-                      color: Colors.black, // Icon color
-                    ),
-                  )
-
-                ],
-              ),
-              SizedBox(height: 20),
-              Text(
-                'Property Facing* :',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: ColorUtils.primaryColor(),
-                ),
-              ),
-              SizedBox(height: 10),
-              Wrap(
-                children: propertyFacings.map((facing) {
-                  bool isSelected = propertyFacing.contains(facing);
-                  IconData iconData;
-                  switch (facing) {
-                    case 'North':
-                      iconData = Icons.arrow_upward;
-                      break;
-                    case 'South':
-                      iconData = Icons.arrow_downward;
-                      break;
-                    case 'East':
-                      iconData = Icons.arrow_forward;
-                      break;
-                    case 'West':
-                      iconData = Icons.arrow_back;
-                      break;
-                    default:
-                      iconData = Icons.error;
-                      break;
-                  }
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        if (isSelected) {
-                          propertyFacing.remove(facing); // Remove if already selected
-                        } else {
-                          if (propertyFacing.length < 3) {
-                            propertyFacing.add(facing); // Add if less than 3 selections
-                          }
-                        }
-                      });
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      margin: EdgeInsets.only(right: 5, ),
-                      decoration: BoxDecoration(
-                        color: isSelected ? customTeal : Colors.transparent,
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all( color: ColorUtils.primaryColor(),),
-                      ),
-                      child: Column(
-                        children: [
-                          Icon(iconData, color: isSelected ? Colors.white : customTeal),
-                          SizedBox(height: 1),
-                          Text(
-                            facing,
-                            style: TextStyle(
-                              color: isSelected ? Colors.white : customTeal,
-                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-
-              SizedBox(height: 20),
-              Text(
-                'Possession Type* :',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: ColorUtils.primaryColor(),
-                ),
-              ),
-              SizedBox(height: 10),
-              //////////
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      child: furnishingTypeController.text == 'Under Construction'
-                          ? ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor:  ColorUtils.primaryColor(),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(15),
-                              topLeft: Radius.circular(15),
-                            ),
-                          ),
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            furnishingTypeController.text = 'Under Construction';
-                          });
-                        },
-                        child: Text(
-                          'Under Construction',
-                          style: TextStyle(fontSize: 13),
-                        ),
-                      )
-                          : OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: ColorUtils.primaryColor(),
-                          side: BorderSide( color: ColorUtils.primaryColor(),),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(15),
-                              topLeft: Radius.circular(15),
-                            ),
-                          ),
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            furnishingTypeController.text = 'Under Construction';
-                          });
-                        },
-                        child: Text(
-                          'Under Construction',
-                          style: TextStyle(fontSize: 13,  color: ColorUtils.primaryColor(),),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 2), // Add spacing between ElevatedButtons
-                  Expanded(
-                    child: Container(
-                      child: furnishingTypeController.text == 'Ready-to-move'
-                          ? ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor:   ColorUtils.primaryColor(),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                              bottomRight: Radius.circular(15),
-                              topRight: Radius.circular(15),
-                            ),
-                          ),
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            furnishingTypeController.text = 'Ready-to-move';
-                          });
-                        },
-                        child: Text(
-                          'Ready-to-move',
-                          style: TextStyle(fontSize: 15),
-                        ),
-                      )
-                          : OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor:  ColorUtils.primaryColor(),
-                          side: BorderSide( color: ColorUtils.primaryColor(),),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                              bottomRight: Radius.circular(15),
-                              topRight: Radius.circular(15),
-                            ),
-                          ),
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            furnishingTypeController.text = 'Ready-to-move';
-                          });
-                        },
-                        child: Text(
-                          'Ready-to-move',
-                          style: TextStyle(fontSize: 15,  color: ColorUtils.primaryColor(),),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
-              SizedBox(height: 20),
-              Text(
-                'Furnishing Type :',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: ColorUtils.primaryColor(),
-                ),
-              ),
-              SizedBox(height: 10),
-              Wrap(
-                spacing: 10,
-                children: furnishingTypes.map((type) {
-                  return ChoiceChip(
-                    label: Text(type),
-                    selected: furnishingTypeController.text == type,
-                    onSelected: (selected) {
-                      setState(() {
-                        furnishingTypeController.text = selected ? type : "";
-                      });
-                    },
-                  );
-                }).toList(),
-              ),
-              SizedBox(height: 20),
-              SizedBox(height: 20),
-              Text("Is this Corner Area?", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,  color: ColorUtils.primaryColor(),)),
-              Row(
-                children: [
-                  Radio(
-                    value: true,
-                    groupValue: isCornerArea,
-                    onChanged: (value) {
-                      setState(() {
-                        isCornerArea = value!;
-                      });
-                    },
-                  ),
-                  Text('Yes'),
-                  Radio(
-                    value: false,
-                    groupValue: isCornerArea,
-                    onChanged: (value) {
-                      setState(() {
-                        isCornerArea = value!;
-                      });
-                    },
-                  ),
-                  Text('No'),
-                ],
-              ),
-
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(keyboardType: TextInputType.number,
-                      controller: totalAreaController,
-                      decoration: InputDecoration(
-                        labelText: "Enter total Area",
-                        hintText: 'Enter Total Area',
-                        border: UnderlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: DropdownButtonFormField<String>(
-                      value: areaType,
+              if (yearsolddata) ...[
+                Text("Is this Fresh property?", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),)),
+                Row(
+                  children: [
+                    Radio(
+                      value: true,
+                      groupValue: freshproperty,
                       onChanged: (value) {
                         setState(() {
-                          areaType = value!;
+                          freshproperty = value!;
                         });
                       },
-                      items: areaTypes.map((type) {
-                        return DropdownMenuItem<String>(
-                          value: type,
-                          child: Text(type),
-                        );
-                      }).toList(),
                     ),
+                    Text('Yes'),
+                    Radio(
+                      value: false,
+                      groupValue: freshproperty,
+                      onChanged: (value) {
+                        setState(() {
+                          freshproperty = value!;
+                        });
+                      },
+                    ),
+                    Text('No'),
+                  ],
+                ),
+
+
+                Text(
+                  'Years old* :',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: ColorUtils.primaryColor(),
                   ),
-                ],
-              ),
-              SizedBox(height: 10),
-              TextField(
-                controller: dimensionController,
-                decoration: InputDecoration(
-                  labelText: 'Enter dimension',
-                  hintText: 'Enter dimension',
-                  border: UnderlineInputBorder(),
                 ),
-              ),
-              SizedBox(height: 10),
-              TextField(
-                controller: roadController,
-                decoration: InputDecoration(
-                  labelText: 'Road Length',
-                  hintText: 'Road Length',
-                  border: UnderlineInputBorder(),
+                SizedBox(height: 10),
+                Row(
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: ColorUtils.primaryColor(), // Replace with your desired background color
+                      ),
+                      child: IconButton(
+                        icon: Icon(Icons.remove,color: Colors.white,),iconSize: 20,
+                        onPressed: () {
+                          setState(() {
+                            if (yearsOld > 0) {
+                              yearsOld--;
+                            }
+                          });
+                        },
+                        // Icon color
+                      ),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      '$yearsOld',
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color:ColorUtils.primaryColor(), // Replace with your desired background color
+                      ),
+                      child: IconButton(
+                        icon: Icon(Icons.add,color: Colors.white,),
+                        onPressed: () {
+                          setState(() {
+                            yearsOld++;
+                          });
+                        },
+                        color: Colors.black, // Icon color
+                      ),
+                    )
+
+                  ],
                 ),
-              ),
-              SizedBox(height: 10),
-              TextField(
-                controller: undividedController,
-                decoration: InputDecoration(
-                  labelText: 'Undivided Share',
-                  hintText: 'Undivided Share',
-                  border: UnderlineInputBorder(),
+
+                SizedBox(height: 20),
+              ],
+              if (facingdata) ...[
+                Text(
+                  'Property Facing* :',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: ColorUtils.primaryColor(),
+                  ),
                 ),
-              ),
-              SizedBox(height: 10),
-              TextField(
-                controller: superbuildupController,
-                decoration: InputDecoration(
-                  labelText: 'superbuildupArea',
-                  hintText: 'superbuildupArea',
-                  border: UnderlineInputBorder(),
+                SizedBox(height: 10),
+                Wrap(
+                  children: propertyFacings.map((facing) {
+                    bool isSelected = propertyFacing.contains(facing);
+                    IconData iconData;
+                    switch (facing) {
+                      case 'North':
+                        iconData = Icons.arrow_upward;
+                        break;
+                      case 'South':
+                        iconData = Icons.arrow_downward;
+                        break;
+                      case 'East':
+                        iconData = Icons.arrow_forward;
+                        break;
+                      case 'West':
+                        iconData = Icons.arrow_back;
+                        break;
+                      default:
+                        iconData = Icons.error;
+                        break;
+                    }
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          if (isSelected) {
+                            propertyFacing.remove(facing); // Remove if already selected
+                          } else {
+                            if (propertyFacing.length < 3) {
+                              propertyFacing.add(facing); // Add if less than 3 selections
+                            }
+                          }
+                        });
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        margin: EdgeInsets.only(right: 5, ),
+                        decoration: BoxDecoration(
+                          color: isSelected ? customTeal : Colors.transparent,
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(color: ColorUtils.primaryColor(),),
+                        ),
+                        child: Column(
+                          children: [
+                            Icon(iconData, color: isSelected ? Colors.white : customTeal),
+                            SizedBox(height: 1),
+                            Text(
+                              facing,
+                              style: TextStyle(
+                                color: isSelected ? Colors.white : customTeal,
+                                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList(),
                 ),
-              ),
-              SizedBox(height: 20),
+
+                SizedBox(height: 20),
+              ],
+              if (possesion) ...[
+                Text(
+                  'Possession Type* :',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: ColorUtils.primaryColor(),
+                  ),
+                ),
+                SizedBox(height: 10),
+                //////////
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        child: possesiontypeController.text == 'Under Construction'
+                            ? ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: ColorUtils.primaryColor(),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(15),
+                                topLeft: Radius.circular(15),
+                              ),
+                            ),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              possesiontypeController.text = 'Under Construction';
+                            });
+                          },
+                          child: Text(
+                            'Under Construction',
+                            style: TextStyle(fontSize: 13),
+                          ),
+                        )
+                            : OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: ColorUtils.primaryColor(),
+                            side: BorderSide(color: ColorUtils.primaryColor(),),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(15),
+                                topLeft: Radius.circular(15),
+                              ),
+                            ),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              possesiontypeController.text = 'Under Construction';
+                            });
+                          },
+                          child: Text(
+                            'Under Construction',
+                            style: TextStyle(fontSize: 13, color: ColorUtils.primaryColor(),),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 2), // Add spacing between ElevatedButtons
+                    Expanded(
+                      child: Container(
+                        child: possesiontypeController.text == 'Ready-to-move'
+                            ? ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: ColorUtils.primaryColor(),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(15),
+                                topRight: Radius.circular(15),
+                              ),
+                            ),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              possesiontypeController.text = 'Ready-to-move';
+                            });
+                          },
+                          child: Text(
+                            'Ready-to-move',
+                            style: TextStyle(fontSize: 15),
+                          ),
+                        )
+                            : OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: ColorUtils.primaryColor(),
+                            side: BorderSide(color: ColorUtils.primaryColor(),),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(15),
+                                topRight: Radius.circular(15),
+                              ),
+                            ),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              possesiontypeController.text = 'Ready-to-move';
+                            });
+                          },
+                          child: Text(
+                            'Ready-to-move',
+                            style: TextStyle(fontSize: 15, color: ColorUtils.primaryColor(),),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                SizedBox(height: 20),
+              ],
+              if (furnishing) ...[
+                Text(
+                  'Furnishing Type :',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: ColorUtils.primaryColor(),
+                  ),
+                ),
+                SizedBox(height: 10),
+                Wrap(
+                  spacing: 10,
+                  children: furnishingTypes.map((type) {
+                    return ChoiceChip(
+                      label: Text(type),
+                      selected: furnishingTypeController.text == type,
+                      onSelected: (selected) {
+                        setState(() {
+                          furnishingTypeController.text = selected ? type : "";
+                        });
+                      },
+                    );
+                  }).toList(),
+                ),
+                SizedBox(height: 20),
+              ],
+              if (cornerarea) ...[
+                SizedBox(height: 20),
+                Text("Is this Corner Area?", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),)),
+                Row(
+                  children: [
+                    Radio(
+                      value: true,
+                      groupValue: isCornerArea,
+                      onChanged: (value) {
+                        setState(() {
+                          isCornerArea = value!;
+                        });
+                      },
+                    ),
+                    Text('Yes'),
+                    Radio(
+                      value: false,
+                      groupValue: isCornerArea,
+                      onChanged: (value) {
+                        setState(() {
+                          isCornerArea = value!;
+                        });
+                      },
+                    ),
+                    Text('No'),
+                  ],
+                ),
+
+
+                SizedBox(height: 10),
+              ],
+              if (totalarea) ...[
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(keyboardType: TextInputType.number,
+                        controller: totalAreaController,
+                        decoration: InputDecoration(
+                          labelText: "Enter total Area",
+                          hintText: 'Enter Total Area',
+                          border: UnderlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: DropdownButtonFormField<String>(
+                        value: areaType,
+                        onChanged: (value) {
+                          setState(() {
+                            areaType = value!;
+                          });
+                        },
+                        items: areaTypes.map((type) {
+                          return DropdownMenuItem<String>(
+                            value: type,
+                            child: Text(type),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ],
+                ),
+
+                SizedBox(height: 10),
+              ],
+              if (dimensionroad) ...[
+                TextField(
+                  controller: dimensionController,
+                  decoration: InputDecoration(
+                    labelText: 'Enter dimension',
+                    hintText: 'Enter dimension',
+                    border: UnderlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 10),
+                TextField(
+                  controller: roadController,
+                  decoration: InputDecoration(
+                    labelText: 'Road Length',
+                    hintText: 'Road Length',
+                    border: UnderlineInputBorder(),
+                  ),
+                ),
+              ],
+              SizedBox(height: 10),
+              if (undividedshare) ...[
+                TextField(
+                  controller: undividedController,
+                  decoration: InputDecoration(
+                    labelText: 'Undivided Share',
+                    hintText: 'Undivided Share',
+                    border: UnderlineInputBorder(),
+                  ),
+                ),
+
+                SizedBox(height: 10),
+              ],
+              if (superbuild) ...[
+                TextField(
+                  controller: superbuildupController,
+                  decoration: InputDecoration(
+                    labelText: 'superbuildupArea',
+                    hintText: 'superbuildupArea',
+                    border: UnderlineInputBorder(),
+                  ),
+                ),
+
+                SizedBox(height: 20),
+              ],
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.horizontal(left: Radius.circular(20)),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.horizontal(left: Radius.circular(20)),
 
-                      color: ColorUtils.primaryColor(), // Your custom background color (teal)
-                    ),
-                    child: SizedBox(
-                      width: 164, // Adjust width as needed
-                      height: 50, // Adjust height as needed
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:   ColorUtils.primaryColor(),// Text color (white)
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.arrow_back, color: Colors.white), // Replace with your desired back icon
-                            SizedBox(width: 8), // Adjust the spacing between icon and text as needed
-                            Text(
-                              "Back",
-                              style: TextStyle(color: Colors.white), // Text color (white)
+                        color: ColorUtils.primaryColor(), // Your custom background color (teal)
+                      ),
+                      child: SizedBox(
+                        width: 164, // Adjust width as needed
+                        height: 50, // Adjust height as needed
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorUtils.primaryColor(), // Text color (white)
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
                             ),
-                          ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.arrow_back, color: Colors.white), // Replace with your desired back icon
+                              SizedBox(width: 8), // Adjust the spacing between icon and text as needed
+                              Text(
+                                "Back",
+                                style: TextStyle(color: Colors.white), // Text color (white)
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.horizontal(right: Radius.circular(20)), // Adjust the border radius as needed
-                      color: ColorUtils.primaryColor(), // Your custom background color (teal)
-                    ),
-                    child: SizedBox(
-                      width: 163, // Adjust width as needed
-                      height: 50, // Adjust height as needed
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AddressPage(
-                                isCornerArea: isCornerArea,
+                  SizedBox(width: 1),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.horizontal(right: Radius.circular(20)), // Adjust the border radius as needed
+                        color: ColorUtils.primaryColor(), // Your custom background color (teal)
+                      ),
+                      child: SizedBox(
+                        width: 163, // Adjust width as needed
+                        height: 50, // Adjust height as needed
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_validateFields()) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      AddressPage(
+                                        freshproperty:freshproperty,
+                                        isCornerArea: isCornerArea,
+                                        category: widget.category,
+                                        subcategory: widget.subcategory,
+                                        propertyType: widget.propertyType,
+                                        propertyOwnerController: propertyOwnerController,
 
-                                subcategory: widget.subcategory,
-                                propertyType: widget.propertyType,
-                                propertyOwnerController: propertyOwnerController,
-                                propertyTitleController: propertyTitleController,
-                                descriptionController: descriptionController,
-                                yearsOld: yearsOld,
-                                furnishingTypeController: furnishingTypeController,
-                                totalAreaController: totalAreaController,
-                                dimensionController:dimensionController,
-                                undividedController:undividedController,
-                                superbuildupController:superbuildupController,
-                                roadController:roadController,
-                                paymentType: paymentType,
-                                possessionType: possessionType,
-                                areaType: areaType,
-                                propertyFacing: propertyFacing,
-                                paymentRows: paymentRows, balconyController: balconyController,bathroomController: bathroomController,
-                              ),
+                                        yearsOld: yearsOld,
+
+                                        furnishingTypeController: furnishingTypeController,
+                                        totalAreaController: totalAreaController,
+                                        dimensionController: dimensionController,
+                                        undividedController: undividedController,
+                                        superbuildupController: superbuildupController,
+                                        roadController: roadController,
+                                        paymentType: paymentType,
+                                        possessionType: possessionType,
+                                        areaType: areaType,
+                                        propertyFacing: propertyFacing,
+                                        paymentRows: paymentRows,
+                                        balconyController: balconyController,
+                                        bathroomController: bathroomController,
+                                      ),
+                                ),
+                              );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorUtils.primaryColor(), // Background color
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
                             ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:  ColorUtils.primaryColor(), // Background color
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
                           ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              "Next",
-                              style: TextStyle(color: Colors.white), // Text color (white)
-                            ),
-                            Icon(Icons.arrow_forward, color: Colors.white),
-                          ],
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                "Next",
+                                style: TextStyle(color: Colors.white), // Text color (white)
+                              ),
+                              Icon(Icons.arrow_forward, color: Colors.white),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -1261,14 +1466,14 @@ class PaymentRow {
 }
 
 class AddressPage extends StatefulWidget {
-
+  final String category;
   final String subcategory;
   final String propertyType;
 
   final bool isCornerArea;
+  final bool freshproperty;
   final TextEditingController propertyOwnerController;
-  final TextEditingController propertyTitleController;
-  final TextEditingController descriptionController;
+
   final TextEditingController balconyController;
   final TextEditingController bathroomController;
   final TextEditingController furnishingTypeController;
@@ -1286,12 +1491,12 @@ class AddressPage extends StatefulWidget {
 
   AddressPage({
     required this.isCornerArea,
-
+    required this.freshproperty,
+    required this.category,
     required this.subcategory,
     required this.propertyType,
     required this.propertyOwnerController,
-    required this.propertyTitleController,
-    required this.descriptionController,
+
 
     required this.furnishingTypeController,
     required this.totalAreaController,
@@ -1320,7 +1525,17 @@ class _AddressPageState extends State<AddressPage> {
   final TextEditingController landmarkController = TextEditingController();
   final TextEditingController latitudeController = TextEditingController();
   final TextEditingController longitudeController = TextEditingController();
-
+  void _showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.black54,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
 
   List<String> floorTypes = ['Independent Floor', 'Shared Floor', 'Duplex Property'];
   String? _locationAddress;
@@ -1328,9 +1543,67 @@ class _AddressPageState extends State<AddressPage> {
   Color customTeal = Color(0xFF8F00FF);
   @override
   Widget build(BuildContext context) {
+    bool floor = !(widget.subcategory == 'Plot / Land' || widget.subcategory == 'Villa / Independent House'|| widget.subcategory == 'Hostel/PG/Service Apartment');
+    bool _validateFields() {
+      List<String> missingFields = [];
+
+
+
+      if (widget.subcategory == 'Commercial Space' || widget.subcategory == 'Flat') {
+        if (floorNumberController.text.isEmpty) {
+          missingFields.add("please enter floor number");
+        }
+        if (floorType.isEmpty) {
+          missingFields.add("please enter floor type");
+        }
+      }
+      if (widget.subcategory == 'Commercial Space' || widget.subcategory == 'Plot / Land'|| widget.subcategory == 'Villa / Independent House'|| widget.subcategory == 'Flat'|| widget.subcategory == 'Hostel/PG/Service Apartment' ) {
+        if (latitudeController.text.isEmpty) {
+          missingFields.add("please Select your location");
+        }
+        if (doorNoController.text.isEmpty) {
+          missingFields.add("please enter door no");
+        }
+        if (addressLineController.text.isEmpty) {
+          missingFields.add("please enter address");
+        }
+        if (areaController.text.isEmpty) {
+          missingFields.add("please enter area");
+        }
+        if (landmarkController.text.isEmpty) {
+          missingFields.add("please enter landmark");
+        }
+      }
+      // Check if payment type is selected
+
+      if (missingFields.isNotEmpty) {
+        String message = "Please fill  the following data:\n-${missingFields.join('\n-')}";
+        _showToast( message);
+        return false; // Validation failed
+      }
+
+      return true; // All validations passed
+    }
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Address Details'),
+      appBar:PreferredSize(
+        preferredSize: Size.fromHeight(60.0),
+        child: Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.6),
+                spreadRadius: 12,
+                blurRadius: 8,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
+          child: AppBar(
+            backgroundColor: ColorUtils.primaryColor(),
+            iconTheme: IconThemeData(color: Colors.white),
+            title: Text('Address Details',style: TextStyle(color: Colors.white),),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
@@ -1339,45 +1612,66 @@ class _AddressPageState extends State<AddressPage> {
             children: [
 
               SizedBox(height: 10),
-              TextField(
-                keyboardType: TextInputType.number,
-                controller: floorNumberController,
-                decoration: InputDecoration(labelText: "Enter floor number",
-                  hintText: 'Enter floor number',
-                  border: UnderlineInputBorder(),
+              if (floor) ...[
+                TextField(
+                  keyboardType: TextInputType.number,
+                  controller: floorNumberController,
+                  decoration: InputDecoration(labelText: "Enter floor number",
+                    hintText: 'Enter floor number',
+                    border: UnderlineInputBorder(),
+                  ),
                 ),
-              ),
-
-              SizedBox(height: 20),
-              Text(
-                'Floor Type*:',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: ColorUtils.primaryColor(),
+                // TextField(
+                //   controller: propertyTitleController,
+                //   decoration: InputDecoration(
+                //     labelText: "Property Title",
+                //     hintText: 'Enter property title',
+                //     border: UnderlineInputBorder(),
+                //   ),
+                // ),
+                // SizedBox(height: 15),
+                //
+                //
+                // TextField(
+                //   controller: descriptionController,
+                //   maxLines: 3,
+                //   decoration: InputDecoration(
+                //     labelText: "Enter property description",
+                //     hintText: 'Enter property description',
+                //     border: UnderlineInputBorder(),
+                //   ),
+                // ),
+                SizedBox(height: 20),
+                Text(
+                  'Floor Type*:',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: ColorUtils.primaryColor(),
+                  ),
                 ),
-              ),
-              SizedBox(height: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: floorTypes.map((type) {
-                  return Row(
-                    children: [
-                      Radio<String>(
-                        value: type,
-                        groupValue: floorType,
-                        onChanged: (value) {
-                          setState(() {
-                            floorType = value!;
-                          });
-                        },
-                      ),
-                      Text(type),
-                    ],
-                  );
-                }).toList(),
-              ),
-              SizedBox(height: 20),
+                SizedBox(height: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: floorTypes.map((type) {
+                    return Row(
+                      children: [
+                        Radio<String>(
+                          value: type,
+                          groupValue: floorType,
+                          onChanged: (value) {
+                            setState(() {
+                              floorType = value!;
+                            });
+                          },
+                        ),
+                        Text(type),
+                      ],
+                    );
+                  }).toList(),
+                ),
+                SizedBox(height: 20),
+              ],
               Row(
                 children: [
                   Text(
@@ -1418,7 +1712,7 @@ class _AddressPageState extends State<AddressPage> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:  ColorUtils.primaryColor(),// Background color
+                          backgroundColor: ColorUtils.primaryColor(), // Background color
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
                           ),
@@ -1457,7 +1751,7 @@ class _AddressPageState extends State<AddressPage> {
                   decoration: InputDecoration(
                     labelText: 'Enter door number',
                     hintText: 'Enter door number',
-                     border: UnderlineInputBorder(),
+                    border: UnderlineInputBorder(),
                   ),
                 ),
                 SizedBox(height: 10),
@@ -1493,105 +1787,115 @@ class _AddressPageState extends State<AddressPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20), // Adjust the border radius as needed
-                      color: ColorUtils.primaryColor(), // Your custom background color (teal)
-                    ),
-                    child: SizedBox(
-                      width: 164, // Adjust width as needed
-                      height: 50, // Adjust height as needed
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:   ColorUtils.primaryColor(), // Text color (white)
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.horizontal(left: Radius.circular(20)), // Adjust the border radius as needed
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.arrow_back, color: Colors.white), // Replace with your desired back icon
-                            SizedBox(width: 8), // Adjust the spacing between icon and text as needed
-                            Text(
-                              "Back",
-                              style: TextStyle(color: Colors.white), // Text color (white)
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20), // Adjust the border radius as needed
+                        color: ColorUtils.primaryColor(), // Your custom background color (teal)
+                      ),
+                      child: SizedBox(
+                        width: 164, // Adjust width as needed
+                        height: 50, // Adjust height as needed
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorUtils.primaryColor(), // Text color (white)
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.horizontal(left: Radius.circular(20)), // Adjust the border radius as needed
                             ),
-                          ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.arrow_back, color: Colors.white), // Replace with your desired back icon
+                              SizedBox(width: 8), // Adjust the spacing between icon and text as needed
+                              Text(
+                                "Back",
+                                style: TextStyle(color: Colors.white), // Text color (white)
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.horizontal(right: Radius.circular(20)), // Adjust the border radius as needed
-                      color: ColorUtils.primaryColor(), // Your custom background color (teal)
-                    ),
-                    child: SizedBox(
-                      width: 163, // Adjust width as needed
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AmentiesScreen(
+                  SizedBox(width: 1),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.horizontal(right: Radius.circular(20)), // Adjust the border radius as needed
+                        color: ColorUtils.primaryColor(), // Your custom background color (teal)
+                      ),
+                      child: SizedBox(
+                        width: 163, // Adjust width as needed
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_validateFields()) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      AmentiesScreen(
 
-                                balconyController:widget.balconyController,
-                                bathroomController:widget.bathroomController,
+                                        balconyController: widget.balconyController,
+                                        bathroomController: widget.bathroomController,
+                                        category: widget.category,
+                                        subcategory: widget.subcategory,
+                                        propertyType: widget.propertyType,
+                                        propertyOwnerController: widget.propertyOwnerController,
 
-                                subcategory: widget.subcategory,
-                                propertyType: widget.propertyType,
-                                propertyOwnerController: widget.propertyOwnerController,
-                                propertyTitleController: widget.propertyTitleController,
-                                descriptionController: widget.descriptionController,
-                                yearsOld: widget.yearsOld,
-                                furnishingTypeController: widget.furnishingTypeController,
-                                totalAreaController: widget.totalAreaController,
-                                dimensionController:widget.dimensionController,
-                                undividedController:widget.undividedController,
-                                superbuildupController:widget.superbuildupController,
-                                roadController:widget.roadController,
-                                isCornerArea:widget.isCornerArea,
-                                paymentType: widget.paymentType,
-                                possessionType: widget.possessionType,
-                                areaType: widget.areaType,
-                                propertyFacing: widget.propertyFacing,
-                                paymentRows: widget.paymentRows,
-                                floorNumberController: floorNumberController,
+                                        yearsOld: widget.yearsOld,
+                                        furnishingTypeController: widget.furnishingTypeController,
+                                        totalAreaController: widget.totalAreaController,
+                                        dimensionController: widget.dimensionController,
+                                        undividedController: widget.undividedController,
+                                        superbuildupController: widget.superbuildupController,
+                                        roadController: widget.roadController,
+                                        isCornerArea: widget.isCornerArea,
+                                        freshproperty:widget.freshproperty,
+                                        paymentType: widget.paymentType,
+                                        possessionType: widget.possessionType,
+                                        areaType: widget.areaType,
+                                        propertyFacing: widget.propertyFacing,
+                                        paymentRows: widget.paymentRows,
+                                        floorNumberController: floorNumberController,
 
-                                floorType: floorType,
-                                doorNoController: doorNoController,
-                                addressLineController: addressLineController,
-                                areaController: areaController,
-                                landmarkController: landmarkController,
-                                latitudeController: latitudeController,
-                                longitudeController: longitudeController,
-                                floorTypes: floorTypes,
-                                locationAddress: _locationAddress, // Pass the selected address
-                                // selectedLocation: _selectedLocation, // Pass the selected coordinates
-                              ),
+                                        floorType: floorType,
+                                        doorNoController: doorNoController,
+                                        addressLineController: addressLineController,
+                                        areaController: areaController,
+                                        landmarkController: landmarkController,
+                                        latitudeController: latitudeController,
+                                        longitudeController: longitudeController,
+                                        floorTypes: floorTypes,
+                                        locationAddress: _locationAddress, // Pass the selected address
+                                        // selectedLocation: _selectedLocation, // Pass the selected coordinates
+                                      ),
+                                ),
+                              );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorUtils.primaryColor(), // Background color
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
                             ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:  ColorUtils.primaryColor(), // Background color
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
                           ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              "Next ",
-                              style: TextStyle(color: Colors.white), // Text color (white)
-                            ),
-                            Icon(Icons.arrow_forward, color: Colors.white),
-                          ],
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                "Next ",
+                                style: TextStyle(color: Colors.white), // Text color (white)
+                              ),
+                              Icon(Icons.arrow_forward, color: Colors.white),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -1606,12 +1910,11 @@ class _AddressPageState extends State<AddressPage> {
 
 class AmentiesScreen extends StatefulWidget {
 
-
+  final String category;
   final String subcategory;
   final String propertyType;
   final TextEditingController propertyOwnerController;
-  final TextEditingController propertyTitleController;
-  final TextEditingController descriptionController;
+
   final int yearsOld;
   final TextEditingController furnishingTypeController;
   final TextEditingController totalAreaController;
@@ -1639,13 +1942,14 @@ class AmentiesScreen extends StatefulWidget {
   final String? locationAddress; // Accept the selected address
   final String? selectedLocation;
   final bool isCornerArea;
+  final bool freshproperty;
   AmentiesScreen({
-
+    required this.category,
     required this.subcategory,
     required this.propertyType,
     required this.superbuildupController,
-    required this.floorNumberController, required this.floorType, required this.doorNoController, required this.addressLineController, required this.areaController,  required this.landmarkController, required this.latitudeController, required this.longitudeController, required this.floorTypes, required this.propertyOwnerController, required this.propertyTitleController, required this.descriptionController, required this.yearsOld, required this.furnishingTypeController,
-    required this.roadController,required this.undividedController,required this.dimensionController, required this.totalAreaController, required this.paymentType, required this.possessionType, required this.areaType, required this.propertyFacing,required this.bathroomController, required this.paymentRows,  this.locationAddress, this.selectedLocation, required this.balconyController, required this.isCornerArea,
+    required this.floorNumberController, required this.floorType, required this.doorNoController, required this.addressLineController, required this.areaController,  required this.landmarkController, required this.latitudeController, required this.longitudeController, required this.floorTypes, required this.propertyOwnerController,  required this.yearsOld, required this.furnishingTypeController,
+    required this.roadController,required this.undividedController,required this.dimensionController, required this.totalAreaController, required this.paymentType, required this.possessionType, required this.areaType, required this.propertyFacing,required this.bathroomController, required this.paymentRows,  this.locationAddress, this.selectedLocation, required this.balconyController, required this.isCornerArea, required this.freshproperty,
   });
 
   @override
@@ -1654,7 +1958,55 @@ class AmentiesScreen extends StatefulWidget {
 class _AmentiesScreenState extends State<AmentiesScreen> {
   final TextEditingController amenitiesController = TextEditingController();
   final TextEditingController nearbyPlaceController = TextEditingController();
+  void _showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.black54,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
   bool parkingIncluded = false;
+  bool _validateFields() {
+    List<String> missingFields = [];
+
+
+    if (widget.subcategory == 'Commercial Space' ||widget.subcategory == 'Hostel/PG/Service Apartment' || widget.subcategory == 'Plot / Land'|| widget.subcategory == 'Villa / Independent House'|| widget.subcategory == 'Flat') {
+      if (amenities.isEmpty) {
+        missingFields.add("Please enter amenities.");
+      }
+      if (nearbyPlaces.isEmpty) {
+        missingFields.add("please enter nearbyplaces details");
+      }
+    }
+    // Check if payment type is selected
+    if (widget.subcategory == 'Commercial Space'|| widget.subcategory == 'Villa / Independent House' || widget.subcategory == 'Flat') {
+      if (parkingIncluded) {
+        if (parkingType.isEmpty) {
+          missingFields.add("Please select a parking type.");
+        }
+        // if (carParkingCount <= 0) {
+        //   missingFields.add("Please specify the number of car parking spaces.");
+        // }
+        // if (bikeParkingCount <= 0) {
+        //   missingFields.add("Please specify the number of bike parking spaces.");
+        // }
+      }
+
+    }
+
+
+    if (missingFields.isNotEmpty) {
+      String message = "Please fill in the following fields:\n-${missingFields.join('\n-')}";
+      _showToast( message);
+      return false; // Validation failed
+    }
+
+    return true; // All validations passed
+  }
   String parkingType = '';
   int carParkingCount = 0;
   int bikeParkingCount = 0;
@@ -1738,9 +2090,27 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool parking = !(widget.subcategory == 'Plot / Land' || widget.subcategory == 'Hostel/PG/Service Apartment');
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Amenties,Nearby/Parking'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(60.0),
+        child: Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.6),
+                spreadRadius: 12,
+                blurRadius: 8,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
+          child: AppBar(
+            backgroundColor: ColorUtils.primaryColor(),
+            iconTheme: IconThemeData(color: Colors.white),
+            title: Text('Amenties,Nearby/Parking',style: TextStyle(color: Colors.white),),
+          ),
+        ),
       ),
       backgroundColor: Colors.white,
       body: Padding(
@@ -1848,8 +2218,8 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                     Row(
                       children: [
                         Container(
-                          width: 40,
-                          height: 40,
+                          width: 36,
+                          height: 39,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: ColorUtils.primaryColor(),
@@ -1864,8 +2234,8 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                         Text('$nearbyDistance km'),
                         SizedBox(width: 5,),// Display current nearby distance
                         Container(
-                          width: 40,
-                          height: 40,
+                          width: 36,
+                          height: 39,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: ColorUtils.primaryColor(),
@@ -1893,276 +2263,288 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                   ],
                 ),
               ),
-
-              SizedBox(height: 20),
-              Text(
-                'Parking :',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: ColorUtils.primaryColor(),
+              if (parking) ...[
+                SizedBox(height: 20),
+                Text(
+                  'Parking :',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: ColorUtils.primaryColor(),
+                  ),
                 ),
-              ),
-              Row(
-                children: [
-                  Radio(
-                    value: true,
-                    groupValue: parkingIncluded,
-                    onChanged: (value) {
-                      setState(() {
-                        parkingIncluded = value ?? false;
-                      });
-                    },
-                  ),
-                  Text('Included'),
-                  SizedBox(width: 20),
-                  Radio(
-                    value: false,
-                    groupValue: parkingIncluded,
-                    onChanged: (value) {
-                      setState(() {
-                        parkingIncluded = value ?? false;
-                      });
-                    },
-                  ),
-                  Text('Not Included'),
-                ],
-              ),
-              if (parkingIncluded)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
                   children: [
-                    SizedBox(height: 20),
-                    Text(
-                      'Parking Type :',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: ColorUtils.primaryColor(),
-                      ),
+                    Radio(
+                      value: true,
+                      groupValue: parkingIncluded,
+                      onChanged: (value) {
+                        setState(() {
+                          parkingIncluded = value ?? false;
+                        });
+                      },
                     ),
-                    Wrap(
-                      spacing: 20,
-                      children: parkingTypes.map((type) {
-                        return ChoiceChip(
-                          label: Text(type),
-                          selected: parkingType == type,
-                          onSelected: (selected) {
-                            setState(() {
-                              parkingType = selected ? type : '';
-                            });
-                          },
-                        );
-                      }).toList(),
+                    Text('Included'),
+                    SizedBox(width: 20),
+                    Radio(
+                      value: false,
+                      groupValue: parkingIncluded,
+                      onChanged: (value) {
+                        setState(() {
+                          parkingIncluded = value ?? false;
+                        });
+                      },
                     ),
-                    SizedBox(height: 20),
-                    Text(
-                      'No of Car Parking :',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: ColorUtils.primaryColor(),
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: ColorUtils.primaryColor(),
-                          ),
-                          child: IconButton(
-                            icon: Icon(Icons.remove),
-                            color: Colors.white, // White icon color
-                            onPressed: removeCarParking,
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          '$carParkingCount',
-                          style: TextStyle(fontSize: 16), // Adjust font size as needed
-                        ),
-                        SizedBox(width: 10),
-                        Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: ColorUtils.primaryColor(),
-                          ),
-                          child: IconButton(
-                            icon: Icon(Icons.add),
-                            color: Colors.white, // White icon color
-                            onPressed: addCarParking,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    SizedBox(height: 20),
-                    Text(
-                      'No of Bike Parking :',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: ColorUtils.primaryColor(),
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: ColorUtils.primaryColor(),
-                          ),
-                          child: IconButton(
-                            icon: Icon(Icons.remove),
-                            color: Colors.white, // White icon color
-                            onPressed: removeBikeParking,
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          '$bikeParkingCount',
-                          style: TextStyle(fontSize: 16), // Adjust font size as needed
-                        ),
-                        SizedBox(width: 10),
-                        Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: ColorUtils.primaryColor(),
-                          ),
-                          child: IconButton(
-                            icon: Icon(Icons.add),
-                            color: Colors.white, // White icon color
-                            onPressed: addBikeParking,
-                          ),
-                        ),
-                      ],
-                    ),
-
+                    Text('Not Included'),
                   ],
                 ),
+                if (parkingIncluded)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 20),
+                      Text(
+                        'Parking Type :',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: ColorUtils.primaryColor(),
+                        ),
+                      ),
+                      Wrap(
+                        spacing: 20,
+                        children: parkingTypes.map((type) {
+                          return ChoiceChip(
+                            label: Text(type),
+                            selected: parkingType == type,
+                            onSelected: (selected) {
+                              setState(() {
+                                parkingType = selected ? type : '';
+                              });
+                            },
+                          );
+                        }).toList(),
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        'No of Car Parking :',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: ColorUtils.primaryColor(),
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color:ColorUtils.primaryColor(), // Red background color for -
+                            ),
+                            child: IconButton(
+                              icon: Icon(Icons.remove),
+                              color: Colors.white, // White icon color
+                              onPressed: removeCarParking,
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            '$carParkingCount',
+                            style: TextStyle(fontSize: 16), // Adjust font size as needed
+                          ),
+                          SizedBox(width: 10),
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: ColorUtils.primaryColor(), // Green background color for +
+                            ),
+                            child: IconButton(
+                              icon: Icon(Icons.add),
+                              color: Colors.white, // White icon color
+                              onPressed: addCarParking,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(height: 20),
+                      Text(
+                        'No of Bike Parking :',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: ColorUtils.primaryColor(),
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color:ColorUtils.primaryColor(), // Red background color for -
+                            ),
+                            child: IconButton(
+                              icon: Icon(Icons.remove),
+                              color: Colors.white, // White icon color
+                              onPressed: removeBikeParking,
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            '$bikeParkingCount',
+                            style: TextStyle(fontSize: 16), // Adjust font size as needed
+                          ),
+                          SizedBox(width: 10),
+                          Container(
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: ColorUtils.primaryColor(), // Green background color for +
+                            ),
+                            child: IconButton(
+                              icon: Icon(Icons.add),
+                              color: Colors.white, // White icon color
+                              onPressed: addBikeParking,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                    ],
+                  ),
+              ],
               SizedBox(height: 20),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.horizontal(left: Radius.circular(20)),
-                      color: ColorUtils.primaryColor(),
-                    ),
-                    child: SizedBox(
-                      width: 163, // Adjust width as needed
-                      height: 50, // Adjust height as needed
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:   ColorUtils.primaryColor(), // Text color (white)
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.arrow_back, color: Colors.white), // Replace with your desired back icon
-                            SizedBox(width: 8), // Adjust the spacing between icon and text as needed
-                            Text(
-                              "Back",
-                              style: TextStyle(color: Colors.white), // Text color (white)
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.horizontal(left: Radius.circular(20)),
+                        color: ColorUtils.primaryColor(), // Your custom background color (teal)
+                      ),
+                      child: SizedBox(
+                        width: 164, // Adjust width as needed
+                        height: 50, // Adjust height as needed
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorUtils.primaryColor(), // Text color (white)
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
                             ),
-                          ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.arrow_back, color: Colors.white), // Replace with your desired back icon
+                              SizedBox(width: 8), // Adjust the spacing between icon and text as needed
+                              Text(
+                                "Back",
+                                style: TextStyle(color: Colors.white), // Text color (white)
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.horizontal(right: Radius.circular(20)), // Adjust the border radius as needed
-                      color: ColorUtils.primaryColor(),
-                    ),
-                    child: SizedBox(
-                      width: 163, // Adjust width as needed
-                      height: 50, // Adjust height as needed
+                  SizedBox(width: 1),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.horizontal(right: Radius.circular(20)), // Adjust the border radius as needed
+                        color: ColorUtils.primaryColor(), // Your custom background color (teal)
+                      ),
+                      child: SizedBox(
+                        width: 163, // Adjust width as needed
+                        height: 50, // Adjust height as needed
 
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PropertyMediaScreen(
-                                subcategory: widget.subcategory,
-                                propertyType: widget.propertyType,
-                                propertyOwnerController: widget.propertyOwnerController,
-                                propertyTitleController: widget.propertyTitleController,
-                                descriptionController: widget.descriptionController,
-                                yearsOld: widget.yearsOld,
-                                furnishingTypeController: widget.furnishingTypeController,
-                                totalAreaController: widget.totalAreaController,
-                                dimensionController:widget.dimensionController,
-                                undividedController:widget.undividedController,
-                                superbuildupController:widget.superbuildupController,
-                                roadController:widget.roadController,
-                                isCornerArea:widget.isCornerArea,
-                                paymentType: widget.paymentType,
-                                possessionType: widget.possessionType,
-                                areaType: widget.areaType,
-                                propertyFacing: widget.propertyFacing,
-                                paymentRows: widget.paymentRows,
-                                balconyController:widget.balconyController,
-                                bathroomController:widget.bathroomController,
-                                floorNumberController: widget.floorNumberController,
-                                floorType: widget.floorType,
-                                doorNoController: widget.doorNoController,
-                                addressLineController: widget.addressLineController,
-                                areaController: widget.areaController,
-                                locationaddress: widget.locationAddress,
-                                selectedlocation:widget.selectedLocation,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_validateFields()) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      PropertyMediaScreen(category: widget.category,
+                                        subcategory: widget.subcategory,
+                                        propertyType: widget.propertyType,
+                                        propertyOwnerController: widget.propertyOwnerController,
 
-                                landmarkController: widget.landmarkController,
-                                latitudeController: widget.latitudeController,
-                                longitudeController: widget.longitudeController,
-                                floorTypes: widget.floorTypes,
-                                amenities: amenities,
-                                nearbyPlaces: nearbyPlaces,
-                                parkingIncluded: parkingIncluded,
-                                parkingType: parkingType,
-                                carParkingCount: carParkingCount,
-                                bikeParkingCount: bikeParkingCount,
+                                        yearsOld: widget.yearsOld,
+                                        furnishingTypeController: widget.furnishingTypeController,
+                                        totalAreaController: widget.totalAreaController,
+                                        dimensionController: widget.dimensionController,
+                                        undividedController: widget.undividedController,
+                                        superbuildupController: widget.superbuildupController,
+                                        roadController: widget.roadController,
+                                        isCornerArea: widget.isCornerArea,
+                                        freshproperty:widget.freshproperty,
+                                        paymentType: widget.paymentType,
+                                        possessionType: widget.possessionType,
+                                        areaType: widget.areaType,
+                                        propertyFacing: widget.propertyFacing,
+                                        paymentRows: widget.paymentRows,
+                                        balconyController: widget.balconyController,
+                                        bathroomController: widget.bathroomController,
+                                        floorNumberController: widget.floorNumberController,
+                                        floorType: widget.floorType,
+                                        doorNoController: widget.doorNoController,
+                                        addressLineController: widget.addressLineController,
+                                        areaController: widget.areaController,
+                                        locationaddress: widget.locationAddress,
+                                        selectedlocation: widget.selectedLocation,
 
-                              ),
+                                        landmarkController: widget.landmarkController,
+                                        latitudeController: widget.latitudeController,
+                                        longitudeController: widget.longitudeController,
+                                        floorTypes: widget.floorTypes,
+                                        amenities: amenities,
+                                        nearbyPlaces: nearbyPlaces,
+                                        parkingIncluded: parkingIncluded,
+                                        parkingType: parkingType,
+                                        carParkingCount: carParkingCount,
+                                        bikeParkingCount: bikeParkingCount,
+
+                                      ),
+                                ),
+                              );
+                            }
+                          },
+
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorUtils.primaryColor(), // Background color
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
                             ),
-                          );
-                        },
-
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: ColorUtils.primaryColor(), // Background color
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                "Next ",
+                                style: TextStyle(color: Colors.white), // Text color (white)
+                              ),
+                              Icon(Icons.arrow_forward, color: Colors.white),
+                            ],
                           ),
                         ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              "Next ",
-                              style: TextStyle(color: Colors.white), // Text color (white)
-                            ),
-                            Icon(Icons.arrow_forward, color: Colors.white),
-                          ],
-                        ),
-                      ),
 
-                    ),),],
+                      ),),
+                  ),],
               ),
 
             ],
@@ -2173,13 +2555,12 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
   }
 }
 class PropertyMediaScreen extends StatefulWidget {
-
+  final String category;
   final String subcategory;
   final String propertyType;
 
   final TextEditingController propertyOwnerController;
-  final TextEditingController propertyTitleController;
-  final TextEditingController descriptionController;
+
   final int yearsOld;
   final TextEditingController furnishingTypeController;
   final TextEditingController totalAreaController;
@@ -2188,6 +2569,7 @@ class PropertyMediaScreen extends StatefulWidget {
   final TextEditingController superbuildupController;
   final TextEditingController roadController;
   final bool isCornerArea;
+  final bool freshproperty;
   final String paymentType;
   final String possessionType;
   final String areaType;
@@ -2214,12 +2596,11 @@ class PropertyMediaScreen extends StatefulWidget {
   final int bikeParkingCount;
 
   PropertyMediaScreen({
-
+    required this.category,
     required this.subcategory,
     required this.propertyType,
     required this.propertyOwnerController,
-    required this.propertyTitleController,
-    required this.descriptionController,
+
     required this.yearsOld,
     required this.furnishingTypeController,
     required this.totalAreaController,
@@ -2251,6 +2632,7 @@ class PropertyMediaScreen extends StatefulWidget {
     required this.bikeParkingCount,
     required this.locationaddress,
     required this.selectedlocation, required this.isCornerArea,
+    required this.freshproperty,
   });
 
   @override
@@ -2264,6 +2646,30 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
   Color customTeal = Color(0xFF8F00FF);
   bool isUploadingVideo = false; // Track video uploading state
   bool isSubmitting = false; // Track property submission state
+  bool _validateFields() {
+    List<String> missingFields = [];
+
+
+
+
+    if (widget.subcategory == 'Commercial Space' || widget.subcategory == 'Plot / Land'|| widget.subcategory == 'Villa / Independent House'|| widget.subcategory == 'Hostel/PG/Service Apartment' || widget.subcategory == 'Flat') {
+      if (propertyImages.isEmpty) {
+        missingFields.add("Please select image.");
+      }
+      if (uploadedVideos.isEmpty) {
+        missingFields.add("Please upload video.");
+      }
+    }
+    // Check if payment type is selected
+
+    if (missingFields.isNotEmpty) {
+      String message = "Please fill in the following fields:\n-${missingFields.join('\n-')}";
+      _showToast(message);
+      return false; // Validation failed
+    }
+
+    return true; // All validations passed
+  }
   void removePhoto(int index) {
     setState(() {
       propertyImages.removeAt(index);
@@ -2350,15 +2756,30 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
       uploadedVideos.removeAt(index);
     });
   }
-
+  void _showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.black54,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
   void _submitProperty() async {
+    if (!_validateFields()) {
+      return; // Stop if validation fails
+    }
+
     setState(() {
       isSubmitting = true; // Start submitting indicator
     });
 
     try {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
-      User? currentUser = FirebaseAuth.instance.currentUser; // Get the current logged-in user
+      User? currentUser = FirebaseAuth.instance
+          .currentUser; // Get the current logged-in user
       if (currentUser == null) {
         throw Exception('No user is logged in');
       }
@@ -2376,36 +2797,35 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
       }
 
       // Generate a new document reference with an auto-generated ID
-      DocumentReference propertyRef = await firestore.collection('propert').add({
-
+      DocumentReference propertyRef = await firestore.collection('propert')
+          .add({
+        'category': widget.category,
         'subcategory': widget.subcategory,
         'propertyType': widget.propertyType,
         'propertyOwner': widget.propertyOwnerController.text,
-        'propertyTitle': widget.propertyTitleController.text,
-        'description': widget.descriptionController.text,
         'yearsOld': widget.yearsOld,
         'furnishingType': widget.furnishingTypeController.text,
         'totalArea': widget.totalAreaController.text,
-        "dimension":widget.dimensionController.text,
-        "undividedshare":widget.undividedController.text,
-        "superbuildup" :widget.superbuildupController.text,
-        "roadController":widget.roadController.text,
-        "isCornerArea" :widget.isCornerArea,
-
-        'paymentType': widget.paymentType,
+        "dimension": widget.dimensionController.text,
+        "undividedshare": widget.undividedController.text,
+        "superbuildup": widget.superbuildupController.text,
+        "roadController": widget.roadController.text,
+        "isCornerArea": widget.isCornerArea,
+        "freshproperty":widget.freshproperty,
         'possessionType': widget.possessionType,
         'areaType': widget.areaType,
         'propertyFacing': widget.propertyFacing,
         'paymentRows': widget.paymentRows.map((row) => row.toMap()).toList(),
         'floorNumber': widget.floorNumberController.text,
-        'balcony':widget.balconyController.text,
-        'bathroom':widget.bathroomController.text,
+        'balcony': widget.balconyController.text,
+        'bathroom': widget.bathroomController.text,
         'floorType': widget.floorType,
         'doorNo': widget.doorNoController.text,
         'addressLine': widget.addressLineController.text,
         'area': widget.areaController.text,
         'locationaddress': widget.locationaddress,
-        'selectedlocation': widget.selectedlocation,
+        'createdAt': DateFormat('MMMM d, y \'at\' h:mm:ss a zzz').format(
+            DateTime.now()),
         'landmark': widget.landmarkController.text,
         'latitude': widget.latitudeController.text,
         'longitude': widget.longitudeController.text,
@@ -2418,7 +2838,8 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
         'PropertyImages': imageUrls,
         'videos': videoUrls,
         'uid': currentUserId,
-        "propertyId" : " ",
+        'featuredStatus': false,
+        "propertyId": " ",
         // Optionally add more fields as needed
       });
 
@@ -2438,6 +2859,7 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
         isSubmitting = false; // Stop submitting indicator on error
       });
     }
+
   }
 
 
@@ -2445,8 +2867,25 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
   Widget build(BuildContext context) {
     print('Building PropertyMediaScreen with ${propertyImages.length} images');
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Property Media Upload'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(60.0),
+        child: Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.6),
+                spreadRadius: 12,
+                blurRadius: 8,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
+          child: AppBar(
+            backgroundColor: ColorUtils.primaryColor(),
+            iconTheme: IconThemeData(color: Colors.white),
+            title: Text('Property Media Upload',style: TextStyle(color: Colors.white),),
+          ),
+        ),
       ),
       backgroundColor: Colors.white,
       body: Padding(
@@ -2530,7 +2969,7 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
                       style: TextStyle(color: Colors.white),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:   ColorUtils.primaryColor(),
+                      backgroundColor: ColorUtils.primaryColor(),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
@@ -2588,65 +3027,73 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.horizontal(left: Radius.circular(20)),
-                      color: ColorUtils.primaryColor(),
-                    ),
-                    child: SizedBox(
-                      width: 163,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:  ColorUtils.primaryColor(),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.arrow_back, color: Colors.white),
-                            SizedBox(width: 8),
-                            Text(
-                              "Back",
-                              style: TextStyle(color: Colors.white),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.horizontal(left: Radius.circular(20)),
+                        color: ColorUtils.primaryColor(),
+                      ),
+                      child: SizedBox(
+                        width: 163,
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorUtils.primaryColor(),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
                             ),
-                          ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.arrow_back, color: Colors.white),
+                              SizedBox(width: 8),
+                              Text(
+                                "Back",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.horizontal(right: Radius.circular(20)),
-                      color: ColorUtils.primaryColor(),
-                    ),
-                    child: SizedBox(
-                      width: 163,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: isSubmitting ? null : _submitProperty,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:  ColorUtils.primaryColor(),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
-                        child: isSubmitting
-                            ? CircularProgressIndicator() // Show loading indicator
-                            : Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              "Submit ",
-                              style: TextStyle(color: Colors.white),
+                  SizedBox(width: 1),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.horizontal(right: Radius.circular(20)),
+                        color: ColorUtils.primaryColor(),
+                      ),
+                      child: SizedBox(
+                        width: 163,
+                        height: 50,
+                        child: ElevatedButton(
+
+                          onPressed: isSubmitting ? null : _submitProperty,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorUtils.primaryColor(),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
                             ),
-                            Icon(Icons.verified, color: Colors.white),
-                          ],
+                          ),
+                          child: isSubmitting
+                              ? CircularProgressIndicator() // Show loading indicator
+                              : Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                "Submit ",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              Icon(Icons.verified, color: Colors.white),
+                            ],
+                          ),
                         ),
                       ),
                     ),

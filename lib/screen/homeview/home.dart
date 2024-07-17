@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:spaceships/colorcode.dart';
 import 'package:spaceships/jvproperty/Agents%20Corner.dart';
+import 'package:spaceships/jvproperty/addpropertyjvproperties.dart';
 import 'package:spaceships/jvproperty/jv%20properties.dart';
 import 'package:spaceships/jvproperty/propertyinventory.dart';
 import 'package:spaceships/jvproperty/propertyservices.dart';
@@ -454,7 +455,7 @@ bool featuredStatus = false;
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => AddPropert(),
+          builder: (context) => JvAddProperty(),
         ),
       );
     }
