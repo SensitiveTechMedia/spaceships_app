@@ -619,7 +619,7 @@ TextEditingController superbuildupController=TextEditingController();
 
       // Check if property owner or consultant is selected
       if (propertyOwnerController.text.isEmpty) {
-        missingFields.add(" Please select Property Owner or Consultant");
+        missingFields.add("Property Owner or Consultant");
       }
 
       // Check required fields based on category and subcategory
@@ -691,9 +691,12 @@ TextEditingController superbuildupController=TextEditingController();
           missingFields.add("please enter Undivided Share");
         }
       }
-      // Check if payment type is selected
       if (paymentRows.isEmpty) {
-        missingFields.add("please enter Payment Type");
+        missingFields.add("Please enter Payment Type");
+      }
+
+      if (paymentType.isEmpty) {
+        missingFields.add("Please select Payment Type");
       }
 
       if (missingFields.isNotEmpty) {

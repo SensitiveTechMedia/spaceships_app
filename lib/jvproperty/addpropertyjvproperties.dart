@@ -30,6 +30,7 @@ class _CategoryScreenState extends State<JvAddProperty> {
     "Commercial Space":["Commercial Shop","Independent Floor", "Shared Floor", "Independent Building",],
     "Hostel/PG/Service Apartment": ["Hostel","PG","Service Apartment", ],
   };
+  String category = "Sell";
   List<Map<String, dynamic>> subcategories = [];
 
   // Modify initState() method to include category information
@@ -342,7 +343,7 @@ class _CategoryScreenState extends State<JvAddProperty> {
                                   builder: (context) => PropertyDetailsScreen(
 
                                     subcategory: selectedSubcategory,
-                                    propertyType: selectedPropertyType, category: 'Sell',
+                                    propertyType: selectedPropertyType, category: category,
                                   ),
                                 ),
                               );

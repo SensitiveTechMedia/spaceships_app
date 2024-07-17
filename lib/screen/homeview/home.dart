@@ -766,10 +766,7 @@ bool featuredStatus = false;
                         children: [
                           Expanded(
                             child: ElevatedButton(
-
                                 onPressed: _navigateToSellCategory,
-
-
                               style: ElevatedButton.styleFrom(
                                 foregroundColor: Colors.white, backgroundColor: customTeal,
                                 shape: RoundedRectangleBorder(
