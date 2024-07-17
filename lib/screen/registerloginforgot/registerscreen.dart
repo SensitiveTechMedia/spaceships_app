@@ -1,0 +1,300 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:gradient_borders/input_borders/gradient_outline_input_border.dart';
+import '../../Common/Constants/color_helper.dart';
+import '../../Common/Constants/string_helper.dart';
+import '../../Common/Widgets/elevated_button.dart';
+import '../../Controller/register_controller.dart';
+
+class RegisterScreen extends GetView<RegisterController> {
+  const RegisterScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 20),
+              RichText(
+                text: TextSpan(
+                  text: "Create your",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontSize: 30,
+                  ),
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: " account",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: ColorCodes.teal,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
+              Text(
+                "Welcome to Space Ships",
+                style: TextStyle(
+                  color: ColorCodes.teal.withOpacity(0.9),
+                ),
+              ),
+              SizedBox(height: 20),
+              GetBuilder<RegisterController>(
+                builder: (controller) {
+                  return TextFormField(
+                    onChanged: (value) => controller.onChangeValueName(value),
+                    controller: controller.nameController,
+                    decoration: InputDecoration(
+                      fillColor: Theme.of(context).colorScheme.onPrimary,
+                      filled: true,
+                      prefixIcon: controller.nameController.text.isEmpty
+                          ? Icon(Icons.person)
+                          : null,
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      focusedBorder: GradientOutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        gradient: LinearGradient(
+                          colors: [ColorCodes.green, ColorCodes.teal],
+                        ),
+                        width: 2,
+                      ),
+                      hintText: "Full Name",
+                    ),
+                  );
+                },
+              ),
+              SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: GetBuilder<RegisterController>(
+                      builder: (controller) {
+                        return TextFormField(
+                          onChanged: (value) => controller.onChangeValueEmail(value),
+                          controller: controller.emailController,
+                          decoration: InputDecoration(
+                            fillColor: Theme.of(context).colorScheme.onPrimary,
+                            filled: true,
+                            prefixIcon: controller.emailController.text.isEmpty
+                                ? Icon(Icons.mail)
+                                : null,
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                bottomLeft: Radius.circular(10),
+                              ),
+                            ),
+                            focusedBorder: GradientOutlineInputBorder(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                bottomLeft: Radius.circular(10),
+                              ),
+                              gradient: LinearGradient(
+                                colors: [ColorCodes.green, ColorCodes.teal],
+                              ),
+                              width: 2,
+                            ),
+                            hintText: "Enter Email",
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: controller.isSendOTPEnabled.value ? controller.sendOTP : null,
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(10),
+                          bottomRight: Radius.circular(10),
+                        ),
+                      ),
+                    ),
+                    child: controller.isSendOTPEnabled.value
+                        ? Text('Send OTP')
+                        : Text('Wait ${controller.timerSeconds.value} seconds'),
+                  ),
+                ],
+              ),
+
+
+
+              SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: Stack(
+                      children: [
+                        GetBuilder<RegisterController>(
+                          builder: (controller) {
+                            return TextFormField(
+                              onChanged: (value) => controller.onChangeValueOTP(value),
+                              controller: controller.otpController,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [LengthLimitingTextInputFormatter(6)],
+                              decoration: InputDecoration(
+                                fillColor: Theme.of(context).colorScheme.onPrimary,
+                                filled: true,
+                                prefixIcon: controller.otpController.text.isEmpty
+                                    ? Icon(Icons.design_services)
+                                    : null,
+                                suffixIcon: ElevatedButton(
+                                  onPressed: () {
+                                    controller.validateOTP();
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(0),
+                                        bottomLeft: Radius.circular(0),
+                                        bottomRight: Radius.circular(9),
+                                        topRight: Radius.circular(9), // Adjust this value as needed
+                                      ),
+                                    ),
+                                  ),
+                                  child: Text("Verify OTP"),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide.none,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                focusedBorder: GradientOutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  gradient: LinearGradient(
+                                    colors: [ColorCodes.green, ColorCodes.teal],
+                                  ),
+                                  width: 2,
+                                ),
+                                hintText: "Enter OTP",
+                              ),
+                              enabled: !controller.isOTPVerified.value,
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width:2),
+                ],
+              ),
+
+
+
+
+
+              SizedBox(height: 20),
+              GetBuilder<RegisterController>(
+                builder: (controller) {
+                  return TextFormField(
+                    controller: controller.passwordController,
+                    onChanged: (value) => controller.onChangeValuePassword(value),
+                    obscureText: !controller.visibility.value,
+                    decoration: InputDecoration(
+                      fillColor: Theme.of(context).colorScheme.onPrimary,
+                      filled: true,
+                      prefixIcon: controller.passwordController.text.isEmpty
+                          ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "assets/images/LockIcon.png",
+                            color: Theme.of(context).colorScheme.primary,
+                            height: 22,
+                          ),
+                        ],
+                      )
+                          : null,
+                      suffixIcon: controller.passwordController.text.isNotEmpty
+                          ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "assets/images/LockIcon.png",
+                            color: Theme.of(context).colorScheme.primary,
+                            height: 22,
+                          ),
+                        ],
+                      )
+                          : null,
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      focusedBorder: GradientOutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        gradient: LinearGradient(colors: [ColorCodes.green, ColorCodes.teal]),
+                        width: 2,
+                      ),
+                      hintText: StringRes.password,
+                    ),
+                  );
+                },
+              ),
+              SizedBox(height: 20),
+              Row(
+                children: [
+                  Text(
+                    "Terms of service",
+                    style: TextStyle(
+                      color: ColorCodes.teal,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                  Spacer(),
+                  GetBuilder<RegisterController>(
+                    builder: (controller) {
+                      return GestureDetector(
+                        onTap: () => controller.visibilityToggle(),
+                        child: Text(
+                          controller.visibility.value ? "Hide password" : "Show password",
+                          style: TextStyle(
+                            color: ColorCodes.teal,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+              SizedBox(height: 15),
+              GetBuilder<RegisterController>(
+                builder: (controller) {
+                  return getElevatedButtonLarge(
+                    onTap: () async {
+                      await controller.saveUserData(context);
+                    },
+                    string: "Register",
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
