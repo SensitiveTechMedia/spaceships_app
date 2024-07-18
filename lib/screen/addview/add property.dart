@@ -2878,11 +2878,11 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
         for (String videoUrl in uploadedVideos) {
           videoUrls.add(videoUrl);
         }
-
+        String categoryToStore = widget.category == 'Sell' ? 'Buy' : widget.category;
         // Generate a new document reference with an auto-generated ID
         DocumentReference propertyRef = await firestore.collection('propert')
             .add({
-          'category': widget.category,
+          'category': categoryToStore,
           'subcategory': widget.subcategory,
           'propertyType': widget.propertyType,
           'propertyOwner': widget.propertyOwnerController.text,

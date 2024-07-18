@@ -71,6 +71,7 @@ class _TestScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   String areaType = "";
 bool featuredStatus = false;
   int _selecteIndex = 0;
+  int _selecteddIndex = 0;
   int _seletedIndex = 0;
   String floorNumber = "";
   String balcony = "";
@@ -783,7 +784,7 @@ bool featuredStatus = false;
                               onPressed: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 0)),
+                                  MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 0,selecteddIndex: 1,)),
                                 );
                               },
                               style: ElevatedButton.styleFrom(
@@ -801,7 +802,7 @@ bool featuredStatus = false;
                               onPressed: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 0)),
+                                  MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 0,selecteddIndex: 2,)),
                                 );
                               },
                               style: ElevatedButton.styleFrom(
@@ -819,7 +820,7 @@ bool featuredStatus = false;
                               onPressed: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 0)),
+                                  MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 0, selecteddIndex: 3,)),
                                 );
                               },
                               style: ElevatedButton.styleFrom(
@@ -942,43 +943,43 @@ bool featuredStatus = false;
                             case 0:
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 1)),
+                                MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 1,selecteddIndex: 0,)),
                               );
                               break;
                             case 1:
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 2)),
+                                MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 2,selecteddIndex: 0,)),
                               );
                               break;
                             case 2:
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 3)),
+                                MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 3,selecteddIndex: 0,)),
                               );
                               break;
                             case 3:
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 4)),
+                                MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 4,selecteddIndex: 0,)),
                               );
                               break;
                             case 4:
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 5)),
+                                MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 5,selecteddIndex: 0,)),
                               );
                               break;
                             case 5:
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 6)),
+                                MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 6,selecteddIndex: 0,)),
                               );
                               break;
                             case 6:
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 7)),
+                                MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 7,selecteddIndex: 0,)),
                               );
                               break;
 

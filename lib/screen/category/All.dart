@@ -4,8 +4,10 @@ import 'package:spaceships/colorcode.dart';
 import 'package:spaceships/screen/videoplayer.dart';
 
 class AllPage extends StatefulWidget {
+  final int selecteddIndex;
   final int selecteIndex;
-  AllPage({required this.selecteIndex});
+
+  AllPage({required this.selecteIndex,required this.selecteddIndex,});
   @override
   _AllPageState createState() => _AllPageState();
 }
@@ -13,7 +15,7 @@ class _AllPageState extends State<AllPage> {
   Color customTeal = Color(0xFF8F00FF);
   int _selecteIndex = 0;
   int _selecteddIndex = 0;
-  final List<String> category = ["Buy", "Rent", "Lease", "All"];
+  final List<String> category = ["All","Buy", "Rent", "Lease", ];
   List<String> cate = ["All", "Flat", "Villa", "Plot", "Commercial", "Hostel"];
   List<String> cateNames = [];
   @override
@@ -21,7 +23,7 @@ class _AllPageState extends State<AllPage> {
     super.initState();
     // Initialize your state with the selected index passed from the constructor
     _selecteIndex = widget.selecteIndex;
-
+    _selecteddIndex = widget.selecteddIndex;
     cateNames = List.generate(cate.length, (index) {
       if (index == 0) {
         return "All Properties";
@@ -190,13 +192,23 @@ class _AllPageState extends State<AllPage> {
           ),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: (_selecteddIndex == 0)
+              stream: (_selecteddIndex == 0 && _selecteIndex == 0)
                   ? FirebaseFirestore.instance.collection('propert').snapshots()
+                  : (_selecteddIndex == 0)
+                  ? FirebaseFirestore.instance
+                  .collection('propert')
+                  .where('subcategory', isEqualTo: cateNames[_selecteIndex])
+                  .snapshots()
+                  : (_selecteIndex == 0)
+                  ? FirebaseFirestore.instance
+                  .collection('propert')
+                  .where('category', isEqualTo: category[_selecteddIndex])
+                  .snapshots()
+
                   : FirebaseFirestore.instance
                   .collection('propert')
-
                   .where('category', isEqualTo: category[_selecteddIndex])
-
+                  .where('subcategory', isEqualTo: cateNames[_selecteIndex])
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
@@ -219,9 +231,6 @@ class _AllPageState extends State<AllPage> {
                       contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
                       onTap: () {
                         // print(wishlistItem);
-
-
-
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -404,222 +413,215 @@ class _AllPageState extends State<AllPage> {
               },
             ),
           ),
-          Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: (_selecteIndex == 0)
-                  ? FirebaseFirestore.instance.collection('propert').snapshots()
-                  : FirebaseFirestore.instance
-                  .collection('propert')
-
-                  .where('subcategory', isEqualTo: cateNames[_selecteIndex])
-
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                if (snapshot.data!.docs.isEmpty) {
-                  return Center(child: Text('No properties found'));
-                }
-
-                return ListView.builder(
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context, index) {
-                    var doc = snapshot.data!.docs[index];
-                    var wishlistItem = doc.data() as Map<String, dynamic>;
-
-                    return ListTile(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
-                      onTap: () {
-                        // print(wishlistItem);
-
-
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>Vieage(
-                              videoUrl: List<String>.from(wishlistItem['videos'] ?? []),
-                             landmark: wishlistItem['landmark'] ?? '',
-                              latitude: wishlistItem[' latitude'] ?? '',
-                             locationAddress: wishlistItem['locationaddress'] ?? '',
-                              longitude: wishlistItem[' longitude'] ?? '',
-                              nearbyPlaces: List<Map<String, dynamic>>.from(wishlistItem['nearbyPlaces'] ?? []),
-                              parkingIncluded: wishlistItem['parkingIncluded'] ?? '',
-                      //         paymentType: wishlistItem[' paymentType'] ?? '',
-                             parkingType: wishlistItem['parkingType'] ?? '',
-                              possessionType: wishlistItem['possessionType'] ?? '',
-                        postUid: wishlistItem['propertyId'] ?? '',
-                              propertyFacing: List<String>.from(wishlistItem['propertyFacing'] ?? []),
-                              paymentRows: List<Map<String, dynamic>>.from(wishlistItem['paymentRows'] ?? []),
-                             roadController: wishlistItem['roadController'] ?? '',
-                              superbuildup: wishlistItem['superbuildup'] ?? '',
-                              totalArea: wishlistItem['totalArea'] ?? '',
-                      undividedShare: wishlistItem['undividedshare'] ?? '',
-                             yearsOld: wishlistItem['yearsOld'] ?? '',
-                              category: wishlistItem['category'] ?? '',
-                             subcategory: wishlistItem['subcategory'] ?? '',
-                              propertyType: wishlistItem['propertyType'] ?? '',
-                            propertyOwner: wishlistItem['propertyOwner'] ?? '',
-                              addressLine: wishlistItem['addressLine'] ?? '',
-                            amenities: List<String>.from(wishlistItem['amenities'] ?? []),
-                              area: wishlistItem['area'] ?? '',
-                              bikeParkingCount: wishlistItem['bikeParkingCount'] ?? '',
-                             carParkingCount: wishlistItem['carParkingCount'] ?? '',
-                              dimension: wishlistItem['dimension']??'',
-                              doorNo: wishlistItem['doorNo']??'',
-
-                              floorType: wishlistItem['floorType']??'',
-                             floorNumber: wishlistItem['floorNumber']??'',
-                              furnishingType: wishlistItem['furnishingType']??'',
-                              isCornerArea: wishlistItem['isCornerArea'] ?? false,
-                              featuredStatus: wishlistItem['featuredStatus'] ?? false,
-                      //
-                              balcony: wishlistItem['balcony'] ?? '',
-                              bathroom: wishlistItem['bathroom'] ?? '',
-
-                              propertyId: wishlistItem['propertyId'] ?? '',
-                              imageUrl: wishlistItem['PropertyImages'] ?? '',
-                            ),
-                          ),
-                        );
-                      },
-                      title: Container(
-                        height: 150,
-                        decoration: BoxDecoration(
-                          color: Color.fromRGBO(160, 161, 164, 1000),
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                          child: Row(
-                            children: [
-                              SizedBox(width: 8),
-                              Stack(
-                                children: [
-                                  Container(
-                                    width: 140,
-                                    height: 140,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      color: Colors.grey,
-                                      image: wishlistItem['PropertyImages'] != null &&
-                                          wishlistItem['PropertyImages']
-                                              .isNotEmpty
-                                          ? DecorationImage(
-                                        image: NetworkImage(wishlistItem[
-                                        'PropertyImages'][0]),
-                                        fit: BoxFit.cover,
-                                      )
-                                          : null,
-                                    ),
-                                    child: wishlistItem['PropertyImages'] ==
-                                        null ||
-                                        wishlistItem['PropertyImages']
-                                            .isEmpty
-                                        ? Icon(Icons.image, size: 50)
-                                        : null,
-                                  ),
-                                  // Positioned(
-                                  //   left: 8,
-                                  //   top: 8,
-                                  //   child: Container(
-                                  //     width: 30,
-                                  //     height: 30,
-                                  //     decoration: BoxDecoration(
-                                  //       color: Colors.lightGreen,
-                                  //       shape: BoxShape.circle,
-                                  //     ),
-                                  //     child: IconButton(
-                                  //       padding: EdgeInsets.zero,
-                                  //       iconSize: 1,
-                                  //       color: Colors.white,
-                                  //       onPressed: () {},
-                                  //       icon: SvgPicture.asset(
-                                  //         'assets/images/HeartIcon.svg',
-                                  //         color: Colors.white,
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                  Positioned(
-                                    bottom: 8,
-                                    left: 10,
-                                    child: Container(
-                                      width: 85,
-                                      height: 20,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        color: Color.fromRGBO(43, 84, 112, 55),
-                                      ),
-                                      child: Text(
-                                        wishlistItem['subcategory'] ??
-                                            'cat',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(width: 15.0),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(height: 20),
-                                    FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        wishlistItem['propertyType'] ??
-                                            'No Title',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: ColorUtils.primaryColor(),
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: 4.0),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.location_on,
-                                          color: ColorUtils.primaryColor(),
-                                          size: 20,
-                                        ),
-                                        FittedBox(
-                                          fit: BoxFit.scaleDown,
-                                          child: Text(
-                                            wishlistItem['area'] ??
-                                                'No Address',
-                                            style: TextStyle(
-                                              color: ColorUtils.primaryColor(),
-                                              fontSize: 10,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 20.0),
-
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                    );
-                  },
-                );
-              },
-            ),
-          ),
+          // Expanded(
+          //   child: StreamBuilder<QuerySnapshot>(
+          //     stream: (_selecteIndex == 0)
+          //         ? FirebaseFirestore.instance.collection('propert').snapshots()
+          //         : FirebaseFirestore.instance
+          //         .collection('propert')
+          //         .where('subcategory', isEqualTo: cateNames[_selecteIndex])
+          //         .snapshots(),
+          //     builder: (context, snapshot) {
+          //       if (snapshot.hasError) {
+          //         return Center(child: Text('Error: ${snapshot.error}'));
+          //       }
+          //       if (snapshot.connectionState == ConnectionState.waiting) {
+          //         return Center(child: CircularProgressIndicator());
+          //       }
+          //       if (snapshot.data!.docs.isEmpty) {
+          //         return Center(child: Text('No properties found'));
+          //       }
+          //       return ListView.builder(
+          //         itemCount: snapshot.data!.docs.length,
+          //         itemBuilder: (context, index) {
+          //           var doc = snapshot.data!.docs[index];
+          //           var wishlistItem = doc.data() as Map<String, dynamic>;
+          //           return ListTile(
+          //             contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+          //             onTap: () {
+          //               // print(wishlistItem);
+          //               Navigator.push(
+          //                 context,
+          //                 MaterialPageRoute(
+          //                   builder: (context) =>Vieage(
+          //                     videoUrl: List<String>.from(wishlistItem['videos'] ?? []),
+          //                    landmark: wishlistItem['landmark'] ?? '',
+          //                     latitude: wishlistItem[' latitude'] ?? '',
+          //                    locationAddress: wishlistItem['locationaddress'] ?? '',
+          //                     longitude: wishlistItem[' longitude'] ?? '',
+          //                     nearbyPlaces: List<Map<String, dynamic>>.from(wishlistItem['nearbyPlaces'] ?? []),
+          //                     parkingIncluded: wishlistItem['parkingIncluded'] ?? '',
+          //             //         paymentType: wishlistItem[' paymentType'] ?? '',
+          //                    parkingType: wishlistItem['parkingType'] ?? '',
+          //                     possessionType: wishlistItem['possessionType'] ?? '',
+          //               postUid: wishlistItem['propertyId'] ?? '',
+          //                     propertyFacing: List<String>.from(wishlistItem['propertyFacing'] ?? []),
+          //                     paymentRows: List<Map<String, dynamic>>.from(wishlistItem['paymentRows'] ?? []),
+          //                    roadController: wishlistItem['roadController'] ?? '',
+          //                     superbuildup: wishlistItem['superbuildup'] ?? '',
+          //                     totalArea: wishlistItem['totalArea'] ?? '',
+          //             undividedShare: wishlistItem['undividedshare'] ?? '',
+          //                    yearsOld: wishlistItem['yearsOld'] ?? '',
+          //                     category: wishlistItem['category'] ?? '',
+          //                    subcategory: wishlistItem['subcategory'] ?? '',
+          //                     propertyType: wishlistItem['propertyType'] ?? '',
+          //                   propertyOwner: wishlistItem['propertyOwner'] ?? '',
+          //                     addressLine: wishlistItem['addressLine'] ?? '',
+          //                   amenities: List<String>.from(wishlistItem['amenities'] ?? []),
+          //                     area: wishlistItem['area'] ?? '',
+          //                     bikeParkingCount: wishlistItem['bikeParkingCount'] ?? '',
+          //                    carParkingCount: wishlistItem['carParkingCount'] ?? '',
+          //                     dimension: wishlistItem['dimension']??'',
+          //                     doorNo: wishlistItem['doorNo']??'',
+          //
+          //                     floorType: wishlistItem['floorType']??'',
+          //                    floorNumber: wishlistItem['floorNumber']??'',
+          //                     furnishingType: wishlistItem['furnishingType']??'',
+          //                     isCornerArea: wishlistItem['isCornerArea'] ?? false,
+          //                     featuredStatus: wishlistItem['featuredStatus'] ?? false,
+          //             //
+          //                     balcony: wishlistItem['balcony'] ?? '',
+          //                     bathroom: wishlistItem['bathroom'] ?? '',
+          //
+          //                     propertyId: wishlistItem['propertyId'] ?? '',
+          //                     imageUrl: wishlistItem['PropertyImages'] ?? '',
+          //                   ),
+          //                 ),
+          //               );
+          //             },
+          //             title: Container(
+          //               height: 150,
+          //               decoration: BoxDecoration(
+          //                 color: Color.fromRGBO(160, 161, 164, 1000),
+          //                 borderRadius: BorderRadius.circular(30.0),
+          //               ),
+          //                 child: Row(
+          //                   children: [
+          //                     SizedBox(width: 8),
+          //                     Stack(
+          //                       children: [
+          //                         Container(
+          //                           width: 140,
+          //                           height: 140,
+          //                           decoration: BoxDecoration(
+          //                             borderRadius: BorderRadius.circular(20.0),
+          //                             color: Colors.grey,
+          //                             image: wishlistItem['PropertyImages'] != null &&
+          //                                 wishlistItem['PropertyImages']
+          //                                     .isNotEmpty
+          //                                 ? DecorationImage(
+          //                               image: NetworkImage(wishlistItem[
+          //                               'PropertyImages'][0]),
+          //                               fit: BoxFit.cover,
+          //                             )
+          //                                 : null,
+          //                           ),
+          //                           child: wishlistItem['PropertyImages'] ==
+          //                               null ||
+          //                               wishlistItem['PropertyImages']
+          //                                   .isEmpty
+          //                               ? Icon(Icons.image, size: 50)
+          //                               : null,
+          //                         ),
+          //                         // Positioned(
+          //                         //   left: 8,
+          //                         //   top: 8,
+          //                         //   child: Container(
+          //                         //     width: 30,
+          //                         //     height: 30,
+          //                         //     decoration: BoxDecoration(
+          //                         //       color: Colors.lightGreen,
+          //                         //       shape: BoxShape.circle,
+          //                         //     ),
+          //                         //     child: IconButton(
+          //                         //       padding: EdgeInsets.zero,
+          //                         //       iconSize: 1,
+          //                         //       color: Colors.white,
+          //                         //       onPressed: () {},
+          //                         //       icon: SvgPicture.asset(
+          //                         //         'assets/images/HeartIcon.svg',
+          //                         //         color: Colors.white,
+          //                         //       ),
+          //                         //     ),
+          //                         //   ),
+          //                         // ),
+          //                         Positioned(
+          //                           bottom: 8,
+          //                           left: 10,
+          //                           child: Container(
+          //                             width: 85,
+          //                             height: 20,
+          //                             decoration: BoxDecoration(
+          //                               borderRadius: BorderRadius.circular(5),
+          //                               color: Color.fromRGBO(43, 84, 112, 55),
+          //                             ),
+          //                             child: Text(
+          //                               wishlistItem['subcategory'] ??
+          //                                   'cat',
+          //                               style: TextStyle(
+          //                                 color: Colors.white,
+          //                                 fontSize: 14,
+          //                               ),
+          //                             ),
+          //                           ),
+          //                         ),
+          //                       ],
+          //                     ),
+          //                     SizedBox(width: 15.0),
+          //                     Expanded(
+          //                       child: Column(
+          //                         crossAxisAlignment:
+          //                         CrossAxisAlignment.start,
+          //                         children: [
+          //                           SizedBox(height: 20),
+          //                           FittedBox(
+          //                             fit: BoxFit.scaleDown,
+          //                             child: Text(
+          //                               wishlistItem['propertyType'] ??
+          //                                   'No Title',
+          //                               style: TextStyle(
+          //                                 fontWeight: FontWeight.bold,
+          //                                 color: ColorUtils.primaryColor(),
+          //                                 fontSize: 20,
+          //                               ),
+          //                             ),
+          //                           ),
+          //                           SizedBox(height: 4.0),
+          //                           Row(
+          //                             children: [
+          //                               Icon(
+          //                                 Icons.location_on,
+          //                                 color: ColorUtils.primaryColor(),
+          //                                 size: 20,
+          //                               ),
+          //                               FittedBox(
+          //                                 fit: BoxFit.scaleDown,
+          //                                 child: Text(
+          //                                   wishlistItem['area'] ??
+          //                                       'No Address',
+          //                                   style: TextStyle(
+          //                                     color: ColorUtils.primaryColor(),
+          //                                     fontSize: 10,
+          //                                   ),
+          //                                 ),
+          //                               ),
+          //                             ],
+          //                           ),
+          //                           SizedBox(height: 20.0),
+          //
+          //                         ],
+          //                       ),
+          //                     ),
+          //                   ],
+          //                 ),
+          //               ),
+          //
+          //           );
+          //         },
+          //       );
+          //     },
+          //   ),
+          // ),
         ],
       ),
     );
