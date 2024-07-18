@@ -1,41 +1,45 @@
-import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:spaceships/colorcode.dart';
-import 'package:spaceships/screen/homeview/propertyview.dart';
 import 'package:spaceships/screen/videoplayer.dart';
-import 'package:uni_links/uni_links.dart';
 
 class AllPage extends StatefulWidget {
   final int selecteIndex;
-
   AllPage({required this.selecteIndex});
-
   @override
   _AllPageState createState() => _AllPageState();
 }
-
-
 class _AllPageState extends State<AllPage> {
-
   Color customTeal = Color(0xFF8F00FF);
   int _selecteIndex = 0;
+  int _selecteddIndex = 0;
+  final List<String> category = ["Buy", "Rent", "Lease", "All"];
   List<String> cate = ["All", "Flat", "Villa", "Plot", "Commercial", "Hostel"];
+  List<String> cateNames = [];
   @override
   void initState() {
     super.initState();
     // Initialize your state with the selected index passed from the constructor
     _selecteIndex = widget.selecteIndex;
+
+    cateNames = List.generate(cate.length, (index) {
+      if (index == 0) {
+        return "All Properties";
+      } else if (index == 1) {
+        return "Flat";
+      } else if (index == 2) {
+        return "Villa / Independent House";
+      } else if (index == 3) {
+        return "Plot / Land";
+      } else if (index == 4) {
+        return "Commercial Space";
+      } else if (index == 5) {
+        return "Hostel/PG/Service Apartment";
+      } else {
+        return "";
+      }
+    });
   }
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,80 +80,50 @@ class _AllPageState extends State<AllPage> {
       body: Column(
         children: [
           SizedBox(height: 20,),
-          Padding(
-            padding: const EdgeInsets.only(left: 10.0, right: 10),
-            child: Container(
-              height: 40,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-              ),
+
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Padding(
+              padding: EdgeInsets.all(5.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Adjust spacing evenly
-                children: [
-                // Adjust the width between buttons
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Add your onPressed logic for 'Buy' button
-                      },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white, backgroundColor:    ColorUtils.primaryColor(),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
+                children: List.generate(category.length, (index) {
+                  bool isSelected = index == _selecteddIndex;
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _selecteddIndex = index;
+                      });
+                    },
+                    child: Container(
+                      width: 80,
+                      height: 40,
+                      margin: EdgeInsets.symmetric(horizontal: 4),
+                      decoration: BoxDecoration(
+                        color: isSelected ? customTeal : Colors.white,
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(
+                          color: ColorUtils.primaryColor(),
+                          width: 1,
                         ),
                       ),
-                      child: Text('Buy',style: TextStyle(fontSize: 12),),
-                    ),
-                  ),
-                  SizedBox(width: 5), // Adjust the width between buttons
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Add your onPressed logic for 'Rent' button
-                      },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white, backgroundColor:     ColorUtils.primaryColor(),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                      ),
-                      child: Text('Rent',style: TextStyle(fontSize: 12),),
-                    ),
-                  ),
-                  SizedBox(width: 5), // Adjust the width between buttons
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Add your onPressed logic for 'Lease' button
-                      },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white, backgroundColor: ColorUtils.primaryColor(),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                      ),
-                      child: Text('Lease',style: TextStyle(fontSize: 12),),
-                    ),
-                  ),
-                  SizedBox(width: 5),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
 
-                        // Add your onPressed logic for 'Sell' button
-                      },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white, backgroundColor:    ColorUtils.primaryColor(),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
+                          SizedBox(height: 5),
+                          Text(
+                            category[index],
+                            style: TextStyle(
+                              fontSize: 12,fontWeight: FontWeight.bold,
+                              color: isSelected ? Colors.white : customTeal,
+                            ),
+                          ),
+                        ],
                       ),
-                      child: Text('All',style: TextStyle(fontSize: 12),),
                     ),
-                  ),
-
-                ],
+                  );
+                }),
               ),
             ),
           ),
@@ -214,14 +188,231 @@ class _AllPageState extends State<AllPage> {
               ),
             ),
           ),
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: (_selecteddIndex == 0)
+                  ? FirebaseFirestore.instance.collection('propert').snapshots()
+                  : FirebaseFirestore.instance
+                  .collection('propert')
 
+                  .where('category', isEqualTo: category[_selecteddIndex])
+
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.data!.docs.isEmpty) {
+                  return Center(child: Text('No properties found'));
+                }
+
+                return ListView.builder(
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    var doc = snapshot.data!.docs[index];
+                    var wishlistItem = doc.data() as Map<String, dynamic>;
+
+                    return ListTile(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+                      onTap: () {
+                        // print(wishlistItem);
+
+
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>Vieage(
+                              videoUrl: List<String>.from(wishlistItem['videos'] ?? []),
+                              landmark: wishlistItem['landmark'] ?? '',
+                              latitude: wishlistItem[' latitude'] ?? '',
+                              locationAddress: wishlistItem['locationaddress'] ?? '',
+                              longitude: wishlistItem[' longitude'] ?? '',
+                              nearbyPlaces: List<Map<String, dynamic>>.from(wishlistItem['nearbyPlaces'] ?? []),
+                              parkingIncluded: wishlistItem['parkingIncluded'] ?? '',
+                              //         paymentType: wishlistItem[' paymentType'] ?? '',
+                              parkingType: wishlistItem['parkingType'] ?? '',
+                              possessionType: wishlistItem['possessionType'] ?? '',
+                              postUid: wishlistItem['propertyId'] ?? '',
+                              propertyFacing: List<String>.from(wishlistItem['propertyFacing'] ?? []),
+                              paymentRows: List<Map<String, dynamic>>.from(wishlistItem['paymentRows'] ?? []),
+                              roadController: wishlistItem['roadController'] ?? '',
+                              superbuildup: wishlistItem['superbuildup'] ?? '',
+                              totalArea: wishlistItem['totalArea'] ?? '',
+                              undividedShare: wishlistItem['undividedshare'] ?? '',
+                              yearsOld: wishlistItem['yearsOld'] ?? '',
+                              category: wishlistItem['category'] ?? '',
+                              subcategory: wishlistItem['subcategory'] ?? '',
+                              propertyType: wishlistItem['propertyType'] ?? '',
+                              propertyOwner: wishlistItem['propertyOwner'] ?? '',
+                              addressLine: wishlistItem['addressLine'] ?? '',
+                              amenities: List<String>.from(wishlistItem['amenities'] ?? []),
+                              area: wishlistItem['area'] ?? '',
+                              bikeParkingCount: wishlistItem['bikeParkingCount'] ?? '',
+                              carParkingCount: wishlistItem['carParkingCount'] ?? '',
+                              dimension: wishlistItem['dimension']??'',
+                              doorNo: wishlistItem['doorNo']??'',
+
+                              floorType: wishlistItem['floorType']??'',
+                              floorNumber: wishlistItem['floorNumber']??'',
+                              furnishingType: wishlistItem['furnishingType']??'',
+                              isCornerArea: wishlistItem['isCornerArea'] ?? false,
+                              featuredStatus: wishlistItem['featuredStatus'] ?? false,
+                              //
+                              balcony: wishlistItem['balcony'] ?? '',
+                              bathroom: wishlistItem['bathroom'] ?? '',
+
+                              propertyId: wishlistItem['propertyId'] ?? '',
+                              imageUrl: wishlistItem['PropertyImages'] ?? '',
+                            ),
+                          ),
+                        );
+                      },
+                      title: Container(
+                        height: 150,
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(160, 161, 164, 1000),
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                        child: Row(
+                          children: [
+                            SizedBox(width: 8),
+                            Stack(
+                              children: [
+                                Container(
+                                  width: 140,
+                                  height: 140,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    color: Colors.grey,
+                                    image: wishlistItem['PropertyImages'] != null &&
+                                        wishlistItem['PropertyImages']
+                                            .isNotEmpty
+                                        ? DecorationImage(
+                                      image: NetworkImage(wishlistItem[
+                                      'PropertyImages'][0]),
+                                      fit: BoxFit.cover,
+                                    )
+                                        : null,
+                                  ),
+                                  child: wishlistItem['PropertyImages'] ==
+                                      null ||
+                                      wishlistItem['PropertyImages']
+                                          .isEmpty
+                                      ? Icon(Icons.image, size: 50)
+                                      : null,
+                                ),
+                                // Positioned(
+                                //   left: 8,
+                                //   top: 8,
+                                //   child: Container(
+                                //     width: 30,
+                                //     height: 30,
+                                //     decoration: BoxDecoration(
+                                //       color: Colors.lightGreen,
+                                //       shape: BoxShape.circle,
+                                //     ),
+                                //     child: IconButton(
+                                //       padding: EdgeInsets.zero,
+                                //       iconSize: 1,
+                                //       color: Colors.white,
+                                //       onPressed: () {},
+                                //       icon: SvgPicture.asset(
+                                //         'assets/images/HeartIcon.svg',
+                                //         color: Colors.white,
+                                //       ),
+                                //     ),
+                                //   ),
+                                // ),
+                                Positioned(
+                                  bottom: 8,
+                                  left: 10,
+                                  child: Container(
+                                    width: 85,
+                                    height: 20,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: Color.fromRGBO(43, 84, 112, 55),
+                                    ),
+                                    child: Text(
+                                      wishlistItem['subcategory'] ??
+                                          'cat',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(width: 15.0),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 20),
+                                  FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      wishlistItem['propertyType'] ??
+                                          'No Title',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: ColorUtils.primaryColor(),
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 4.0),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.location_on,
+                                        color: ColorUtils.primaryColor(),
+                                        size: 20,
+                                      ),
+                                      FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          wishlistItem['area'] ??
+                                              'No Address',
+                                          style: TextStyle(
+                                            color: ColorUtils.primaryColor(),
+                                            fontSize: 10,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 20.0),
+
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                    );
+                  },
+                );
+              },
+            ),
+          ),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: (_selecteIndex == 0)
                   ? FirebaseFirestore.instance.collection('propert').snapshots()
                   : FirebaseFirestore.instance
                   .collection('propert')
-                  .where('subcategory', isEqualTo: cate[_selecteIndex])
+
+                  .where('subcategory', isEqualTo: cateNames[_selecteIndex])
+
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {

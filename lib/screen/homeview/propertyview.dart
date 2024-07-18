@@ -887,74 +887,68 @@ class _PropertyViewState extends State<PropertyView> {
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
-
-
-
-
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                  'assets/images/balcony.svg', // Path to bathroom SVG asset
-                                  width: 24,
-                                  height: 24,
-                                  color: Color.fromRGBO(139, 200, 62, 1.0),
-                                ),
-                                SizedBox(width: 8),
-                                Text(
-                                  "${widget.balcony} Balcony",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black,
+                        if (widget.subcategory != 'Plot / Land' &&
+                            widget.subcategory != 'Commercial Space' &&
+                            widget.subcategory != 'Hostel/PG/Service Apartment') ...[
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(
+                                    'assets/images/balcony.svg', // Path to balcony SVG asset
+                                    width: 24,
+                                    height: 24,
+                                    color: Color.fromRGBO(139, 200, 62, 1.0),
                                   ),
-                                ),
-                              ],
+                                  SizedBox(width: 8),
+                                  Text(
+                                    "${widget.balcony} Balcony",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-
-
-
-
-
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                  'assets/images/BathRoom.svg', // Path to bathroom SVG asset
-                                  width: 24,
-                                  height: 24,
-                                  color: Color.fromRGBO(139, 200, 62, 1.0),
-                                ),
-                                SizedBox(width: 8),
-                                Text(
-                                  "${widget.bathroom} Bathroom",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black,
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(
+                                    'assets/images/BathRoom.svg', // Path to bathroom SVG asset
+                                    width: 24,
+                                    height: 24,
+                                    color: Color.fromRGBO(139, 200, 62, 1.0),
                                   ),
-                                ),
-                              ],
+                                  SizedBox(width: 8),
+                                  Text(
+                                    "${widget.bathroom} Bathroom",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-
+                        ],
                       ],
                     ),
                   ),
@@ -1074,6 +1068,8 @@ class _PropertyViewState extends State<PropertyView> {
                           ),
                         ],
                         rows: [
+                      if (widget.subcategory != 'Plot / Land' &&
+                      widget.subcategory != 'Hostel/PG/Service Apartment') ...[
                           DataRow(
                             cells: [
                               DataCell(
@@ -1090,7 +1086,7 @@ class _PropertyViewState extends State<PropertyView> {
                               ),
                             ],
                           ),
-
+],
                           DataRow(
                             cells: [
                               DataCell(
