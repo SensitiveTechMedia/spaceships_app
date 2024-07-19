@@ -68,12 +68,14 @@ class _PropertyViewState extends State<PropertyView> {
   late VideoPlayerController _controller;
    late Future<List<Map<String, dynamic>>> paymentRowsFuture;
   late Future<List<Map<String, dynamic>>> nearbyplaces;
+
   StreamSubscription? _sub;
   User? user = FirebaseAuth.instance.currentUser; // Get the current user
 
   GoogleMapController? _mapController;
   int _currentIndex = 0;
   List<String> amenities = [];
+  List<String> propertyFacing = [];
   List<String> propertyImages = [];
   DateTime? selectedDate;
   String formattedDate = '';
@@ -112,6 +114,8 @@ class _PropertyViewState extends State<PropertyView> {
     fetchpropertyimges();
     fetchUserDetails();
     _initUniLinks();
+    amenties();
+    fetchData();
   }
   void dispose() {
     _sub?.cancel();
@@ -122,6 +126,14 @@ class _PropertyViewState extends State<PropertyView> {
     DocumentSnapshot doc = await FirebaseFirestore.instance.collection('propert').doc(widget.propertyId).get();
     return List<Map<String, dynamic>>.from(doc['nearbyPlaces']);
   }
+  Future<List<Map<String, dynamic>>> amenties() async {
+    DocumentSnapshot doc = await FirebaseFirestore.instance
+        .collection('propert')
+        .doc(widget.propertyId)
+        .get();
+    return List<Map<String, dynamic>>.from(doc['amenities']);
+  }
+
 
   Future<List<Map<String, dynamic>>> fetchPaymentRows() async {
     DocumentSnapshot doc = await FirebaseFirestore.instance.collection('propert').doc(widget.propertyId).get();
@@ -290,7 +302,21 @@ class _PropertyViewState extends State<PropertyView> {
 
   }
 
+  void fetchData() async {
+    // Fetch data from Firebase Firestore
+    final docSnapshot = await FirebaseFirestore.instance
+        .collection('propert')
+        .doc(widget.propertyId)
+        .get();
 
+    if (docSnapshot.exists) {
+      setState(() {
+        amenities = List<String>.from(docSnapshot.data()?['amenities'] ?? []);
+        propertyFacing = List<String>.from(docSnapshot.data()?['propertyFacing'] ?? []);
+
+      });
+    }
+  }
   void fetchLocation() async {
     try {
       Position position = await Geolocator.getCurrentPosition(
@@ -384,9 +410,6 @@ class _PropertyViewState extends State<PropertyView> {
       ));
     }
   }
-
-
-
   Future<void> _launchWhatsApp() async {
     String message = "Checkout this property: ${widget.category}\nAddress: ${widget.addressLine}\nArea: ${widget.area}\n${PropertyDeepLink.generateDeepLink(widget.propertyId)}";
     try {
@@ -396,7 +419,6 @@ class _PropertyViewState extends State<PropertyView> {
       print('Error sharing: $e');
     }
   }
-
   Future<void> _checkIfInWishlist() async {
     if (user != null) {
       var querySnapshot = await FirebaseFirestore.instance
@@ -410,7 +432,6 @@ class _PropertyViewState extends State<PropertyView> {
       });
     }
   }
-
   Future<void> saveToWishlist() async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
@@ -490,7 +511,6 @@ class _PropertyViewState extends State<PropertyView> {
       print('Error saving to wishlist: $e'); // Handle error saving to wishlist
     }
   }
-
   @override
   Widget build(BuildContext context) {
 
@@ -1006,41 +1026,45 @@ class _PropertyViewState extends State<PropertyView> {
                         color: widget.customTeal,),),
                     ),
                   ),
+
+
+
+
+
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
                         // Displaying fetched amenities
 
-    Padding(
-    padding: EdgeInsets.only(left: 10),
-    child: Wrap(
-    spacing: 10, // Adjust as needed for spacing between containers
-    children: List.generate(widget.amenities.length, (index) {
-    return Container(
-    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-    decoration: BoxDecoration(
-    color: widget.customTeal,
-    borderRadius: BorderRadius.circular(10.0),
-    ),
-    child: Center(
-    child: Text(
-    widget.amenities[index],
-    style: TextStyle(
-    fontSize: 16,
-    color: Colors.white,
-    ),
-    ),
-    ),
-    );
-    }),
-    ),
-    ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Wrap(
+                            spacing: 10, // Adjust as needed for spacing between containers
+                            children: List.generate(amenities.length, (index) {
+                              return Container(
+                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                decoration: BoxDecoration(
+                                  color: widget.customTeal,
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    widget.amenities[index],
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                          ),
+                        ),
 
-    ],
+                      ],
                     ),
                   ),
-
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Container(
@@ -1057,7 +1081,7 @@ class _PropertyViewState extends State<PropertyView> {
                           DataColumn(
                             label: Text(
                               'Other Details',
-                              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: widget.customTeal),
+                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: widget.customTeal),
                             ),
                           ),
                           DataColumn(
@@ -1087,6 +1111,8 @@ class _PropertyViewState extends State<PropertyView> {
                             ],
                           ),
 ],
+    if (widget.subcategory != 'Flat'  &&widget.category != 'Rent' && widget.category != 'Lease' &&
+    widget.subcategory != 'Hostel/PG/Service Apartment') ...[
                           DataRow(
                             cells: [
                               DataCell(
@@ -1103,8 +1129,10 @@ class _PropertyViewState extends State<PropertyView> {
                               ),
                             ],
                           ),
-
-
+],
+    if (widget.subcategory != 'Plot / Land' &&widget.subcategory != 'Villa / Independent House' &&
+ widget.category != 'Rent' && widget.category != 'Lease' &&
+    widget.subcategory != 'Hostel/PG/Service Apartment') ...[
                           DataRow(
                             cells: [
                               DataCell(
@@ -1121,6 +1149,9 @@ class _PropertyViewState extends State<PropertyView> {
                               ),
                             ],
                           ),
+                          ],
+    if (  widget.category != 'Rent' && widget.category != 'Lease' &&
+    widget.subcategory != 'Hostel/PG/Service Apartment') ...[
                           DataRow(
                             cells: [
                               DataCell(
@@ -1137,6 +1168,9 @@ class _PropertyViewState extends State<PropertyView> {
                               ),
                             ],
                           ),
+    ],
+    if (widget.subcategory != 'Plot / Land' && widget.subcategory != 'Commercial Space' &&
+    widget.subcategory != 'Hostel/PG/Service Apartment') ...[
                           DataRow(
                             cells: [
                               DataCell(
@@ -1153,6 +1187,10 @@ class _PropertyViewState extends State<PropertyView> {
                               ),
                             ],
                           ),
+                          ],
+                            if (widget.subcategory != 'Plot / Land' &&widget.subcategory != 'Villa / Independent House' &&
+    widget.subcategory != 'Commercial Space' &&widget.category != 'Rent' && widget.category != 'Lease' &&
+    widget.subcategory != 'Hostel/PG/Service Apartment') ...[
                           DataRow(
                             cells: [
                               DataCell(
@@ -1169,6 +1207,8 @@ class _PropertyViewState extends State<PropertyView> {
                               ),
                             ],
                           ),
+                          ],      if (widget.subcategory != 'Flat'  &&widget.category != 'Rent' && widget.category != 'Lease' &&
+    widget.subcategory != 'Hostel/PG/Service Apartment') ...[
                           DataRow(
                             cells: [
                               DataCell(
@@ -1185,6 +1225,10 @@ class _PropertyViewState extends State<PropertyView> {
                               ),
                             ],
                           ),
+                          ],
+    if (widget.subcategory != 'Flat' && widget.subcategory != 'Villa / Independent House' &&
+        widget.category != 'Lease' &&        widget.category != 'Rent' &&
+    widget.subcategory != 'Hostel/PG/Service Apartment') ...[
                           DataRow(
                             cells: [
                               DataCell(
@@ -1201,7 +1245,7 @@ class _PropertyViewState extends State<PropertyView> {
                               ),
                             ],
                           ),
-
+],
                           DataRow(
                             cells: [
                               DataCell(
@@ -1218,7 +1262,8 @@ class _PropertyViewState extends State<PropertyView> {
                               ),
                             ],
                           ),
-
+    if (widget.subcategory != 'Plot / Land' &&
+    widget.subcategory != 'Hostel/PG/Service Apartment') ...[
                           DataRow(
                             cells: [
                               DataCell(
@@ -1228,13 +1273,34 @@ class _PropertyViewState extends State<PropertyView> {
                                 ),
                               ),
                               DataCell(
-                                Text(
-                                  "${widget.propertyFacing}",
-                                  style: TextStyle(fontSize: 16,  color: widget.customTeal),
+                                Container(
+                                  child: Row(
+                                    children: propertyFacing.map((facing) {
+                                      return Padding(
+                                        padding: EdgeInsets.all(10.0),
+                                        child: Container(
+
+
+                                          child: Center(
+                                            child: Text(
+                                              facing,
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                  color: widget.customTeal,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
                                 ),
                               ),
                             ],
                           ),
+    ],
+    if (widget.subcategory != 'Plot / Land' &&
+    widget.subcategory != 'Hostel/PG/Service Apartment') ...[
                           DataRow(
                             cells: [
                               DataCell(
@@ -1283,6 +1349,10 @@ class _PropertyViewState extends State<PropertyView> {
                               ),
                             ],
                           ),
+                                ],
+                                if (widget.subcategory != 'Plot / Land' && widget.category != 'Rent' &&
+                                    widget.category != 'Lease' &&
+    widget.subcategory != 'Hostel/PG/Service Apartment') ...[
                           DataRow(
                             cells: [
                               DataCell(
@@ -1299,6 +1369,10 @@ class _PropertyViewState extends State<PropertyView> {
 
                             ],
                           ),
+                          ],
+    if (widget.subcategory != 'Villa / Independent House' &&
+    widget.subcategory != 'Plot / Land' &&
+    widget.subcategory != 'Hostel/PG/Service Apartment') ...[
                           DataRow(
                             cells: [
                               DataCell(
@@ -1329,6 +1403,7 @@ class _PropertyViewState extends State<PropertyView> {
                               ),
                             ],
                           ),
+                          ],
                           DataRow(
                             cells: [
                               DataCell(

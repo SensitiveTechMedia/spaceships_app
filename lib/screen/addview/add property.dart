@@ -67,7 +67,7 @@ class _HomeState extends State<AddPropert> with TickerProviderStateMixin {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'How do you want to post this property?',
+                'Post FREE Property Ad',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

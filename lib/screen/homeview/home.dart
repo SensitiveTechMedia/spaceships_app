@@ -17,12 +17,16 @@ import 'package:spaceships/screen/Notification.dart';
 import 'package:spaceships/screen/addview/add%20property.dart';
 import 'package:spaceships/screen/addview/viewproperty.dart';
 import 'package:spaceships/screen/category/All.dart';
+import 'package:spaceships/screen/filter.dart';
+import 'package:spaceships/screen/helpsupport.dart';
+import 'package:spaceships/screen/homeview/featuredproperties.dart';
 
 import 'package:spaceships/screen/profileedit/profile%20page.dart';
 import 'package:spaceships/screen/registerloginforgot/loginoption.dart';
 import 'package:spaceships/screen/search%20screen.dart';
 
 import 'package:spaceships/screen/wishlistfilter/whislist%20screen.dart';
+import '../a.dart';
 import 'propertyview.dart';
 class HomeScreen extends StatefulWidget {
   final String username;
@@ -883,12 +887,12 @@ bool featuredStatus = false;
                                 IconButton(
                                   icon: Icon(Icons.tune,    color: ColorUtils.primaryColor(),),
                                   onPressed: () {
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(builder: (context) => FilterScreen(
-                                    //     onApplyFilters: applyFilters,
-                                    //   )),
-                                    // );
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => Screen(onApplyFilters: (Map<String, dynamic> filters) {  },
+
+                                      )),
+                                    );
                                   },
                                 ),
                                 SizedBox(width: width * 0.02),
@@ -1216,11 +1220,19 @@ SizedBox(
                       style: TextStyle(   color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
                     ),
 
-                    Padding(
-                      padding: const EdgeInsets.only(left: 84.0),
-                      child: Text(
-                        "View All ",
-                        style: TextStyle(   color: ColorUtils.primaryColor(),),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Featured()),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 84.0),
+                        child: Text(
+                          "View All ",
+                          style: TextStyle(   color: ColorUtils.primaryColor(),),
+                        ),
                       ),
                     ),
                     Padding(
@@ -1663,42 +1675,48 @@ SizedBox(
                     bottomRight: Radius.circular(15),
                   ),
                 ),
-                child: Text(
-                  category == 'Sell' ? 'buy' : category,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 23,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                child: Row(
+                  children: [
+                    Text(
+                      category == 'Sell' ? 'buy' : category,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(width: 3,),
+                    Text(
+                      propertyType,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
                 ),
               ),
             ),
-            Positioned(
-              top: 15,
-              left: 50,
-              right: 0,
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 2, horizontal: 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(0),
-                    bottomRight: Radius.circular(15),
-                  ),
-                ),
-                child: Text(
-                  propertyType,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 23,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ),
+            // Positioned(
+            //   top: 15,
+            //   left: 60,
+            //   right: 0,
+            //   child: Container(
+            //     padding: EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+            //     decoration: BoxDecoration(
+            //       borderRadius: BorderRadius.only(
+            //         bottomLeft: Radius.circular(0),
+            //         bottomRight: Radius.circular(15),
+            //       ),
+            //     ),
+            //     child:
+            //   ),
+            // ),
             // Text
             Positioned(
               bottom: 0,
@@ -1867,40 +1885,47 @@ SizedBox(
                 MaterialPageRoute(builder: (context) => Propertyservices()),
               );
             }, isBold: true),
-            _buildDrawerItem(Icons.support_agent_outlined, 'Agents Corner', () {
+            // _buildDrawerItem(Icons.support_agent_outlined, 'Agents Corner', () {
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(builder: (context) => Agentcorner()),
+            //   );
+            // }, isBold: true),
+            // _buildDrawerItem(Icons.real_estate_agent_outlined, 'Rental Helicopters', () {
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(builder: (context) => Propertyservices()),
+            //   );
+            // }, isBold: true),
+            // _buildDrawerItem(Icons.real_estate_agent_outlined, '5 Star Villas', () {
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(builder: (context) => Propertyservices()),
+            //   );
+            // }, isBold: true),
+            // _buildDrawerItem(Icons.real_estate_agent_outlined, 'Event Halls', () {
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(builder: (context) => Propertyservices()),
+            //   );
+            // }, isBold: true),
+            // _buildDrawerItem(Icons.real_estate_agent_outlined, 'Daily Rentals', () {
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(builder: (context) => Propertyservices()),
+            //   );
+            // }, isBold: true),
+
+            _buildDrawerItem(Icons.help, 'Help & Support',isBold: true, () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Agentcorner()),
+                MaterialPageRoute(builder: (context) => SupportScreen()),
               );
-            }, isBold: true),
-            _buildDrawerItem(Icons.real_estate_agent_outlined, 'Rental Helicopters', () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Propertyservices()),
-              );
-            }, isBold: true),
-            _buildDrawerItem(Icons.real_estate_agent_outlined, '5 Star Villas', () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Propertyservices()),
-              );
-            }, isBold: true),
-            _buildDrawerItem(Icons.real_estate_agent_outlined, 'Event Halls', () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Propertyservices()),
-              );
-            }, isBold: true),
-            _buildDrawerItem(Icons.real_estate_agent_outlined, 'Daily Rentals', () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Propertyservices()),
-              );
-            }, isBold: true),
-            _buildDrawerItem(Icons.help, 'Help & Support',isBold: true, () {}),
+            }),
             _buildDrawerItem(Icons.logout, 'Logout',isBold: true, () {
               _showLogoutBottomSheet(context);
             }),
+            SizedBox(height: 280,),
             Container(
               color: ColorUtils.primaryColor(),
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 11),

@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:spaceships/colorcode.dart';
+import 'package:spaceships/screen/filter.dart';
 import 'package:spaceships/screen/homeview/home.dart';
 import 'package:spaceships/screen/profileedit/profile%20page.dart';
 import 'package:spaceships/screen/search%20screen.dart';
@@ -82,8 +83,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) =>  Tune(
-                  onApplyFilters: applyFilters,
+                MaterialPageRoute(builder: (context) => Screen(onApplyFilters: (Map<String, dynamic> filters) {  },
 
                 )),
               );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:spaceships/colorcode.dart';
+import 'package:spaceships/screen/filter.dart';
 import 'package:spaceships/screen/videoplayer.dart';
 
 class AllPage extends StatefulWidget {
@@ -69,7 +70,12 @@ class _AllPageState extends State<AllPage> {
               IconButton(
                 icon: Icon(Icons.tune),
                 onPressed: () {
-                  // Define your action here
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Screen(onApplyFilters: (Map<String, dynamic> filters) {  },
+
+                    )),
+                  );
                   print('Icon button pressed');
                 },
               ),
