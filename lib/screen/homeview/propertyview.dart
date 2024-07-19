@@ -514,53 +514,83 @@ class _PropertyViewState extends State<PropertyView> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
+    return Scaffold(backgroundColor: Colors.white.withOpacity(1),
         body: CustomScrollView(
         slivers: <Widget>[
-          // SliverAppBar(
-          //   backgroundColor: widget.customTeal,
-          //   pinned: true,
-          //   leadingWidth: 70,
-          //   leading: Padding(
-          //     padding: EdgeInsets.only(left: 17.0), // Adjust the left padding as needed
-          //     child: GestureDetector(
-          //       onTap: () {
-          //         Navigator.pop(context);
-          //       },
-          //       child: Center(
-          //         child: CircleAvatar(
-          //           radius: 23,
-          //           backgroundColor: Colors.white,
-          //           child: Icon(
-          //             Icons.arrow_back_ios,
-          //             size: 30,
-          //             color: Colors.black,
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          //   title:Padding(
-          //     padding: const EdgeInsets.only(right: 14.0),
-          //     child: Text(
-          //         widget.propertyname,
-          //         style: TextStyle(
-          //           color: Colors.white,
-          //           fontSize: 24,
-          //           fontWeight: FontWeight.bold,
-          //         ),
-          //
-          //     ),
-          //
-          //   ),
-          //
-          //
-          //   actions: [
-          //     Container(
-          //       child: Text(""),
-          //     ),
-          //   ],
-          // ),
+          SliverAppBar(
+            backgroundColor: Colors.transparent,
+            // backgroundColor: widget.customTeal,
+            pinned: true,
+            leadingWidth: 70,
+            leading: Padding(
+              padding: EdgeInsets.only(left: 17.0), // Adjust the left padding as needed
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2), // Adjust the shadow color and opacity
+                          spreadRadius: 2,
+                          blurRadius: 6,
+                          offset: Offset(0, 3), // Change offset to your preference
+                        ),
+                      ],
+                    ),
+                    child: CircleAvatar(
+                      radius: 23,
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        Icons.arrow_back_ios,
+                        size: 30,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            title:Padding(
+              padding: const EdgeInsets.only(right: 14.0),
+              child: Text(
+                  widget.subcategory,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+
+              ),
+
+            ),
+
+
+            actions: [
+              Container(
+                child: CircleAvatar(
+                  radius: 25,
+                  backgroundColor: isInWishlist ? Colors.red : Colors.green,
+                  child: IconButton(
+                    onPressed: () {
+                      saveToWishlist();
+                    },
+                    icon: SvgPicture.asset(
+                      'assets/images/HeartIcon.svg',
+                      width: 24,
+                      height: 24,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 25,)
+            ],
+          ),
 
 
           SliverToBoxAdapter(
@@ -568,7 +598,8 @@ class _PropertyViewState extends State<PropertyView> {
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  SizedBox(height: 30),
+                  SizedBox(height: 10),
+                  // SizedBox(height: 30),
                   Stack(
                     children: [
 
@@ -692,24 +723,24 @@ class _PropertyViewState extends State<PropertyView> {
                           ),
                         ),
                       ),
-                      Positioned(
-                        top: 10,
-                        left: 20,
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: CircleAvatar(
-                            radius: 25,
-                            backgroundColor: Colors.white,
-                            child: Icon(
-                              Icons.arrow_back_ios,
-                              size: 25,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      ),
+                      // Positioned(
+                      //   top: 10,
+                      //   left: 20,
+                      //   child: GestureDetector(
+                      //     onTap: () {
+                      //       Navigator.pop(context);
+                      //     },
+                      //     child: CircleAvatar(
+                      //       radius: 25,
+                      //       backgroundColor: Colors.white,
+                      //       child: Icon(
+                      //         Icons.arrow_back_ios,
+                      //         size: 25,
+                      //         color: Colors.black,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       Positioned(
                         top: 10,
                         right: 16,
@@ -732,21 +763,21 @@ class _PropertyViewState extends State<PropertyView> {
                             //
                             // ),
                             SizedBox(width: 25),
-                            CircleAvatar(
-                              radius: 25,
-                              backgroundColor: isInWishlist ? Colors.red : Colors.green,
-                              child: IconButton(
-                                onPressed: () {
-                                  saveToWishlist();
-                                },
-                                icon: SvgPicture.asset(
-                                  'assets/images/HeartIcon.svg',
-                                  width: 24,
-                                  height: 24,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
+                            // CircleAvatar(
+                            //   radius: 25,
+                            //   backgroundColor: isInWishlist ? Colors.red : Colors.green,
+                            //   child: IconButton(
+                            //     onPressed: () {
+                            //       saveToWishlist();
+                            //     },
+                            //     icon: SvgPicture.asset(
+                            //       'assets/images/HeartIcon.svg',
+                            //       width: 24,
+                            //       height: 24,
+                            //       color: Colors.white,
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),

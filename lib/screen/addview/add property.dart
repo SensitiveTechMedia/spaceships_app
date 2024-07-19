@@ -52,7 +52,7 @@ class _HomeState extends State<AddPropert> with TickerProviderStateMixin {
           child: AppBar(
             backgroundColor:  ColorUtils.primaryColor(), // Example app bar background color
             title: Text(
-              "Add Property",
+              "Post FREE Property Ad",
               style: TextStyle(color: Colors.white),
             ),
             iconTheme: IconThemeData(color: Colors.white),
@@ -67,7 +67,7 @@ class _HomeState extends State<AddPropert> with TickerProviderStateMixin {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Post FREE Property Ad',
+                'How do you want to post this property?',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -236,7 +236,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
               ),
               SizedBox(height: 20),
               if (_selectedSubcategoryIndex != -1 &&
-                  subcategories[_selectedSubcategoryIndex]["name"] == "Flat") // Show text field only when "Flat" is selected
+                  subcategories[_selectedSubcategoryIndex]["name"] == "Flat"
+
+              ) // Show text field only when "Flat" is selected
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -1002,98 +1004,98 @@ TextEditingController superbuildupController=TextEditingController();
               ),
               SizedBox(height: 20),
     if (yearsolddata) ...[
-      Text("Is this Fresh property?", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),)),
-      Row(
-        children: [
-          Radio(
-            value: true,
-            groupValue: freshproperty,
-            onChanged: (value) {
-              setState(() {
-                freshproperty = value!;
-              });
-            },
-          ),
-          Text('Yes'),
-          Radio(
-            value: false,
-            groupValue: freshproperty,
-            onChanged: (value) {
-              setState(() {
-                freshproperty = value!;
-              });
-            },
-          ),
-          Text('No'),
-        ],
-      ),
-
-
-      Text(
-                'Years old* :',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: ColorUtils.primaryColor(),
-                ),
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: ColorUtils.primaryColor(), // Replace with your desired background color
-                    ),
-                    child: IconButton(
-                      icon: Icon(Icons.remove,color: Colors.white,),iconSize: 20,
-                      onPressed: () {
-                        setState(() {
-                          if (yearsOld > 0) {
-                            yearsOld--;
-                          }
-                        });
-                      },
-                      // Icon color
-                    ),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    '$yearsOld',
-                    style: TextStyle(
-                      fontSize: 18,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color:ColorUtils.primaryColor(), // Replace with your desired background color
-                    ),
-                    child: IconButton(
-                      icon: Icon(Icons.add,color: Colors.white,),
-                      onPressed: () {
-                        setState(() {
-                          yearsOld++;
-                        });
-                      },
-                      color: Colors.black, // Icon color
-                    ),
-                  )
-
-                ],
-              ),
-
-              SizedBox(height: 20),
+    Text(
+    "Is this a fresh property?",
+    style: TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+      color: ColorUtils.primaryColor(), // Replace with ColorUtils.primaryColor() if you have a custom color utility
+    ),
+    ),
+    Row(
+    children: [
+    Radio(
+    value: true,
+    groupValue: freshproperty,
+    onChanged: (value) {
+    setState(() {
+      freshproperty = value!;
+    });
+    },
+    ),
+    Text('Yes'),
+    Radio(
+    value: false,
+    groupValue: freshproperty,
+    onChanged: (value) {
+    setState(() {
+      freshproperty = value!;
+    });
+    },
+    ),
+    Text('No'),
     ],
+    ),
+    SizedBox(height: 10),
+    if (!freshproperty) ...[
+    Text(
+    'Years old*:',
+    style: TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+      color: ColorUtils.primaryColor(), // Replace with ColorUtils.primaryColor() if you have a custom color utility
+    ),
+    ),
+    SizedBox(height: 10),
+    Row(
+    children: [
+    Container(
+    width: 40,
+    height: 40,
+    decoration: BoxDecoration(
+    shape: BoxShape.circle,
+      color: ColorUtils.primaryColor(), // Replace with your desired background color
+    ),
+    child: IconButton(
+    icon: Icon(Icons.remove, color: Colors.white),
+    iconSize: 20,
+    onPressed: () {
+    setState(() {
+    if (yearsOld > 0) {
+    yearsOld--;
+    }
+    });
+    },
+    ),
+    ),
+    SizedBox(width: 5),
+    Text(
+    '$yearsOld',
+    style: TextStyle(fontSize: 18),
+    ),
+    SizedBox(width: 5),
+    Container(
+    width: 40,
+    height: 40,
+    decoration: BoxDecoration(
+    shape: BoxShape.circle,
+      color: ColorUtils.primaryColor(), // Replace with your desired background color
+    ),
+    child: IconButton(
+    icon: Icon(Icons.add, color: Colors.white),
+    onPressed: () {
+    setState(() {
+    yearsOld++;
+    });
+    },
+    ),
+    ),
+    ],
+    ),
+    ] else
+    SizedBox.shrink(),
+    ],
+
     if (facingdata) ...[
               Text(
                 'Property Facing* :',

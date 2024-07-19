@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spaceships/colorcode.dart';
+import 'package:spaceships/screen/addview/add%20property.dart';
 import 'package:spaceships/screen/filter.dart';
+import 'package:spaceships/screen/search%20screen.dart';
 import 'package:spaceships/screen/videoplayer.dart';
 
 class AllPage extends StatefulWidget {
@@ -67,18 +70,69 @@ class _AllPageState extends State<AllPage> {
             ),
             iconTheme: IconThemeData(color: Colors.white),
             actions: [
-              IconButton(
-                icon: Icon(Icons.tune),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Screen(onApplyFilters: (Map<String, dynamic> filters) {  },
+              Padding(
+                padding: EdgeInsets.only(right: 10.0), // Adjust the value as needed
+                child: Padding(
+                  padding: EdgeInsets.all(0.0), // Adjust the margin size as needed
+                  child: CircleAvatar(
+                    radius: 18,
+                    backgroundColor: Colors.white,
+                    child: IconButton(
+                      icon: Icon(Icons.add, size: 20, color: ColorUtils.primaryColor()),
+                      onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AddPropert()
 
-                    )),
-                  );
-                  print('Icon button pressed');
-                },
+                        ),
+                      );
+                      },
+                    ),
+                  ),
+                ),
               ),
+              Padding(
+                padding: EdgeInsets.only(right: 10.0), // Adjust the value as needed
+                child: Padding(
+                  padding: EdgeInsets.all(0.0), // Adjust the margin size as needed
+                  child: CircleAvatar(
+                    radius: 18,
+                    backgroundColor: Colors.white,
+                    child: IconButton(
+                      icon: Icon(Icons.search, size: 20, color: ColorUtils.primaryColor()),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => SearchScreen()),
+                        );
+
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(right: 10.0), // Adjust the value as needed
+                child: Padding(
+                  padding: EdgeInsets.all(0.0), // Adjust the margin size as needed
+                  child: CircleAvatar(
+                    radius: 18,
+                    backgroundColor: Colors.white,
+                    child: IconButton(
+                      icon: Icon(Icons.tune, size: 20, color: ColorUtils.primaryColor()),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Screen(onApplyFilters: (Map<String, dynamic> filters) {  },
+
+                          )),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+
             ],
           ),
         ),
@@ -719,8 +773,79 @@ class Vieage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Property Details'),
+      appBar:  AppBar(
+        backgroundColor: Colors.transparent,
+        // backgroundColor: widget.customTeal,
+
+        leadingWidth: 70,
+        leading: Padding(
+          padding: EdgeInsets.only(left: 17.0), // Adjust the left padding as needed
+          child: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2), // Adjust the shadow color and opacity
+                      spreadRadius: 2,
+                      blurRadius: 6,
+                      offset: Offset(0, 3), // Change offset to your preference
+                    ),
+                  ],
+                ),
+                child: CircleAvatar(
+                  radius: 23,
+                  backgroundColor: Colors.white,
+                  child: Icon(
+                    Icons.arrow_back_ios,
+                    size: 30,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+
+        // title:Padding(
+        //   padding: const EdgeInsets.only(right: 14.0),
+        //   child: Text(
+        //     widget.subcategory,
+        //     style: TextStyle(
+        //       color: Colors.black,
+        //       fontSize: 24,
+        //       fontWeight: FontWeight.bold,
+        //     ),
+        //
+        //   ),
+        //
+        // ),
+
+
+        actions: [
+          Container(
+            child: CircleAvatar(
+              radius: 25,
+              // backgroundColor: isInWishlist ? Colors.red : Colors.green,
+              child: IconButton(
+                onPressed: () {
+                  // saveToWishlist();
+                },
+                icon: SvgPicture.asset(
+                  'assets/images/HeartIcon.svg',
+                  width: 24,
+                  height: 24,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 25,)
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

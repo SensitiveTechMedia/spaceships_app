@@ -1,797 +1,4 @@
-//
-//
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_svg/svg.dart';
-
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:intl/intl.dart';
-import 'package:spaceships/colorcode.dart';
-
-import 'package:spaceships/screen/homeview/home.dart';
-import 'package:spaceships/screen/profileedit/profile%20page.dart';
-import 'package:spaceships/screen/wishlistfilter/whislist%20screen.dart';
-
-
-
-class FilterScreen extends StatefulWidget {
-  final Function(Map<String, dynamic> filters) onApplyFilters;
-
-  FilterScreen({
-    required this.onApplyFilters,
-  });
-
-  @override
-  _FilterScreenState createState() => _FilterScreenState();
-}
-
-class _FilterScreenState extends State<FilterScreen> {
-
-  List<String> selectedPropertyTypes = [];
-  List<String> selectedPropertyCategories = [];
-  List<String> selectedAmenities = [];
-  List<String> selectedFacingDirections = [];
-  List<String> selectedFurnishedStatuses = [];
-  List<String> selectedParkingOptions = [];
-
-  void _clearFilters() {
-    setState(() {
-      selectedPropertyTypes.clear();
-      selectedPropertyCategories.clear();
-      selectedAmenities.clear();
-      selectedFacingDirections.clear();
-      selectedFurnishedStatuses.clear();
-      selectedParkingOptions.clear();
-    });
-
-    // Apply empty filters to reset and fetch all properties
-    widget.onApplyFilters({
-      'propertyTypes': [],
-      'propertyCategories': [],
-      'amenities': [],
-      'facingDirections': [],
-      'furnishedStatuses': [],
-      'parkingOptions': [],
-    });
-  }
-
-  void _applyFilters() {
-    // Create the filters mapamen
-    Map<String, dynamic> filters = {
-      'propertyTypes': selectedPropertyTypes,
-      'propertyCategories': selectedPropertyCategories,
-      'amenities': selectedAmenities,
-      'facingDirections': selectedFacingDirections,
-      'furnishedStatuses': selectedFurnishedStatuses,
-      'parkingOptions': selectedParkingOptions,
-    };
-
-    // Apply selected filters and fetch filtered properties
-    widget.onApplyFilters(filters);
-
-    // Close the filter screen and navigate to filtered properties screen
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => FilteredPropertiesScreen(
-          filters: filters,
-        ),
-      ),
-    );
-  }
-  int _selectedIndex = 1;
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white,),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => HomeScreen(username: '')),
-            );
-
-          },
-        ),
-        backgroundColor: ColorUtils.primaryColor(),
-        title: Text('Filter Properties',style: TextStyle(color: Colors.white),),
-        actions: [
-          // TextButton(
-          //   onPressed: _applyFilters,
-          //   child: Text(
-          //     'Apply',
-          //     style: TextStyle(color: Colors.white),
-          //   ),
-          // ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildCheckboxList(
-              'Select Property Types',
-              ['Rent', 'Sell'],
-              selectedPropertyTypes,
-            ),
-            SizedBox(height: 16.0),
-            _buildCheckboxList(
-              'Select Property Categories',
-              ['Residential', 'Commercial'],
-              selectedPropertyCategories,
-            ),
-            SizedBox(height: 16.0),
-            _buildCheckboxList(
-              'Amenities',
-              [
-                'Swimming Pool',
-                'Gym',
-                'Garden',
-                'Lift',
-                'Air Conditioner',
-                'Intercom',
-                'Child Play Area',
-                'Gas Pipeline',
-                'Servant Room',
-                'Rainwater Harvesting',
-                'House Keeping',
-                'Visitor Parking',
-                'Internet Service',
-                'Club House',
-                'Fire Safety',
-                'Shopping Center',
-                'Park',
-                'Sewage Treatment',
-                'Power Backup',
-                'Water Storage',
-              ],
-              selectedAmenities,
-            ),
-            SizedBox(height: 16.0),
-            _buildCheckboxList(
-              'Select Facing Directions',
-              [
-                'North', 'South', 'East', 'West', 'North East', 'South East', 'North West', 'South West',
-              ],
-              selectedFacingDirections,
-            ),
-            SizedBox(height: 16.0),
-            _buildCheckboxList(
-              'Select Furnished Statuses',
-              ['Furnished', 'Unfurnished', 'Semi-Furnished'],
-              selectedFurnishedStatuses,
-            ),
-            SizedBox(height: 16.0),
-            _buildCheckboxList(
-              'Select Parking Options',
-              ['Bike', 'Car'],
-              selectedParkingOptions,
-            ),
-            SizedBox(height: 16.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
-                  onPressed: _applyFilters,
-                  child: Text('Apply Filters', style: TextStyle(color: Colors.white)),
-                  style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).primaryColor),
-                ),
-                ElevatedButton(
-                  onPressed: _clearFilters,
-                  child: Text('Clear Filters', style: TextStyle(color: Colors.white)),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                ),
-              ],
-            ),
-          ],
-        ),
-
-      ),
-
-    );
-  }
-
-  Widget _buildCheckboxList(String title, List<String> options, List<String> selectedValues) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        SizedBox(height: 8.0),
-        Wrap(
-          spacing: 10.0,
-          runSpacing: 10.0,
-          children: options.map((option) {
-            return FilterChip(
-              label: Text(option),
-              selected: selectedValues.contains(option),
-              onSelected: (isSelected) {
-                setState(() {
-                  if (isSelected) {
-                    selectedValues.add(option);
-                  } else {
-                    selectedValues.remove(option);
-                  }
-                });
-              },
-            );
-          }).toList(),
-        ),
-      ],
-    );
-  }
-}
-
-Future<List<Map<String, String>>> fetchFilteredProperties(Map<String, dynamic> filters) async {
-  CollectionReference properties = FirebaseFirestore.instance.collection('property');
-
-  Query query = properties;
-
-  // Apply a basic filter to reduce the initial dataset size
-  if (filters['propertyTypes'].isNotEmpty) {
-    query = query.where('property', whereIn: filters['propertyType']);
-  }
-  if (filters['propertyCategories'].isNotEmpty) {
-    query = query.where('propertyType', whereIn: filters['propertyCategories']);
-  }
-
-  QuerySnapshot querySnapshot = await query.get();
-
-  List<Map<String, String>> allProperties = querySnapshot.docs.map((doc) {
-    List<String> selectedAmenities = [];
-    if (doc['selectedAmenities'] is List) {
-      selectedAmenities = List<String>.from(doc['selectedAmenities']);
-    }
-
-    return {
-      'propertyId': doc.id, // Add propertyId here
-      'image': (doc['propertyImages'] is List && doc['propertyImages'].isNotEmpty)
-          ? doc['propertyImages'][0] as String
-          : 'https://via.placeholder.com/150',
-      'title': doc['propertyName'] as String,
-      'propertyType': doc['propertyType'] as String? ?? '',
-      'facingDirection': doc['selectedDirection'] as String? ?? '',
-      'furnishedStatus': doc['selectedFurnishedStatus'] as String? ?? '',
-      'parkingOption': doc['selectedParking'] as String? ?? '',
-      'plotSquareFeet': doc['plotSquareFeet']?.toString() ?? 'N/A',
-      'sittingRoom': doc['sittingRoom']?.toString() ?? 'N/A',
-      'balcony': doc['balcony']?.toString() ?? 'N/A',
-      'bathrooms': doc['bathrooms']?.toString() ?? 'N/A',
-      'kitchen': doc['kitchen']?.toString() ?? 'N/A',
-      'bedRooms': doc['bedRooms']?.toString() ?? 'N/A',
-      'numberOfToilets': doc['numberOfToilets']?.toString() ?? 'N/A',
-      'numberOfFloors': doc['numberOfFloors']?.toString() ?? 'N/A',
-      'latitude': doc['latitude']?.toString() ?? '0',
-      'longitude': doc['longitude']?.toString() ?? '0',
-      'selectedAmenities': selectedAmenities.join(', '),
-      'amount': doc['amount'] as String? ?? '',
-      'address': doc['address'] as String? ?? '',
-    };
-  }).toList();
-
-  // Perform additional filtering locally
-  List<Map<String, String>> filteredProperties = allProperties.where((property) {
-    bool matchesCategories = filters['propertyCategories'].isEmpty || filters['propertyCategories'].contains(property['propertyType']);
-    bool matchesFacingDirections = filters['facingDirections'].isEmpty || filters['facingDirections'].contains(property['facingDirection']);
-    bool matchesFurnishedStatuses = filters['furnishedStatuses'].isEmpty || filters['furnishedStatuses'].contains(property['furnishedStatus']);
-    bool matchesParkingOptions = filters['parkingOptions'].isEmpty || filters['parkingOptions'].contains(property['parkingOption']);
-    bool matchesAmenities = filters['amenities'].isEmpty || filters['amenities'].every((amenity) => property['selectedAmenities']?.contains(amenity) ?? false);
-
-    return matchesCategories && matchesFacingDirections && matchesFurnishedStatuses && matchesParkingOptions && matchesAmenities;
-  }).toList();
-  filteredProperties.forEach((property) {
-    print('Property Title: ${property['title']}, Property ID: ${property['propertyId']}');
-    print('Property Title: ${property['title']}, Property ID: ${property['propertyId']}, Square Feet: ${property['longitude']}');
-  });
-
-  return filteredProperties;
-}
-
-class FilteredPropertiesScreen extends StatelessWidget {
-  final Map<String, dynamic> filters;
-
-  FilteredPropertiesScreen({
-    required this.filters,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<List<Map<String, String>>>(
-      future: fetchFilteredProperties(filters),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold(
-            appBar: AppBar(backgroundColor:   ColorUtils.primaryColor(),
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back, color: Colors.white,),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomeScreen(username: '')),
-                  );
-
-                },
-              ),
-              title: Text('Filtered Properties',style: TextStyle(color: Colors.white),),
-            ),
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        }
-        if (snapshot.hasError) {
-          return Scaffold(
-            appBar: AppBar(
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back, color: Colors.white,),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomeScreen(username: '')),
-                  );
-
-                },
-              ),
-              title: Text('Filtered Properties'),
-            ),
-            body: Center(
-              child: Text('Error: ${snapshot.error}'),
-            ),
-          );
-        }
-        if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Scaffold(
-            appBar: AppBar(
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back, color: Colors.white,),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomeScreen(username: '')),
-                  );
-
-                },
-              ),
-              backgroundColor:   ColorUtils.primaryColor(),
-              title: Text('Filtered Properties',style: TextStyle(color: Colors.white),),
-            ),
-            body: Center(
-              child: Text('No properties found.'),
-            ),
-          );
-        }
-
-        List<Map<String, String>> filteredProperties = snapshot.data!;
-
-        return Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.white,),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomeScreen(username: '')),
-                );
-
-              },
-            ),
-            backgroundColor:   ColorUtils.primaryColor(),
-            title: Text('Filtered Properties',style: TextStyle(color: Colors.white),),
-          ),
-          body: ListView.builder(
-            itemCount: filteredProperties.length,
-            itemBuilder: (context, index) {
-              var property = filteredProperties[index];
-
-
-              return ListTile(
-                contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                      builder: (context) => FilterPropertyDetailsViewScreen(property: property),
-                  ),
-                  );
-                },
-                title: Container(
-                  height: 150,
-                  decoration: BoxDecoration(
-                    color: Color.fromRGBO(160, 161, 164, 1000),
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                  child: Row(
-                    children: [
-                      SizedBox(width: 8),
-                      Stack(
-                        children: [
-                          Container(
-                            width: 140,
-                            height: 140,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20.0),
-                              color: Colors.grey,
-                              image: property['image'] != null && property['image']!.isNotEmpty
-                                  ? DecorationImage(
-                                image: NetworkImage(property['image']!),
-                                fit: BoxFit.cover,
-                              )
-                                  : null,
-                            ),
-                            child: property['image'] == null || property['image']!.isEmpty
-                                ? Icon(Icons.image, size: 50)
-                                : null,
-                          ),
-
-                        ],
-                      ),
-                      SizedBox(width: 15.0),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 20),
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                property['title'] ?? 'No Title',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color:  ColorUtils.primaryColor(),
-                                  fontSize: 24,
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 4.0),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.location_on,
-                                  color: ColorUtils.primaryColor(),
-                                  size: 20,
-                                ),
-                                FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    property['address'] ?? 'No Address',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: ColorUtils.primaryColor(),
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 20.0),
-                            Text(
-                              '₹${property['amount'] ?? 'No Amount'}/month',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: ColorUtils.primaryColor(),
-                                fontSize: 18,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
-}
-
-
-
-
-class FilterPropertyDetailsViewScreen extends StatelessWidget {
-
-  final Map<String, dynamic> property;
-  FilterPropertyDetailsViewScreen({required this.property});
-  GoogleMapController? _mapController;
-
-  @override
-
-  Widget build(BuildContext context) {
-    LatLng propertyLocation = LatLng(
-      double.parse(property['latitude'] ?? '0'),
-      double.parse(property['longitude'] ?? '0'),
-    );
-    String formatDate(String? dateString) {
-      if (dateString == null) {
-        return 'No date provided';
-      }
-      try {
-        DateTime date = DateTime.parse(dateString);
-        return DateFormat('yyyy-MM-dd').format(date);
-      } catch (e) {
-        return 'Invalid date';  // Handle any parsing errors
-      }
-    }
-
-
-    bool isInWishlist = false;
-    List<String> amenities = [];
-    return Scaffold(
-
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
-              children: [
-
-               Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  height: 500,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20.0),
-                    color: Colors.grey,
-                    image: property['image'] != null && property['image']!.isNotEmpty
-                        ? DecorationImage(
-                      image: NetworkImage(property['image']!),
-                      fit: BoxFit.cover,
-                    )
-                        : null,
-                  ),
-                  child: property['image'] == null || property['image']!.isEmpty
-                      ? Icon(Icons.image, size: 50)
-                      : null,
-                ),
-              ),
-                Positioned(
-                  bottom: 30,
-                  left: 40,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: ColorUtils.primaryColor(), // Green background color
-                      borderRadius: BorderRadius.circular(20.0), // Border radius
-                    ),
-                    child: Text(
-                      property['title'] ?? 'No Title',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white, // Text color
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 10,
-                  left: 20,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: CircleAvatar(
-                      radius: 25,
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        Icons.arrow_back_ios,
-                        size: 25,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 10,
-                  right: 16,
-                  child: Row(
-                    children: <Widget>[
-                      CircleAvatar(
-                        radius: 25,
-                        backgroundColor: Colors.white,
-                        child: IconButton(
-                          onPressed: () {
-                            // Handle share action
-                          },
-                          icon: SvgPicture.asset(
-                            'assets/images/ShareIcon.svg',
-                            width: 24,
-                            height: 24,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 25),
-                      CircleAvatar(
-                        radius: 25,
-                        backgroundColor: isInWishlist ? Colors.red : Colors.green,
-                        child: IconButton(
-                          onPressed: () {
-                            // saveToWishlist();
-                          },
-                          icon: SvgPicture.asset(
-                            'assets/images/HeartIcon.svg',
-                            width: 24,
-                            height: 24,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-      ]
-            ),
-            SizedBox(height: 20.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Text(
-                      property['title'] ?? 'No Title',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: ColorUtils.primaryColor(),
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      ' ${property['amount'] ?? 'No Amount'}',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: ColorUtils.primaryColor(),
-                      ),
-                      textAlign: TextAlign.right,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(width: 18),
-                Icon(
-                  Icons.location_on,
-                  color: ColorUtils.primaryColor(),
-                  size: 20,
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 5),
-                    child: Text(
-                      property['address'] ?? 'No Address',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: ColorUtils.primaryColor(),
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.only(right: 20),
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      "per month",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: ColorUtils.primaryColor(),
-                      ),
-                      textAlign: TextAlign.right,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            SizedBox(height: 10),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Center(
-                child: Container(
-                  width: double.infinity,
-                  child: Divider(
-                    height: 15,
-                    color: Colors.grey,
-                  ),
-                ),
-              ),
-            ),
-
-            Padding(
-              padding: EdgeInsets.all(10), // Adjust the amount of outer padding as needed
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.2), // Adjust opacity as needed
-                  borderRadius: BorderRadius.circular(10), // Adjust radius as needed
-                ),
-                padding: EdgeInsets.all(15), // Add padding for space around the container content
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Colors.grey,
-                      child:  Image.asset(
-                        "assets/images/logos.png",
-                        width: 60,
-                        height: 60,
-                        fit: BoxFit.fitWidth,
-                      ),
-                    ),
-
-
-                    SizedBox(width: 25),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child:SvgPicture.asset(
-                        'assets/images/ChatIcon.svg',
-                        width: 40,  // Adjust width and height as needed
-                        height: 34,
-                      ),
-
-                    ),
-                    Expanded(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 8),
-                            child: Text(
-                              "Chat with Support",style: TextStyle( color: ColorUtils.primaryColor(),fontSize: 18,),
-                            ),
-                          ),
-
-
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-
-
-
-
-
-
-
-
-
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 
 class Screen extends StatefulWidget {
   final Function(Map<String, dynamic> filters) onApplyFilters;
@@ -802,61 +9,59 @@ class Screen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _FilteScreenState createState() => _FilteScreenState();
+  _FilterScreenState createState() => _FilterScreenState();
 }
 
-class _FilteScreenState extends State<Screen> {
+class _FilterScreenState extends State<Screen> {
   String selectedOption = '';
-
-  // Track selection states
+  String selectedSubcategory = '';
+  String selectedPropertyType = '';
   bool buySelected = false;
   bool rentSelected = false;
+  bool leaseSelected = false;
   List<String> propertyTypeSelected = [];
   List<String> furnishedStatusSelected = [];
   List<String> selectedAmenities = [];
-  String selectedDirection = '';
   List<String> selectedParking = [];
-
+  String selectedDirection = '';
   final List<String> amenities = [
-    'Swimming Pool',
-    'Gym',
-    'Garden',
-    'Lift',
-    'Air Conditioner',
-    'Intercom',
-    'Child Play Area',
-    'Gas Pipeline',
-    'Servant Room',
-    'Rainwater Harvesting',
-    'House Keeping',
-    'Visitor Parking',
-    'Internet Service',
-    'Club House',
-    'Fire Safety',
-    'Shopping Center',
-    'Park',
-    'Sewage Treatment',
-    'Power Backup',
-    'Water Storage',
+    'Swimming Pool', 'Gym', 'Garden', 'Lift', 'Air Conditioner', 'Intercom',
+    'Child Play Area', 'Gas Pipeline', 'Servant Room', 'Rainwater Harvesting',
+    'House Keeping', 'Visitor Parking', 'Internet Service', 'Club House',
+    'Fire Safety', 'Shopping Center', 'Park', 'Sewage Treatment', 'Power Backup', 'Water Storage',
   ];
 
-  final List<String> directions = [
-    'North',
-    'South',
-    'East',
-    'West',
+  final List<String> directions = ['North', 'South', 'East', 'West'];
 
+  final List<String> parkingOptions = ['Open Parking', 'Closed Parking'];
+
+  final List<String> subcategories = [
+    'Flat', 'Villa / Independent House', 'Plot / Land', 'Commercial Space', 'Hostel/PG/Service Apartment',
   ];
 
-  final List<String> parkingOptions = [
-    'Bike',
-    'Car',
+  final List<String> propertyTypes = [
+    'Individual Plot',
+    'Agricultural Land',
+    'Independent Villa',
+    'Gated Community Villa',
+    'Gated Community Plot',
+    'Commercial Shop',
+    'Independent Floor',
+    "Shared Floor",
+    "Independent Building",
+    "Hostel",
+    "PG",
+    "Service Apartment",
   ];
 
   void _clearFilters() {
     setState(() {
       buySelected = false;
       rentSelected = false;
+      leaseSelected = false;
+      selectedOption = '';
+      selectedSubcategory = '';
+      selectedPropertyType = '';
       propertyTypeSelected.clear();
       furnishedStatusSelected.clear();
       selectedAmenities.clear();
@@ -871,6 +76,18 @@ class _FilteScreenState extends State<Screen> {
       'furnishedStatuses': [],
       'parkingOptions': [],
     });
+  }
+
+  void _applyFilters() {
+    Map<String, dynamic> filters = {
+      'propertyCategories': selectedOption == 'Category' ? [buySelected ? 'Buy' : rentSelected ? 'Rent' : leaseSelected ? 'Lease' : ''] : [],
+      'propertyTypes': selectedPropertyType.isNotEmpty ? [selectedPropertyType] : [],
+      'amenities': selectedAmenities,
+      'furnishedStatuses': furnishedStatusSelected,
+      'facingDirections': [directions],
+      'parkingOptions': selectedParking,
+    };
+    widget.onApplyFilters(filters);
   }
 
   @override
@@ -890,7 +107,9 @@ class _FilteScreenState extends State<Screen> {
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      selectedOption = 'Property';
+                      selectedOption = 'Category';
+                      selectedSubcategory = '';
+                      selectedPropertyType = '';
                     });
                   },
                   child: Container(
@@ -898,9 +117,27 @@ class _FilteScreenState extends State<Screen> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12.0),
                       border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
-                      color: selectedOption == 'Property' ? Colors.blue.withOpacity(0.5) : Colors.transparent,
+                      color: selectedOption == 'Category' ? Colors.blue.withOpacity(0.5) : Colors.transparent,
                     ),
-                    child: Text('Property', style: TextStyle(fontSize: 17)),
+                    child: Text('Category', style: TextStyle(fontSize: 17)),
+                  ),
+                ),
+                VerticalDivider(thickness: 5),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selectedOption = 'Subcategory';
+                      selectedPropertyType = '';
+                    });
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12.0),
+                      border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
+                      color: selectedOption == 'Subcategory' ? Colors.blue.withOpacity(0.5) : Colors.transparent,
+                    ),
+                    child: Center(child: Text('Subcategory', style: TextStyle(fontSize: 17))),
                   ),
                 ),
                 VerticalDivider(thickness: 5),
@@ -925,6 +162,7 @@ class _FilteScreenState extends State<Screen> {
                   onTap: () {
                     setState(() {
                       selectedOption = 'Furnished status';
+                      selectedPropertyType = '';
                     });
                   },
                   child: Container(
@@ -942,6 +180,7 @@ class _FilteScreenState extends State<Screen> {
                   onTap: () {
                     setState(() {
                       selectedOption = 'Amenities';
+                      selectedPropertyType = '';
                     });
                   },
                   child: Container(
@@ -959,6 +198,7 @@ class _FilteScreenState extends State<Screen> {
                   onTap: () {
                     setState(() {
                       selectedOption = 'Direction';
+                      selectedPropertyType = '';
                     });
                   },
                   child: Container(
@@ -976,6 +216,7 @@ class _FilteScreenState extends State<Screen> {
                   onTap: () {
                     setState(() {
                       selectedOption = 'Parking';
+                      selectedPropertyType = '';
                     });
                   },
                   child: Container(
@@ -1022,8 +263,10 @@ class _FilteScreenState extends State<Screen> {
   }
 
   Widget _buildRightSection() {
-    if (selectedOption == 'Property') {
-      return _buildPropertySection();
+    if (selectedOption == 'Category') {
+      return _buildCategorySection();
+    } else if (selectedOption == 'Subcategory') {
+      return _buildSubcategorySection();
     } else if (selectedOption == 'Property Type') {
       return _buildPropertyTypeSection();
     } else if (selectedOption == 'Furnished status') {
@@ -1039,7 +282,7 @@ class _FilteScreenState extends State<Screen> {
     }
   }
 
-  Widget _buildPropertySection() {
+  Widget _buildCategorySection() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -1047,7 +290,10 @@ class _FilteScreenState extends State<Screen> {
           onTap: () {
             setState(() {
               buySelected = !buySelected;
-              if (buySelected) rentSelected = false;
+              if (buySelected) {
+                rentSelected = false;
+                leaseSelected = false;
+              }
             });
           },
           child: Row(
@@ -1058,17 +304,16 @@ class _FilteScreenState extends State<Screen> {
             ],
           ),
         ),
-        Divider(
-          height: 10,
-          thickness: 1,
-          color: Colors.grey.shade300,
-        ),
+        Divider(height: 10, thickness: 1, color: Colors.grey.shade300),
         SizedBox(height: 5),
         GestureDetector(
           onTap: () {
             setState(() {
               rentSelected = !rentSelected;
-              if (rentSelected) buySelected = false;
+              if (rentSelected) {
+                buySelected = false;
+                leaseSelected = false;
+              }
             });
           },
           child: Row(
@@ -1080,76 +325,74 @@ class _FilteScreenState extends State<Screen> {
           ),
         ),
         SizedBox(height: 5),
-        Divider(
-          height: 10,
-          thickness: 1,
-          color: Colors.grey.shade300,
+        Divider(height: 10, thickness: 1, color: Colors.grey.shade300),
+        SizedBox(height: 5),
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              leaseSelected = !leaseSelected;
+              if (leaseSelected) {
+                buySelected = false;
+                rentSelected = false;
+              }
+            });
+          },
+          child: Row(
+            children: [
+              Icon(leaseSelected ? Icons.check_box : Icons.check_box_outline_blank),
+              SizedBox(width: 8),
+              Text('Lease', style: TextStyle(fontSize: 16)),
+            ],
+          ),
         ),
+        SizedBox(height: 5),
+        Divider(height: 10, thickness: 1, color: Colors.grey.shade300),
       ],
+    );
+  }
+
+  Widget _buildSubcategorySection() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: subcategories.map((subcategory) {
+        return GestureDetector(
+          onTap: () {
+            setState(() {
+              selectedSubcategory = subcategory;
+            });
+          },
+          child: Row(
+            children: [
+              Icon(selectedSubcategory == subcategory ? Icons.check_box : Icons.check_box_outline_blank),
+              SizedBox(width: 8),
+              Text(subcategory, style: TextStyle(fontSize: 16)),
+            ],
+          ),
+        );
+      }).toList(),
     );
   }
 
   Widget _buildPropertyTypeSection() {
+    // Return property types based on the selected subcategory if needed
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        _buildPropertyTypeOption('Home'),
-        SizedBox(height: 5),
-        Divider(
-          height: 10,
-          thickness: 1,
-          color: Colors.grey.shade300,
-        ),
-        _buildPropertyTypeOption('Villa'),
-        SizedBox(height: 5),
-        Divider(
-          height: 10,
-          thickness: 1,
-          color: Colors.grey.shade300,
-        ),
-        _buildPropertyTypeOption('Apartment'),
-        SizedBox(height: 5),
-        Divider(
-          height: 10,
-          thickness: 1,
-          color: Colors.grey.shade300,
-        ),
-        _buildPropertyTypeOption('PG'),
-        SizedBox(height: 5),
-        Divider(
-          height: 10,
-          thickness: 1,
-          color: Colors.grey.shade300,
-        ),
-        _buildPropertyTypeOption('Office'),
-        SizedBox(height: 5),
-        Divider(
-          height: 10,
-          thickness: 1,
-          color: Colors.grey.shade300,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPropertyTypeOption(String type) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          if (propertyTypeSelected.contains(type)) {
-            propertyTypeSelected.remove(type);
-          } else {
-            propertyTypeSelected = [type];
-          }
-        });
-      },
-      child: Row(
-        children: [
-          Icon(propertyTypeSelected.contains(type) ? Icons.check_box : Icons.check_box_outline_blank),
-          SizedBox(width: 8),
-          Text(type, style: TextStyle(fontSize: 16)),
-        ],
-      ),
+      children: propertyTypes.map((propertyType) {
+        return GestureDetector(
+          onTap: () {
+            setState(() {
+              selectedPropertyType = propertyType;
+            });
+          },
+          child: Row(
+            children: [
+              Icon(selectedPropertyType == propertyType ? Icons.check_box : Icons.check_box_outline_blank),
+              SizedBox(width: 8),
+              Text(propertyType, style: TextStyle(fontSize: 16)),
+            ],
+          ),
+        );
+      }).toList(),
     );
   }
 
@@ -1159,18 +402,10 @@ class _FilteScreenState extends State<Screen> {
       children: [
         _buildFurnishedStatusOption('Furnished'),
         SizedBox(height: 5),
-        Divider(
-          height: 10,
-          thickness: 1,
-          color: Colors.grey.shade300,
-        ),
+        Divider(height: 10, thickness: 1, color: Colors.grey.shade300),
         _buildFurnishedStatusOption('Unfurnished'),
         SizedBox(height: 5),
-        Divider(
-          height: 10,
-          thickness: 1,
-          color: Colors.grey.shade300,
-        ),
+        Divider(height: 10, thickness: 1, color: Colors.grey.shade300),
         _buildFurnishedStatusOption('Semi-furnished'),
       ],
     );
@@ -1198,97 +433,76 @@ class _FilteScreenState extends State<Screen> {
   }
 
   Widget _buildAmenitiesSection() {
-    return ListView.builder(
-      itemCount: amenities.length,
-      itemBuilder: (context, index) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: amenities.map((amenity) {
         return GestureDetector(
           onTap: () {
             setState(() {
-              if (selectedAmenities.contains(amenities[index])) {
-                selectedAmenities.remove(amenities[index]);
+              if (selectedAmenities.contains(amenity)) {
+                selectedAmenities.remove(amenity);
               } else {
-                selectedAmenities.add(amenities[index]);
+                selectedAmenities.add(amenity);
               }
             });
           },
           child: Row(
             children: [
-              Icon(selectedAmenities.contains(amenities[index]) ? Icons.check_box : Icons.check_box_outline_blank),
+              Icon(selectedAmenities.contains(amenity) ? Icons.check_box : Icons.check_box_outline_blank),
               SizedBox(width: 8),
-              Text(amenities[index], style: TextStyle(fontSize: 16)),
+              Text(amenity, style: TextStyle(fontSize: 16)),
             ],
           ),
         );
-      },
+      }).toList(),
     );
   }
 
   Widget _buildDirectionSection() {
-    return ListView.builder(
-      itemCount: directions.length,
-      itemBuilder: (context, index) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: directions.map((direction) {
         return GestureDetector(
           onTap: () {
             setState(() {
-              selectedDirection = directions[index];
+              selectedDirection = direction;
             });
           },
           child: Row(
             children: [
-              Icon(selectedDirection == directions[index] ? Icons.check_box : Icons.check_box_outline_blank),
+              Icon(selectedDirection == direction ? Icons.check_box : Icons.check_box_outline_blank),
               SizedBox(width: 8),
-              Text(directions[index], style: TextStyle(fontSize: 16)),
+              Text(direction, style: TextStyle(fontSize: 16)),
             ],
           ),
         );
-      },
+      }).toList(),
     );
   }
 
   Widget _buildParkingSection() {
-    return ListView.builder(
-      itemCount: parkingOptions.length,
-      itemBuilder: (context, index) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: parkingOptions.map((option) {
         return GestureDetector(
           onTap: () {
             setState(() {
-              if (selectedParking.contains(parkingOptions[index])) {
-                selectedParking.remove(parkingOptions[index]);
+              if (selectedParking.contains(option)) {
+                selectedParking.remove(option);
               } else {
-                selectedParking.add(parkingOptions[index]);
+                selectedParking.add(option);
               }
             });
           },
           child: Row(
             children: [
-              Icon(selectedParking.contains(parkingOptions[index]) ? Icons.check_box : Icons.check_box_outline_blank),
+              Icon(selectedParking.contains(option) ? Icons.check_box : Icons.check_box_outline_blank),
               SizedBox(width: 8),
-              Text(parkingOptions[index], style: TextStyle(fontSize: 16)),
+              Text(option, style: TextStyle(fontSize: 16)),
             ],
           ),
         );
-      },
+      }).toList(),
     );
-  }
-
-  void _applyFilters() {
-    Map<String, dynamic> filters = {
-      'propertyTypes': propertyTypeSelected,
-      'amenities': selectedAmenities,
-      'furnishedStatuses': furnishedStatusSelected,
-      'facingDirections': [selectedDirection],
-      'parkingOptions': selectedParking,
-    };
-    widget.onApplyFilters(filters);
-
-    // Close the filter screen and navigate to filtered properties screen
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => FilteredPropertiesScreen(
-    //       filters: filters,
-    //     ),
-    //   ),
-    // );
   }
 }
