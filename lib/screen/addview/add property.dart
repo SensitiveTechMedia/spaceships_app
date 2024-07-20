@@ -153,30 +153,31 @@ class _CategoryScreenState extends State<CategoryScreen> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0),
-    child: Container(
-    decoration: BoxDecoration(
-    boxShadow: [
-    BoxShadow(
-    color: Colors.grey.withOpacity(0.6),
-    spreadRadius: 12,
-    blurRadius: 8,
-    offset: Offset(0, 3), // changes position of shadow
-    ),
-    ],
-    ),
-    child:AppBar( backgroundColor: ColorUtils.primaryColor(),
-
-        title: Text('${widget.category} Category',style: TextStyle(color: Colors.white),),
-      iconTheme: IconThemeData(color: Colors.white),
-      ),),
+        child: Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.6),
+                spreadRadius: 12,
+                blurRadius: 8,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
+          child: AppBar(
+            backgroundColor: ColorUtils.primaryColor(),
+            title: Text('${widget.category} Category', style: TextStyle(color: Colors.white)),
+            iconTheme: IconThemeData(color: Colors.white),
+          ),
+        ),
       ),
-
-      body: Center(
+      body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(height: 10),
               Text(
                 'Select a subcategory:',
                 style: TextStyle(
@@ -207,7 +208,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         decoration: BoxDecoration(
                           color: isSelected ? customTeal : Colors.white,
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: ColorUtils.primaryColor(),),
+                          border: Border.all(color: ColorUtils.primaryColor()),
                         ),
                         child: Row(
                           children: [
@@ -218,7 +219,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               ),
                             if (subcategories[index]["icon"] != null)
                               SizedBox(width: 10),
-                           Flexible(
+                            Flexible(
                               child: Text(
                                 subcategories[index]["name"],
                                 style: TextStyle(
@@ -235,76 +236,126 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 ),
               ),
               SizedBox(height: 20),
-              if (_selectedSubcategoryIndex != -1 &&
-                  subcategories[_selectedSubcategoryIndex]["name"] == "Flat"
-
-              ) // Show text field only when "Flat" is selected
+              if (_selectedSubcategoryIndex != -1)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Enter Property Type:',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: ColorUtils.primaryColor(),
+                    if (subcategories[_selectedSubcategoryIndex]["name"] == "Villa / Independent House" ||
+                        subcategories[_selectedSubcategoryIndex]["name"] == "Flat")
+                      Text(
+                        'Enter BHK Value:',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: ColorUtils.primaryColor(),
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Container(
-                          width: 36, // Adjust width to change circle size
-                          height: 39, // Adjust height to change circle size
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: ColorUtils.primaryColor(), // Background color of the circle
+                    if (subcategories[_selectedSubcategoryIndex]["name"] == "Villa / Independent House" ||
+                        subcategories[_selectedSubcategoryIndex]["name"] == "Flat")
+                      SizedBox(height: 10),
+                    if (subcategories[_selectedSubcategoryIndex]["name"] == "Villa / Independent House" ||
+                        subcategories[_selectedSubcategoryIndex]["name"] == "Flat")
+                      Row(
+                        children: [
+                          Container(
+                            width: 36, // Adjust width to change circle size
+                            height: 39, // Adjust height to change circle size
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: ColorUtils.primaryColor(), // Background color of the circle
+                            ),
+                            child: IconButton(
+                              icon: Icon(Icons.remove, color: Colors.white),
+                              onPressed: () {
+                                setState(() {
+                                  if (bhkValue > 1) bhkValue--; // Decrease value, minimum 1
+                                });
+                              },
+                            ),
                           ),
-                          child: IconButton(
-                            icon: Icon(Icons.remove, color: Colors.white),
-                            onPressed: () {
-                              setState(() {
-                                if (bhkValue > 1) bhkValue--; // Decrease value, minimum 1
-                              });
-                            },
+                          SizedBox(width: 10),
+                          Text(
+                            '$bhkValue BHK',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: ColorUtils.primaryColor(),
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 10,),
-                        Text(
-                          '$bhkValue BHK',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: ColorUtils.primaryColor(),
+                          SizedBox(width: 10),
+                          Container(
+                            width: 36, // Adjust width to change circle size
+                            height: 39, // Adjust height to change circle size
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: ColorUtils.primaryColor(), // Background color of the circle
+                            ),
+                            child: IconButton(
+                              icon: Icon(Icons.add, color: Colors.white), // Icon with custom teal color
+                              onPressed: () {
+                                setState(() {
+                                  bhkValue++; // Increase value
+                                });
+                              },
+                              padding: EdgeInsets.all(0), // Optional: Remove default padding
+                              iconSize: 24, // Adjust icon size if needed
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 10,),
-                        Container(
-                          width: 36, // Adjust width to change circle size
-                          height: 39, // Adjust height to change circle size
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: ColorUtils.primaryColor(), // Background color of the circle
+                        ],
+                      ),
+                    if (subcategories[_selectedSubcategoryIndex]["name"] == "Villa / Independent House")
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 20),
+                          Text(
+                            'Select Property Type:',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: ColorUtils.primaryColor(),
+                            ),
                           ),
-                          child: IconButton(
-                            icon: Icon(Icons.add, color: Colors.white), // Icon with custom teal color
-                            onPressed: () {
-                              setState(() {
-                                bhkValue++; // Increase value
-                              });
-                            },
-                            padding: EdgeInsets.all(0), // Optional: Remove default padding
-                            iconSize: 24, // Adjust icon size if needed
+                          SizedBox(height: 10),
+                          Wrap(
+                            spacing: 10,
+                            runSpacing: 10,
+                            children: List.generate(
+                              propertyTypes["Villa / Independent House"]!.length,
+                                  (index) {
+                                bool isSelected = _selectedPropertyType == propertyTypes["Villa / Independent House"]![index];
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedPropertyType = propertyTypes["Villa / Independent House"]![index];
+                                    });
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                                    decoration: BoxDecoration(
+                                      color: isSelected ? customTeal : Colors.white,
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(color: ColorUtils.primaryColor()),
+                                    ),
+                                    child: Text(
+                                      propertyTypes["Villa / Independent House"]![index],
+                                      style: TextStyle(
+                                        color: isSelected ? Colors.white : customTeal,
+                                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
-                        )
-
-                      ],
-                    ),
+                        ],
+                      ),
                   ],
                 ),
-
               if (_selectedSubcategoryIndex != -1 &&
-                  subcategories[_selectedSubcategoryIndex]["name"] != "Flat") // Show property types list for other subcategories
+                  subcategories[_selectedSubcategoryIndex]["name"] != "Flat" &&
+                  subcategories[_selectedSubcategoryIndex]["name"] != "Villa / Independent House")
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -335,7 +386,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               decoration: BoxDecoration(
                                 color: isSelected ? customTeal : Colors.white,
                                 borderRadius: BorderRadius.circular(8),
-                                border: Border.all(color: ColorUtils.primaryColor(),),
+                                border: Border.all(color: ColorUtils.primaryColor()),
                               ),
                               child: Text(
                                 propertyTypes[subcategories[_selectedSubcategoryIndex]["name"]]![index],
@@ -399,35 +450,45 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       ),
                       child: SizedBox(
                         height: 50,
+
                         child: ElevatedButton(
                           onPressed: () {
-    if (_selectedSubcategoryIndex == -1) {
-      _showToast( "Please select a subcategory.");
-    } else if (_selectedPropertyType.isEmpty &&
-    subcategories[_selectedSubcategoryIndex]["name"] != "Flat") {
-      _showToast( "Please select a property type.");
-    } else {
-    String selectedSubcategory = subcategories[_selectedSubcategoryIndex]["name"];
-    String selectedPropertyType = subcategories[_selectedSubcategoryIndex]["name"] == "Flat"
-    ? '$bhkValue BHK'
-        : _selectedPropertyType.isNotEmpty
-    ? _selectedPropertyType
-        : "Select Property Type";
+                            if (_selectedSubcategoryIndex == -1) {
+                              _showToast("Please select a subcategory.");
+                            } else {
+                              String selectedSubcategory = subcategories[_selectedSubcategoryIndex]["name"];
+                              String selectedPropertyType = "";
 
-    print("Selected Subcategory: $selectedSubcategory, Property Type: $selectedPropertyType");
+                              if (selectedSubcategory == "Flat" || selectedSubcategory == "Villa / Independent House") {
+                                selectedPropertyType = '$bhkValue BHK';
+                                if (selectedSubcategory == "Villa / Independent House") {
+                                  String propertyType = _selectedPropertyType.isNotEmpty
+                                      ? _selectedPropertyType
+                                      : "Select Property Type";
+                                  selectedPropertyType = '$propertyType, $selectedPropertyType'; // Combine property type and BHK value
+                                }
+                              } else {
+                                selectedPropertyType = _selectedPropertyType.isNotEmpty
+                                    ? _selectedPropertyType
+                                    : "Select Property Type";
+                              }
 
-                              print("Selected Subcategory: $selectedSubcategory, Property Type: $selectedPropertyType");
+                              if (selectedPropertyType == "Select Property Type" && selectedSubcategory != "Flat" && selectedSubcategory != "Villa / Independent House") {
+                                _showToast("Please select a property type.");
+                              } else {
+                                print("Selected Subcategory: $selectedSubcategory, Property Type: $selectedPropertyType");
 
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => PropertyDetailsScreen(
-                                    category: widget.category,
-                                    subcategory: selectedSubcategory,
-                                    propertyType: selectedPropertyType,
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => PropertyDetailsScreen(
+                                      category: widget.category,
+                                      subcategory: selectedSubcategory,
+                                      propertyType: selectedPropertyType,
+                                    ),
                                   ),
-                                ),
-                              );
+                                );
+                              }
                             }
                           },
                           style: ElevatedButton.styleFrom(
@@ -447,18 +508,20 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             ],
                           ),
                         ),
+
                       ),
                     ),
                   ),
                 ],
               ),
-
             ],
           ),
         ),
       ),
     );
   }
+
+
 
 
   void _showToast(String message) {
@@ -536,11 +599,12 @@ class PropertyDetailsScreen extends StatefulWidget {
   final String category;
   final String subcategory;
   final String propertyType;
-
+  final int? bhkValue;
   PropertyDetailsScreen({
     required this.category,
     required this.subcategory,
     required this.propertyType,
+    this.bhkValue,
   });
   @override
   _PropertyDetailsScreenState createState() => _PropertyDetailsScreenState();

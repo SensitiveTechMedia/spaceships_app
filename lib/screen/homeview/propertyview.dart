@@ -133,13 +133,10 @@ class _PropertyViewState extends State<PropertyView> {
         .get();
     return List<Map<String, dynamic>>.from(doc['amenities']);
   }
-
-
   Future<List<Map<String, dynamic>>> fetchPaymentRows() async {
     DocumentSnapshot doc = await FirebaseFirestore.instance.collection('propert').doc(widget.propertyId).get();
     return List<Map<String, dynamic>>.from(doc['paymentRows']);
   }
-
   void _showModalBottomSheet() {
     showModalBottomSheet(
       context: context,
@@ -246,7 +243,6 @@ class _PropertyViewState extends State<PropertyView> {
       _handleDeepLink(initialUri);
     }
   }
-
   void _handleDeepLink(Uri? uri) {
 
       if (uri != null) {
@@ -301,7 +297,6 @@ class _PropertyViewState extends State<PropertyView> {
 
 
   }
-
   void fetchData() async {
     // Fetch data from Firebase Firestore
     final docSnapshot = await FirebaseFirestore.instance
@@ -351,7 +346,6 @@ class _PropertyViewState extends State<PropertyView> {
       print('Error fetching amenities: $e');
     }
   }
-
   Future<void> fetchUserDetails() async {
     try {
       if (user != null) {
@@ -873,15 +867,13 @@ class _PropertyViewState extends State<PropertyView> {
                       // ),
                     ],
                   ),
-
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SizedBox(width: 8),
                       Icon(
                         Icons.location_on,
-                        color: widget.customTeal,
+                        color: ColorUtils.primaryColor(),
                         size: 20,
                       ),
                       Expanded(
@@ -892,7 +884,7 @@ class _PropertyViewState extends State<PropertyView> {
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: widget.customTeal,
+                              color: ColorUtils.primaryColor(),
                             ),
                             textAlign: TextAlign.left,
                           ),
@@ -916,7 +908,6 @@ class _PropertyViewState extends State<PropertyView> {
 
                     ],
                   ),
-
                   SizedBox(height:1),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8),
@@ -930,10 +921,7 @@ class _PropertyViewState extends State<PropertyView> {
                       ),
                     ),
                   ),
-
                   SizedBox(height: 5),
-
-
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -1003,10 +991,6 @@ class _PropertyViewState extends State<PropertyView> {
                       ],
                     ),
                   ),
-
-
-
-
                   Padding(
                     padding: const EdgeInsets.only(left: 10.0),
                     child: Container(
@@ -1047,8 +1031,6 @@ class _PropertyViewState extends State<PropertyView> {
                         ),
                       ),
                     ),
-
-
                   Padding(
                     padding: const EdgeInsets.only(left: 10.0),
                     child: Container(
@@ -1057,11 +1039,6 @@ class _PropertyViewState extends State<PropertyView> {
                         color: widget.customTeal,),),
                     ),
                   ),
-
-
-
-
-
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -1517,9 +1494,6 @@ class _PropertyViewState extends State<PropertyView> {
                       ),
                     ),
                   ),
-
-
-
                   if (widget.videoUrl.isNotEmpty)
                     Column(
                       children: [
@@ -1603,12 +1577,9 @@ class _PropertyViewState extends State<PropertyView> {
                   SizedBox(height: 50,),
                   // Container(child: Text("Gated Community: ${gatedCommunity.isNotEmpty ? gatedCommunity : 'Not specified'}")),
 
-                  // //          )
                 ]),
     ),
-
           ),
-
         ]
         ),
       floatingActionButton: Stack(
@@ -1736,14 +1707,6 @@ class _PropertyViewState extends State<PropertyView> {
           ),
         ],
       ),
-
-
-
-
-
-
-
-
     );
 
   }

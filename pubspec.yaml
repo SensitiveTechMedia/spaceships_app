@@ -71,6 +71,7 @@ dependencies:
   firebase_messaging: ^15.0.3
   fluttertoast: ^8.2.6
   dropdown_button2: ^2.3.9
+  loading_animation_widget: ^1.2.1
 
 dev_dependencies:
   flutter_test:

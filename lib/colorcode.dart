@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-// color: ColorUtils.primarycolor(),
+// color: ColorUtils.primaryColor(),
 
 
   // static Color primarycolor() {

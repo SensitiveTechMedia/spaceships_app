@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:spaceships/colorcode.dart';
+import 'package:spaceships/screen/helpsupport.dart';
 
 class Propertyservices extends StatefulWidget {
   const Propertyservices({super.key});
@@ -245,8 +246,11 @@ class _PropertyservicesState extends State<Propertyservices> {
                     child: IconButton(
                       icon: Icon(Icons.question_mark_outlined, size: 20, color: ColorUtils.primaryColor()),
                       onPressed: () {
-                        // Handle your onPressed action here
-                      },
+                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>SupportScreen())
+                        );},
                     ),
                   ),
                 ),

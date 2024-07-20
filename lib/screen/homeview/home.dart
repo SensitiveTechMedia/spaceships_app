@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:spaceships/colorcode.dart';
 import 'package:spaceships/jvproperty/Agents%20Corner.dart';
 import 'package:spaceships/jvproperty/addpropertyjvproperties.dart';
@@ -159,7 +160,7 @@ bool featuredStatus = false;
   final PageController _pageController = PageController();
   Timer? _timer;
   late Future<List<Map<String, dynamic>>> _bannerFuture;
-
+  DateTime? currentBackPressTime;
   @override
   void initState() {
     super.initState();
@@ -741,647 +742,417 @@ bool featuredStatus = false;
     super.dispose();
   }
 
+  Future<bool> onWillPop() {
+    DateTime now = DateTime.now();
+    if (currentBackPressTime == null || now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
+      currentBackPressTime = now;
+      Fluttertoast.showToast(msg: "Double Tap to Exit");
+      return Future.value(false);
+    }
+    return Future.value(true);
+  }
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final tabWidth = (width - 90) / 2;
 
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: _buildAppBar(),
-      drawer: _buildDrawer(context),
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 5),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10.0, right: 10),
-                    child: Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Adjust spacing evenly
-                        children: [
-                          Expanded(
-                            child: ElevatedButton(
-                                onPressed: _navigateToSellCategory,
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.white, backgroundColor: customTeal,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
+    return WillPopScope(
+      onWillPop: onWillPop,
+      child: Scaffold(
+        key: _scaffoldKey,
+        appBar: _buildAppBar(),
+        drawer: _buildDrawer(context),
+        body: NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 5),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0, right: 10),
+                      child: Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Adjust spacing evenly
+                          children: [
+                            Expanded(
+                              child: ElevatedButton(
+                                  onPressed: _navigateToSellCategory,
+                                style: ElevatedButton.styleFrom(
+                                  foregroundColor: Colors.white, backgroundColor: customTeal,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
                                 ),
+                                child: Text('Sell',style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
+      
                               ),
-                              child: Text('Sell',style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
-
                             ),
-                          ),
-                          SizedBox(width: 5), // Adjust the width between buttons
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 0,selecteddIndex: 1,)),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.white, backgroundColor:    ColorUtils.primaryColor(),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
+                            SizedBox(width: 5), // Adjust the width between buttons
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 0,selecteddIndex: 1,)),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  foregroundColor: Colors.white, backgroundColor:    ColorUtils.primaryColor(),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
                                 ),
+                                child: Text('Buy',style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
                               ),
-                              child: Text('Buy',style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
                             ),
-                          ),
-                          SizedBox(width: 5), // Adjust the width between buttons
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 0,selecteddIndex: 2,)),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.white, backgroundColor:    ColorUtils.primaryColor(),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
+                            SizedBox(width: 5), // Adjust the width between buttons
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 0,selecteddIndex: 2,)),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  foregroundColor: Colors.white, backgroundColor:    ColorUtils.primaryColor(),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
                                 ),
+                                child: Text('Rent',style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
                               ),
-                              child: Text('Rent',style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
                             ),
-                          ),
-                          SizedBox(width: 5), // Adjust the width between buttons
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 0, selecteddIndex: 3,)),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.white, backgroundColor: ColorUtils.primaryColor(),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
+                            SizedBox(width: 5), // Adjust the width between buttons
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 0, selecteddIndex: 3,)),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  foregroundColor: Colors.white, backgroundColor: ColorUtils.primaryColor(),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
                                 ),
+                                child: Text('Lease',style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
                               ),
-                              child: Text('Lease',style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 15),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10.0), // Adjust horizontal padding as needed
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => SearchScreen()),
-                        );
-                      },
-                      child: TextFormField(
-                        readOnly: true,
+                    SizedBox(height: 15),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10.0), // Adjust horizontal padding as needed
+                      child: GestureDetector(
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => SearchScreen()),
                           );
                         },
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Theme.of(context).colorScheme.onPrimary,
-                          border: OutlineInputBorder(
-                            // borderSide: BorderSide(color: Colors.red),
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          prefixIcon: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => SearchScreen()),
-                              );
-                            },
-                            child: Icon(Icons.search, color: ColorUtils.primaryColor()),
-                          ),
-                          suffixIcon: UnconstrainedBox(
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 1,
-                                  color: ColorUtils.primaryColor(),
-                                  // color: ColorCodes.grey.withOpacity(0.4),
-                                ),
-                                SizedBox(width: width * 0.04),
-                                IconButton(
-                                  icon: Icon(Icons.tune,    color: ColorUtils.primaryColor(),),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => Screen(onApplyFilters: (Map<String, dynamic> filters) {  },
-
-                                      )),
-                                    );
-                                  },
-                                ),
-                                SizedBox(width: width * 0.02),
-                              ],
+                        child: TextFormField(
+                          readOnly: true,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => SearchScreen()),
+                            );
+                          },
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Theme.of(context).colorScheme.onPrimary,
+                            border: OutlineInputBorder(
+                              // borderSide: BorderSide(color: Colors.red),
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                          ),
-                          constraints: BoxConstraints(maxHeight: 80, maxWidth: double.infinity), // Ensure it takes full width
-                          contentPadding: EdgeInsets.only(top: 10),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(color: Colors.blue),
-                            // borderSide: BorderSide.none,
-                          ),
-                          hintText: 'Search House, Apartment, etc',
-                          hintStyle: TextStyle(
-                            fontWeight: FontWeight.w300,
-                            fontSize: 14,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-
-
-
-
-          ],
-              ),
-            ),
-          ];
-        },
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: List.generate(cate.length, (index) {
-                      bool isSelected = _selecteIndex == index;
-
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _selecteIndex = index; // Update the selected index
-                          });
-
-                          switch (index) {
-                            case 0:
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 1,selecteddIndex: 0,)),
-                              );
-                              break;
-                            case 1:
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 2,selecteddIndex: 0,)),
-                              );
-                              break;
-                            case 2:
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 3,selecteddIndex: 0,)),
-                              );
-                              break;
-                            case 3:
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 4,selecteddIndex: 0,)),
-                              );
-                              break;
-                            case 4:
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 5,selecteddIndex: 0,)),
-                              );
-                              break;
-                            case 5:
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 6,selecteddIndex: 0,)),
-                              );
-                              break;
-                            case 6:
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 7,selecteddIndex: 0,)),
-                              );
-                              break;
-
-                            default:
-                              break;
-                          }
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.all(3.0),
-                          child: Container(
-                            width: 100, // Fixed width
-                            height: 80, // Fixed height
-                            decoration: BoxDecoration(
-
-                              // color: isSelected ? customTeal : Colors.white,
-                              borderRadius: BorderRadius.circular(5), // Updated border radius
-                              border: Border.all(
-                                // color: isSelected ? customTeal : Colors.white,
-                                color: isSelected ? customTeal : customTeal, // Blue for unselected, customTeal for selected
-                                width: 1, // Adjust border width as needed
-                              ),
+                            prefixIcon: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => SearchScreen()),
+                                );
+                              },
+                              child: Icon(Icons.search, color: ColorUtils.primaryColor()),
                             ),
-                            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  index == 0
-                                      ? Icons.apartment
-                                      : index == 1
-                                      ? Icons.home
-                                      : index == 2
-                                      ? Icons.landscape
-                                      : index == 3
-                                      ? Icons.home_max_rounded
-                                      : Icons.villa,
-                                  color: isSelected ? customTeal : customTeal,
-                                ),
-                                SizedBox(height: 5), // Added space between icon and text
-                                Text(
-                                  cate[index],
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    color: isSelected ? Colors.black : Colors.black,
+                            suffixIcon: UnconstrainedBox(
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 1,
+                                    color: ColorUtils.primaryColor(),
+                                    // color: ColorCodes.grey.withOpacity(0.4),
                                   ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    }),
-                  ),
-                ),
-              ),
-
-          FutureBuilder<List<Map<String, dynamic>>>(
-            future: _bannerFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              }
-
-              if (snapshot.hasError) {
-                return Center(child: Text('Error fetching data'));
-              }
-
-              final banners = snapshot.data;
-
-              if (banners == null || banners.isEmpty) {
-                return Center(child: Text('No banners available'));
-              }
-
-              return Padding(
-                padding: const EdgeInsets.all(9.0),
-                child: Container(
-                  height: 200,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: PageView.builder(
-                    controller: _pageController,
-                    itemCount: banners.length,
-                    itemBuilder: (context, index) {
-                      final banner = banners[index];
-                      final imageUrls = banner['imageUrls'] as List<String>;
-
-                      return ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: imageUrls.length,
-                        itemBuilder: (context, imageIndex) {
-                          final imageUrl = imageUrls[imageIndex];
-                          return Padding(
-                            padding: const EdgeInsets.all(1.0),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10.0),
-                              child: Image.network(
-                                imageUrl,
-                                fit: BoxFit.cover,
-                                width: MediaQuery.of(context).size.width - 20, // Adjust width as needed
-                                height: 200,
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ),
-              );
-            },
-          ),
-
-
-SizedBox(
-  height: 10,
-),
-              Container(height: 15,
-                color: Theme.of(context).colorScheme.onPrimary,
-              ),
-              Container(
-                color: Theme.of(context).colorScheme.onPrimary,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Row(
-                    children: [
-                      Text(
-                        'Property Services',
-                        style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      Spacer(), // Adds space between "Property Services" and "View All"
-                      GestureDetector(
-                        onTap: () {
-                          // Navigate to the next page here
-                          Navigator.push(context, MaterialPageRoute(builder: (context) =>Propertyservices()));
-                        },
-                        child: Row(
-                          children: [
-                            Text(
-                              "View All ",
-                              style: TextStyle(color: ColorUtils.primaryColor()),
-                            ),
-                            Icon(
-                              Icons.arrow_forward_ios,
-                              color: ColorUtils.primaryColor(),
-                              size: 15,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              Container(height: 10,
-          color: Theme.of(context).colorScheme.onPrimary,
-        ),
-        SizedBox(height: 1,),
-        Container(
-         color: Theme.of(context).colorScheme.onPrimary,
-          child: Padding(
-            padding: const EdgeInsets.only(top:20.0,bottom: 10.0),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(crossAxisAlignment: CrossAxisAlignment.start,
-                children: propertyTopics.map((topic) {
-                  bool isSingleLine = topic["text"].length <= 5; // Adjust the character limit as needed
-                  return GestureDetector(
-                      onTap: () {
-                    _showModalBottomSheet(topic["text"]);
-                  },
-                  child: Container(
-                    width: 100, // Adjust the width as needed
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          child: CircleAvatar(
-                            backgroundColor: ColorUtils.primaryColor(),
-                            radius: 27,
-                            child: CircleAvatar(
-                              backgroundColor: ColorUtils.primaryColor(), // Example color
-                              radius: 27,
-                              child: CircleAvatar(
-                                backgroundColor: Colors.white, // Example color
-                                radius: 26,
-                                child: Icon(topic["icon"], size: 25, color: ColorUtils.primaryColor(),), // Adjust icon size and color
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 4), // Adjust vertical spacing as needed
-                        Text(
-                          topic["text"],
-                          maxLines: isSingleLine ? 1 : 4, // Show single line if text is short, otherwise allow 2 lines
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis, // Use ellipsis if text overflows
-                          style: TextStyle(fontSize: 13,  height: 1.3,),
-                        ),
-                      ],
-                    ),
-                  ),
-                  );
-                }).toList(),
-              ),
-            ),
-          ),
-        ),
-
-              Container(height: 20,
-                color: Theme.of(context).colorScheme.onPrimary,
-              ),
-
-
-          SizedBox(height: 20),
-          Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Featured Properties',
-                      style: TextStyle(   color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Featured()),
-                        );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 84.0),
-                        child: Text(
-                          "View All ",
-                          style: TextStyle(   color: ColorUtils.primaryColor(),),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 2.0),
-                      child: Icon(Icons.arrow_forward_ios,      color: ColorUtils.primaryColor(),size: 15,),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height:5),
-              Container(
-                height: 150, // Adjust height according to your content
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: filteredpropertyId.length,
-                  itemBuilder: (context, index) {
-                    return _buildPropertyItem(index);
-                  },
-                ),
-              ),
-
-              SizedBox(height: 25),
-
-
-
-              Container( color: Theme.of(context).colorScheme.onPrimary,
-                child: Padding(
-                  padding: const EdgeInsets.only(top:20.0,bottom: 25.0,left: 15.0,right: 15.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      // color: Theme.of(context).colorScheme.onPrimary,
-                      borderRadius: BorderRadius.circular(10.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1), // Shadow color with opacity
-                          spreadRadius: 1, // How far the shadow spreads
-                          // Softening effect
-                          offset: Offset(0, 0), // Horizontal and vertical offsets
-                        ),
-                      ],
-                      border: Border.all(
-                        color: ColorUtils.primaryColor(), // Set border color to red
-                        width: 0.5, // Set border width
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-
-                          child: Column(
-                            children: [
-                              Container(
-                                width: double.infinity, // Makes the container span the full width of the screen
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  color: ColorUtils.primaryColor(),
-                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0),topRight: Radius.circular(10.0),),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Want to ",
-                                      style: TextStyle(fontSize: 16, color: Colors.white),
-                                    ),
-                                    Text(
-                                      "Sell/Rent ",
-                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-                                    ),
-                                    Text(
-                                      "your property?",
-                                      style: TextStyle(fontSize: 16, color: Colors.white),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  SizedBox(width: 14),
-                                  SvgPicture.asset("assets/images/tick.svg"),
-                                  SizedBox(width: 4),
-                                  Text("Publish your property for FREE"),
-                                ],
-                              ),
-                              SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  SizedBox(width: 14),
-                                  SvgPicture.asset("assets/images/tick.svg"),
-                                  SizedBox(width: 4),
-                                  Text("Get Verified Tenant / Buyers"),
-                                ],
-                              ),
-                              SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  SizedBox(width: 14),
-                                  SvgPicture.asset("assets/images/tick.svg"),
-                                  SizedBox(width: 4),
-                                  Text("Showcase your property Instantly to public"),
-                                ],
-                              ),
-                              SizedBox(height: 5),
-                              Row(
-                                children: [
-                                  Spacer(), // Pushes the button to the right
-                                  ElevatedButton(
+                                  SizedBox(width: width * 0.04),
+                                  IconButton(
+                                    icon: Icon(Icons.tune,    color: ColorUtils.primaryColor(),),
                                     onPressed: () {
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(builder: (context) => AddPropert()),
+                                        MaterialPageRoute(builder: (context) => Screen(onApplyFilters: (Map<String, dynamic> filters) {  },
+      
+                                        )),
                                       );
                                     },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(0.0),
-                                          bottomRight: Radius.circular(10),
-                                        ),
-                                      ),
-                                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                      shadowColor: Colors.white, // Add shadow color
-                                      elevation: 0, // Adjust elevation as needed
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.add_circle,
-                                          color: ColorUtils.primaryColor(),
-                                        ),
-                                        SizedBox(width: 10),
-                                        Text(
-                                          "Post your property",
-                                          style: TextStyle(
-                                            color: ColorUtils.primaryColor(),
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
                                   ),
-
+                                  SizedBox(width: width * 0.02),
                                 ],
+                              ),
+                            ),
+                            constraints: BoxConstraints(maxHeight: 80, maxWidth: double.infinity), // Ensure it takes full width
+                            contentPadding: EdgeInsets.only(top: 10),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: Colors.blue),
+                              // borderSide: BorderSide.none,
+                            ),
+                            hintText: 'Search House, Apartment, etc',
+                            hintStyle: TextStyle(
+                              fontWeight: FontWeight.w300,
+                              fontSize: 14,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+      
+      
+      
+      
+      
+            ],
+                ),
+              ),
+            ];
+          },
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: List.generate(cate.length, (index) {
+                        bool isSelected = _selecteIndex == index;
+      
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selecteIndex = index; // Update the selected index
+                            });
+      
+                            switch (index) {
+                              case 0:
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 1,selecteddIndex: 0,)),
+                                );
+                                break;
+                              case 1:
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 2,selecteddIndex: 0,)),
+                                );
+                                break;
+                              case 2:
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 3,selecteddIndex: 0,)),
+                                );
+                                break;
+                              case 3:
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 4,selecteddIndex: 0,)),
+                                );
+                                break;
+                              case 4:
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 5,selecteddIndex: 0,)),
+                                );
+                                break;
+                              case 5:
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 6,selecteddIndex: 0,)),
+                                );
+                                break;
+                              case 6:
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 7,selecteddIndex: 0,)),
+                                );
+                                break;
+      
+                              default:
+                                break;
+                            }
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.all(3.0),
+                            child: Container(
+                              width: 100, // Fixed width
+                              height: 80, // Fixed height
+                              decoration: BoxDecoration(
+      
+                                // color: isSelected ? customTeal : Colors.white,
+                                borderRadius: BorderRadius.circular(5), // Updated border radius
+                                border: Border.all(
+                                  // color: isSelected ? customTeal : Colors.white,
+                                  color: isSelected ? customTeal : customTeal, // Blue for unselected, customTeal for selected
+                                  width: 1, // Adjust border width as needed
+                                ),
+                              ),
+                              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    index == 0
+                                        ? Icons.apartment
+                                        : index == 1
+                                        ? Icons.home
+                                        : index == 2
+                                        ? Icons.landscape
+                                        : index == 3
+                                        ? Icons.home_max_rounded
+                                        : Icons.villa,
+                                    color: isSelected ? customTeal : customTeal,
+                                  ),
+                                  SizedBox(height: 5), // Added space between icon and text
+                                  Text(
+                                    cate[index],
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: isSelected ? Colors.black : Colors.black,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
+                ),
+      
+            FutureBuilder<List<Map<String, dynamic>>>(
+              future: _bannerFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+      
+                if (snapshot.hasError) {
+                  return Center(child: Text('Error fetching data'));
+                }
+      
+                final banners = snapshot.data;
+      
+                if (banners == null || banners.isEmpty) {
+                  return Center(child: Text('No banners available'));
+                }
+      
+                return Padding(
+                  padding: const EdgeInsets.all(9.0),
+                  child: Container(
+                    height: 200,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: PageView.builder(
+                      controller: _pageController,
+                      itemCount: banners.length,
+                      itemBuilder: (context, index) {
+                        final banner = banners[index];
+                        final imageUrls = banner['imageUrls'] as List<String>;
+      
+                        return ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: imageUrls.length,
+                          itemBuilder: (context, imageIndex) {
+                            final imageUrl = imageUrls[imageIndex];
+                            return Padding(
+                              padding: const EdgeInsets.all(1.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10.0),
+                                child: Image.network(
+                                  imageUrl,
+                                  fit: BoxFit.cover,
+                                  width: MediaQuery.of(context).size.width - 20, // Adjust width as needed
+                                  height: 200,
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                );
+              },
+            ),
+      
+      
+      SizedBox(
+        height: 10,
+      ),
+                Container(height: 15,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+                Container(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Property Services',
+                          style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        Spacer(), // Adds space between "Property Services" and "View All"
+                        GestureDetector(
+                          onTap: () {
+                            // Navigate to the next page here
+                            Navigator.push(context, MaterialPageRoute(builder: (context) =>Propertyservices()));
+                          },
+                          child: Row(
+                            children: [
+                              Text(
+                                "View All ",
+                                style: TextStyle(color: ColorUtils.primaryColor()),
+                              ),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                color: ColorUtils.primaryColor(),
+                                size: 15,
                               ),
                             ],
                           ),
@@ -1390,97 +1161,339 @@ SizedBox(
                     ),
                   ),
                 ),
+      
+                Container(height: 10,
+            color: Theme.of(context).colorScheme.onPrimary,
+          ),
+          SizedBox(height: 1,),
+          Container(
+           color: Theme.of(context).colorScheme.onPrimary,
+            child: Padding(
+              padding: const EdgeInsets.only(top:20.0,bottom: 10.0),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(crossAxisAlignment: CrossAxisAlignment.start,
+                  children: propertyTopics.map((topic) {
+                    bool isSingleLine = topic["text"].length <= 5; // Adjust the character limit as needed
+                    return GestureDetector(
+                        onTap: () {
+                      _showModalBottomSheet(topic["text"]);
+                    },
+                    child: Container(
+                      width: 100, // Adjust the width as needed
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            child: CircleAvatar(
+                              backgroundColor: ColorUtils.primaryColor(),
+                              radius: 27,
+                              child: CircleAvatar(
+                                backgroundColor: ColorUtils.primaryColor(), // Example color
+                                radius: 27,
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.white, // Example color
+                                  radius: 26,
+                                  child: Icon(topic["icon"], size: 25, color: ColorUtils.primaryColor(),), // Adjust icon size and color
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 4), // Adjust vertical spacing as needed
+                          Text(
+                            topic["text"],
+                            maxLines: isSingleLine ? 1 : 4, // Show single line if text is short, otherwise allow 2 lines
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis, // Use ellipsis if text overflows
+                            style: TextStyle(fontSize: 13,  height: 1.3,),
+                          ),
+                        ],
+                      ),
+                    ),
+                    );
+                  }).toList(),
+                ),
               ),
-
-              SizedBox(height: 0),
+            ),
+          ),
+      
+                Container(height: 20,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+      
+      
+            SizedBox(height: 20),
+            Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Featured Properties',
+                        style: TextStyle(   color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+      
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Featured()),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 84.0),
+                          child: Text(
+                            "View All ",
+                            style: TextStyle(   color: ColorUtils.primaryColor(),),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 2.0),
+                        child: Icon(Icons.arrow_forward_ios,      color: ColorUtils.primaryColor(),size: 15,),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height:5),
+                Container(
+                  height: 150, // Adjust height according to your content
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: filteredpropertyId.length,
+                    itemBuilder: (context, index) {
+                      return _buildPropertyItem(index);
+                    },
+                  ),
+                ),
+      
+                SizedBox(height: 25),
+      
+      
+      
+                Container( color: Theme.of(context).colorScheme.onPrimary,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top:20.0,bottom: 25.0,left: 15.0,right: 15.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        // color: Theme.of(context).colorScheme.onPrimary,
+                        borderRadius: BorderRadius.circular(10.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1), // Shadow color with opacity
+                            spreadRadius: 1, // How far the shadow spreads
+                            // Softening effect
+                            offset: Offset(0, 0), // Horizontal and vertical offsets
+                          ),
+                        ],
+                        border: Border.all(
+                          color: ColorUtils.primaryColor(), // Set border color to red
+                          width: 0.5, // Set border width
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+      
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: double.infinity, // Makes the container span the full width of the screen
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: ColorUtils.primaryColor(),
+                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0),topRight: Radius.circular(10.0),),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Want to ",
+                                        style: TextStyle(fontSize: 16, color: Colors.white),
+                                      ),
+                                      Text(
+                                        "Sell/Rent ",
+                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                                      ),
+                                      Text(
+                                        "your property?",
+                                        style: TextStyle(fontSize: 16, color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Row(
+                                  children: [
+                                    SizedBox(width: 14),
+                                    SvgPicture.asset("assets/images/tick.svg"),
+                                    SizedBox(width: 4),
+                                    Text("Publish your property for FREE"),
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                                Row(
+                                  children: [
+                                    SizedBox(width: 14),
+                                    SvgPicture.asset("assets/images/tick.svg"),
+                                    SizedBox(width: 4),
+                                    Text("Get Verified Tenant / Buyers"),
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                                Row(
+                                  children: [
+                                    SizedBox(width: 14),
+                                    SvgPicture.asset("assets/images/tick.svg"),
+                                    SizedBox(width: 4),
+                                    Text("Showcase your property Instantly to public"),
+                                  ],
+                                ),
+                                SizedBox(height: 5),
+                                Row(
+                                  children: [
+                                    Spacer(), // Pushes the button to the right
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => AddPropert()),
+                                        );
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(0.0),
+                                            bottomRight: Radius.circular(10),
+                                          ),
+                                        ),
+                                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                        shadowColor: Colors.white, // Add shadow color
+                                        elevation: 0, // Adjust elevation as needed
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.add_circle,
+                                            color: ColorUtils.primaryColor(),
+                                          ),
+                                          SizedBox(width: 10),
+                                          Text(
+                                            "Post your property",
+                                            style: TextStyle(
+                                              color: ColorUtils.primaryColor(),
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+      
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+      
+                SizedBox(height: 0),
+              ],
+            ),
+      
+      
+      
+      
+          ),
+        ),
+        bottomNavigationBar: Container(
+          color: Color.fromRGBO(143, 0, 255, 1.0),
+          height: 55,
+          child: FlashyTabBar(
+            backgroundColor: Color.fromRGBO(143, 0, 255, 1.0).withOpacity(0),
+            selectedIndex: _seletedIndex,
+            showElevation: true,
+            onItemSelected: (index) {
+              if (index == 0) {
+      
+              } else {
+                setState(() {
+                  _seletedIndex = index;
+                  switch (_seletedIndex) {
+                    case 0:
+                      break;
+                    case 1:
+                      _navigateToSearchScreen(context);
+                      break;
+                    case 2:
+                      _navigateToWishlistScreen(context);
+                      break;
+                    case 3:
+                      navigateToProfileScreen(context);
+      
+                    default:
+                      break;
+                  }
+                });
+              }
+            },
+            items: [
+              FlashyTabBarItem(
+                icon: SvgPicture.asset(
+                  "assets/images/Subtract.svg",
+                  height: 24,
+                  color: Colors.white,
+                ),
+                // inactiveColor: Colors.white,
+                title: Text(""),
+                activeColor: Colors.white,
+      
+              ),
+              FlashyTabBarItem(
+                activeColor: Colors.white,
+                icon: SvgPicture.asset(
+                  height: 24,
+                  "assets/images/SearchIcon.svg",
+                  color: Colors.white,
+                ),
+                inactiveColor: Colors.white,
+                title: Text(""),
+      
+              ),
+              FlashyTabBarItem(
+                activeColor: Colors.white,
+                icon: SvgPicture.asset(
+                  "assets/images/Heart.svg",
+                  height: 24,
+      
+                  color: Colors.white,
+                ),
+                inactiveColor: Colors.white,
+                title: Text(""),
+      
+              ),
+              FlashyTabBarItem(
+                activeColor: Colors.white,
+                icon: SvgPicture.asset(
+                  "assets/images/ProfileIcon.svg",
+                  height: 34,
+      
+                  color: Colors.white,
+                ),
+                inactiveColor: Colors.white,
+      
+                title: Text(""),
+      
+              ),
             ],
           ),
-
-
-
-
-        ),
-      ),
-      bottomNavigationBar: Container(
-        color: Color.fromRGBO(143, 0, 255, 1.0),
-        height: 55,
-        child: FlashyTabBar(
-          backgroundColor: Color.fromRGBO(143, 0, 255, 1.0).withOpacity(0),
-          selectedIndex: _seletedIndex,
-          showElevation: true,
-          onItemSelected: (index) {
-            if (index == 0) {
-
-            } else {
-              setState(() {
-                _seletedIndex = index;
-                switch (_seletedIndex) {
-                  case 0:
-                    break;
-                  case 1:
-                    _navigateToSearchScreen(context);
-                    break;
-                  case 2:
-                    _navigateToWishlistScreen(context);
-                    break;
-                  case 3:
-                    navigateToProfileScreen(context);
-
-                  default:
-                    break;
-                }
-              });
-            }
-          },
-          items: [
-            FlashyTabBarItem(
-              icon: SvgPicture.asset(
-                "assets/images/Subtract.svg",
-                height: 24,
-                color: Colors.white,
-              ),
-              // inactiveColor: Colors.white,
-              title: Text(""),
-              activeColor: Colors.white,
-
-            ),
-            FlashyTabBarItem(
-              activeColor: Colors.white,
-              icon: SvgPicture.asset(
-                height: 24,
-                "assets/images/SearchIcon.svg",
-                color: Colors.white,
-              ),
-              inactiveColor: Colors.white,
-              title: Text(""),
-
-            ),
-            FlashyTabBarItem(
-              activeColor: Colors.white,
-              icon: SvgPicture.asset(
-                "assets/images/Heart.svg",
-                height: 24,
-
-                color: Colors.white,
-              ),
-              inactiveColor: Colors.white,
-              title: Text(""),
-
-            ),
-            FlashyTabBarItem(
-              activeColor: Colors.white,
-              icon: SvgPicture.asset(
-                "assets/images/ProfileIcon.svg",
-                height: 34,
-
-                color: Colors.white,
-              ),
-              inactiveColor: Colors.white,
-
-              title: Text(""),
-
-            ),
-          ],
         ),
       ),
     );
