@@ -218,7 +218,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                 height: 20,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5),
-                                  color: Color.fromRGBO(43, 84, 112, 55),
+                                  color: ColorUtils.primaryColor(),
                                 ),
                                 child: Text(
                                   wishlistItem['subcategory'] ??

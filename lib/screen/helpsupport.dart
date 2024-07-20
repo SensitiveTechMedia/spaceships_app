@@ -214,7 +214,7 @@ class _SupportScreenState extends State<SupportScreen> {
                       final status = doc['status'] as String;
                       final submittedDate = (doc['submittedDate'] as Timestamp).toDate();
                       final userUID = doc['userUID'] as String;
-
+                      final docId = doc.id;
                       String createDay = DateFormat('dd').format(submittedDate);
                       String createMonth = DateFormat('MMMM').format(submittedDate);
                       String createHour = DateFormat('hh').format(submittedDate);
@@ -224,7 +224,19 @@ class _SupportScreenState extends State<SupportScreen> {
                       return Column(
                         children: [
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+    Navigator.push(
+    context,
+    MaterialPageRoute(
+    builder: (context) => ResponseScreen(
+    docId: docId,
+    issue: issue,
+
+    submittedDate: submittedDate,
+    status: status,
+    ),),
+                              );
+                            },
                             child: Container(
                               width: MediaQuery.of(context).size.width,
                               decoration: BoxDecoration(
@@ -399,6 +411,185 @@ class _SupportScreenState extends State<SupportScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+
+
+class ResponseScreen extends StatefulWidget {
+  final String docId;
+  final String issue;
+  final DateTime submittedDate;
+  final String status;
+
+  ResponseScreen({
+    required this.docId,
+    required this.issue,
+    required this.submittedDate,
+    required this.status,
+  });
+
+  @override
+  _ResponseScreenState createState() => _ResponseScreenState();
+}
+
+class _ResponseScreenState extends State<ResponseScreen> {
+  TextEditingController responseController = TextEditingController();
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  Future<void> _sendResponse() async {
+    if (responseController.text.isNotEmpty) {
+      try {
+        // Get the current user's UID
+        String uid = auth.currentUser?.uid ?? 'unknown';
+
+        await firestore.collection('support').doc(widget.docId).collection('responses').add({
+          'response': responseController.text,
+          'respondedDate': DateTime.now(),
+          'userUID': uid, // Store the UID
+        });
+
+        // Optionally show a success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Response sent successfully')),
+        );
+
+        // Clear the text field
+        responseController.clear();
+      } catch (e) {
+        // Optionally show an error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to send response')),
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    String createDay = DateFormat('dd').format(widget.submittedDate);
+    String createMonth = DateFormat('MMMM').format(widget.submittedDate);
+    String createHour = DateFormat('hh').format(widget.submittedDate);
+    String createMinute = DateFormat('mm').format(widget.submittedDate);
+    String createSeconds = DateFormat('ss').format(widget.submittedDate);
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: ColorUtils.primaryColor(), // Example app bar background color
+        title: Text(
+          "Support Screen",
+          style: TextStyle(color: Colors.white),
+        ),
+        iconTheme: IconThemeData(color: Colors.white),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Date: $createDay $createMonth $createHour:$createMinute:$createSeconds",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    "Issue: ${widget.issue}",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    "Status: ${widget.status}",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 16),
+                  Expanded(
+                    child: StreamBuilder<QuerySnapshot>(
+                      stream: firestore.collection('support').doc(widget.docId).collection('responses').orderBy('respondedDate').snapshots(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+
+                        return ListView(
+                          children: snapshot.data!.docs.map((doc) {
+                            bool isCurrentUser = doc['userUID'] == auth.currentUser?.uid;
+                            return Align(
+                              alignment: isCurrentUser ? Alignment.centerLeft : Alignment.centerRight,
+                              child: Container(
+                                margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: isCurrentUser ? Colors.blue[100] : Colors.green[100],
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(doc['response'], style: TextStyle(fontSize: 16)),
+                                    SizedBox(height: 5),
+                                    Text(
+                                      DateFormat('yyyy-MM-dd – kk:mm').format(doc['respondedDate'].toDate()),
+                                      style: TextStyle(fontSize: 12, color: Colors.black54),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: responseController,
+                    decoration: InputDecoration(
+                      labelText: 'Type your response here...',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8),
+                GestureDetector(
+                  onTap: _sendResponse,
+                  child: Container(
+                    width: 100,
+                    height: 55,
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: ColorUtils.primaryColor(),
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Send',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
