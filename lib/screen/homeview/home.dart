@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:spaceships/colorcode.dart';
 import 'package:spaceships/jvproperty/Agents%20Corner.dart';
 import 'package:spaceships/jvproperty/addpropertyjvproperties.dart';
@@ -646,7 +647,10 @@ bool featuredStatus = false;
                   ),
                   SizedBox(height: 15),
                   _isLoading
-                      ? CircularProgressIndicator() // Show circular progress indicator if loading
+                      ? Container(     child: LoadingAnimationWidget.stretchedDots(
+                    color: ColorUtils.primaryColor(),
+                    size: 50,
+                  ),) // Show circular progress indicator if loading
                       : Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -1057,7 +1061,13 @@ bool featuredStatus = false;
               future: _bannerFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return Center(child: Container(
+                      child: Container(
+                        child: LoadingAnimationWidget.dotsTriangle(
+                          color: ColorUtils.primaryColor(),
+                          size: 50,
+                        ),
+                      ),),);
                 }
       
                 if (snapshot.hasError) {
@@ -1108,8 +1118,20 @@ bool featuredStatus = false;
                                   fit: BoxFit.cover,
                                   width: MediaQuery.of(context).size.width - 20, // Adjust width as needed
                                   height: 200,
-                                ),
-                              ),
+    loadingBuilder: (context, child, progress) {
+    if (progress == null) {
+    return child;
+    } else {
+    return Center(
+      child: LoadingAnimationWidget.inkDrop(
+        color: ColorUtils.primaryColor(),
+        size: 50,
+      ),
+    ); }
+    },
+    ),
+                              )
+
                             );
                           },
                         );
@@ -2033,12 +2055,25 @@ class _ImageLoaderState extends State<ImageLoader> {
             return child;
           } else {
             // Still loading
-            return CircularProgressIndicator();
+            return Container(
+
+                child: LoadingAnimationWidget.inkDrop(
+                  color: ColorUtils.primaryColor(),
+                  size: 50,
+                ),
+
+            );
           }
         },
       )
           : Container(
-        child: CircularProgressIndicator(),
+        child: Container(
+            child: LoadingAnimationWidget.inkDrop(
+              color: ColorUtils.primaryColor(),
+              size: 50,
+            ),
+
+        ),
         key: ValueKey('placeholder'),
       ),
     );

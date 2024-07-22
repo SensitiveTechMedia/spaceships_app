@@ -1,8 +1,13 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/context_extensions.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:spaceships/colorcode.dart';
 
 class SupportScreen extends StatefulWidget {
@@ -418,6 +423,8 @@ class _SupportScreenState extends State<SupportScreen> {
 
 
 
+
+
 class ResponseScreen extends StatefulWidget {
   final String docId;
   final String issue;
@@ -439,17 +446,35 @@ class _ResponseScreenState extends State<ResponseScreen> {
   TextEditingController responseController = TextEditingController();
   final FirebaseAuth auth = FirebaseAuth.instance;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final ImagePicker _picker = ImagePicker();
+  File? _image;
+  bool _isUploading = false; // Add this variable to track upload status
 
   Future<void> _sendResponse() async {
-    if (responseController.text.isNotEmpty) {
+    if (responseController.text.isNotEmpty || _image != null) {
+      setState(() {
+        _isUploading = true; // Set to true when upload starts
+      });
+
       try {
         // Get the current user's UID
         String uid = auth.currentUser?.uid ?? 'unknown';
+
+        // Upload the image if selected
+        String? imageUrl;
+        if (_image != null) {
+          final storageRef = FirebaseStorage.instance.ref().child('responses/${widget.docId}/${DateTime.now().millisecondsSinceEpoch}.jpg');
+          final uploadTask = storageRef.putFile(_image!);
+          final snapshot = await uploadTask.whenComplete(() => {});
+          imageUrl = await snapshot.ref.getDownloadURL();
+        }
 
         await firestore.collection('support').doc(widget.docId).collection('responses').add({
           'response': responseController.text,
           'respondedDate': DateTime.now(),
           'userUID': uid, // Store the UID
+          'isClient': false, // Mark this as a user response
+          'imageUrl': imageUrl, // Store the image URL if available
         });
 
         // Optionally show a success message
@@ -457,13 +482,34 @@ class _ResponseScreenState extends State<ResponseScreen> {
           SnackBar(content: Text('Response sent successfully')),
         );
 
-        // Clear the text field
+        // Clear the text field and image
         responseController.clear();
+        setState(() {
+          _image = null;
+        });
       } catch (e) {
         // Optionally show an error message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to send response')),
         );
+      } finally {
+        setState(() {
+          _isUploading = false; // Set to false when upload finishes
+        });
+      }
+    }
+  }
+
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+
+      // Automatically upload the image once it's picked
+      if (_image != null) {
+        await _sendResponse();
       }
     }
   }
@@ -477,120 +523,191 @@ class _ResponseScreenState extends State<ResponseScreen> {
     String createSeconds = DateFormat('ss').format(widget.submittedDate);
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: ColorUtils.primaryColor(), // Example app bar background color
-        title: Text(
-          "Support Screen",
-          style: TextStyle(color: Colors.white),
-        ),
-        iconTheme: IconThemeData(color: Colors.white),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Date: $createDay $createMonth $createHour:$createMinute:$createSeconds",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    "Issue: ${widget.issue}",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    "Status: ${widget.status}",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 16),
-                  Expanded(
-                    child: StreamBuilder<QuerySnapshot>(
-                      stream: firestore.collection('support').doc(widget.docId).collection('responses').orderBy('respondedDate').snapshots(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return Center(child: CircularProgressIndicator());
-                        }
-
-                        return ListView(
-                          children: snapshot.data!.docs.map((doc) {
-                            bool isCurrentUser = doc['userUID'] == auth.currentUser?.uid;
-                            return Align(
-                              alignment: isCurrentUser ? Alignment.centerLeft : Alignment.centerRight,
-                              child: Container(
-                                margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: isCurrentUser ? Colors.blue[100] : Colors.green[100],
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(doc['response'], style: TextStyle(fontSize: 16)),
-                                    SizedBox(height: 5),
-                                    Text(
-                                      DateFormat('yyyy-MM-dd – kk:mm').format(doc['respondedDate'].toDate()),
-                                      style: TextStyle(fontSize: 12, color: Colors.black54),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                        );
-                      },
-                    ),
-                  ),
-                ],
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(60.0),
+        child: Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.6),
+                spreadRadius: 12,
+                blurRadius: 8,
+                offset: Offset(0, 3), // changes position of shadow
               ),
-            ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: responseController,
-                    decoration: InputDecoration(
-                      labelText: 'Type your response here...',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 8),
-                GestureDetector(
-                  onTap: _sendResponse,
-                  child: Container(
-                    width: 100,
-                    height: 55,
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: ColorUtils.primaryColor(),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Send',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18,
-                          color: Colors.white,
+          child: AppBar(
+            backgroundColor: ColorUtils.primaryColor(),
+            iconTheme: IconThemeData(color: Colors.white),
+            title: Text('Support Screen', style: TextStyle(color: Colors.white)),
+          ),
+        ),
+      ),
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Date: $createDay $createMonth $createHour:$createMinute:$createSeconds",
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        "Issue: ${widget.issue}",
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        "Status: ${widget.status}",
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 16),
+                      Expanded(
+                        child: StreamBuilder<QuerySnapshot>(
+                          stream: firestore.collection('support').doc(widget.docId).collection('responses').orderBy('respondedDate').snapshots(),
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              return Center(   child: LoadingAnimationWidget.inkDrop(
+                                color: ColorUtils.primaryColor(),
+                                size: 50,
+                              ),);
+                            }
+
+                            return ListView(
+                              children: snapshot.data!.docs.map((doc) {
+                                bool isClient = doc['isClient'] ?? false;
+                                bool isCurrentUser = doc['userUID'] == auth.currentUser?.uid;
+
+                                return Align(
+                                  alignment: isClient ? Alignment.centerRight : Alignment.centerLeft,
+                                  child: Container(
+                                    margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: isCurrentUser ? ColorUtils.primaryColor() : isClient ? Colors.green[100] : Colors.grey[300],
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        if (doc['response'] != null) Text(doc['response'], style: TextStyle(fontSize: 16,color: Colors.white)),
+                                        if (doc['imageUrl'] != null)
+                                          Padding(
+                                            padding: const EdgeInsets.only(top: 1.0),
+                                            child: SizedBox(
+                                              width: 200, // Set the desired width
+                                              height: 200, // Set the desired height
+                                              child: Image.network(
+                                                doc['imageUrl'],
+                                                width: 200,
+                                                height: 80,
+                                                fit: BoxFit.cover, // Use BoxFit.cover to fit the image within the given width and height
+                                              ),
+                                            ),
+                                          ),
+
+                                        SizedBox(height: 5),
+                                        Text(
+                                          DateFormat('yyyy-MM-dd – kk:mm').format(doc['respondedDate'].toDate()),
+                                          style: TextStyle(fontSize: 12, color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            );
+                          },
                         ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 5.0, right: 5.0, bottom: 10.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: responseController,
+                        decoration: InputDecoration(
+                          hintText: 'Type your response here...',hintStyle: TextStyle(color: Colors.white),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
+                          filled: true,
+                          fillColor: ColorUtils.primaryColor(),
+                          prefixIcon: Padding(
+                            padding: const EdgeInsets.only(left: 8.0, right: 10),
+                            child: GestureDetector(
+                              onTap: _isUploading ? null : _pickImage, // Disable picking image if uploading
+                              child: CircleAvatar(
+                                backgroundColor: Colors.white,
+                                child: Icon(
+                                  Icons.photo,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                          suffixIcon: Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: GestureDetector(
+                              onTap: _isUploading ? null : _sendResponse, // Disable sending response if uploading
+                              child: CircleAvatar(
+                                backgroundColor: Colors.white,
+                                child: Center(
+                                  child: Icon(
+                                    Icons.send,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        enabled: !_isUploading, // Disable the text field if uploading
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                  ],
+                ),
+              ),
+            ],
           ),
+          if (_isUploading)
+            Center(
+              child: LoadingAnimationWidget.inkDrop(
+                color: ColorUtils.primaryColor(),
+                size: 50,
+              ),
+            ),
         ],
       ),
     );
   }
 }
+
+

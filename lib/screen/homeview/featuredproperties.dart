@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:spaceships/colorcode.dart';
 import 'package:spaceships/screen/category/All.dart';
 import 'package:spaceships/screen/filter.dart';
@@ -69,7 +70,10 @@ class _AllPageState extends State<Featured> {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 }
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return Center(child: LoadingAnimationWidget.dotsTriangle(
+                    color: ColorUtils.primaryColor(),
+                    size: 50,
+                  ),);
                 }
                 if (snapshot.data!.docs.isEmpty) {
                   return Center(child: Text('No properties found'));

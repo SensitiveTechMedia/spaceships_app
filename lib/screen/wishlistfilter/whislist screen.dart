@@ -10,15 +10,13 @@ import 'package:geolocator/geolocator.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:share/share.dart';
 import 'package:spaceships/colorcode.dart';
+import 'package:spaceships/screen/a.dart';
 import 'package:spaceships/screen/filter.dart';
 import 'package:spaceships/screen/homeview/home.dart';
 import 'package:spaceships/screen/profileedit/profile%20page.dart';
 import 'package:spaceships/screen/search%20screen.dart';
-import 'package:spaceships/screen/videoplayer.dart';
-import 'package:spaceships/screen/wishlistfilter/tune.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:video_player/video_player.dart';
-
 import '../homeview/propertyview.dart';
 
 class WishlistScreen extends StatefulWidget {
@@ -109,7 +107,10 @@ class _WishlistScreenState extends State<WishlistScreen> {
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Center(  child: LoadingAnimationWidget.dotsTriangle(
+              color: ColorUtils.primaryColor(),
+              size: 50,
+            ),);
           }
 
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
@@ -394,10 +395,8 @@ class _WhislitsState extends State<Whislits> {
   late VideoPlayerController _controller;
   late Future<List<Map<String, dynamic>>> paymentRowsFuture;
   late Future<List<Map<String, dynamic>>> nearbyplaces;
-
   StreamSubscription? _sub;
   User? user = FirebaseAuth.instance.currentUser; // Get the current user
-
   GoogleMapController? _mapController;
   int _currentIndex = 0;
   List<String> amenities = [];
@@ -406,45 +405,43 @@ class _WhislitsState extends State<Whislits> {
   DateTime? selectedDate;
   String formattedDate = '';
   bool _showOptions = false;
-
-
-
+  bool isInWishlist = false;
+  String? subcategory;
+  String? category;
   String? userName;
   String? userMobileNumber;
   TextEditingController nameController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
   UserProfile? _posterProfile;
   Position? _currentPosition;
-  bool isInWishlist = false;
 
   @override
   void initState() {
     super.initState();
     propertyDataFuture = fetchPropertyData();
-
     _pageController = PageController();
-
-
     _checkIfInWishlist();
     fetchLocation();
-
     fetchUserDetails();
     _initUniLinks();
     amenties();
     fetchData();
   }
-
   @override
   void dispose() {
     _sub?.cancel();
     _pageController.dispose();
     super.dispose();
   }
-  // @override
-  // void dispose() {
-  //   _pageController.dispose();
-  //   super.dispose();
-  // }
+  Future<void> _launchWhatsApp() async {
+    String message = "Checkout this property: $category, \nAddress: $subcategory ,\n${PropertyDeepLink.generateDeepLink(widget.propertyId)}${PropertyDeepLink.generateDeepLink(widget.propertyId)}";
+    try {
+      await Share.share(message);
+      print('Sharing via WhatsApp: $message');
+    } catch (e) {
+      print('Error sharing: $e');
+    }
+  }
   Future<List<Map<String, dynamic>>> nearbyplace() async {
     DocumentSnapshot doc = await FirebaseFirestore.instance.collection('propert').doc(widget.propertyId).get();
     return List<Map<String, dynamic>>.from(doc['nearbyPlaces']);
@@ -617,8 +614,6 @@ class _WhislitsState extends State<Whislits> {
         print('Property ID not found in the link.');
       }
     }
-
-
   }
   void fetchData() async {
     // Fetch data from Firebase Firestore
@@ -727,7 +722,6 @@ class _WhislitsState extends State<Whislits> {
       ));
     }
   }
-
   Future<void> _checkIfInWishlist() async {
     if (user != null) {
       var querySnapshot = await FirebaseFirestore.instance
@@ -782,16 +776,79 @@ class _WhislitsState extends State<Whislits> {
     }
   }
   Future<Map<String, dynamic>> fetchPropertyData() async {
-    DocumentSnapshot snapshot = await FirebaseFirestore.instance
-        .collection('propert')
-        .doc(widget.propertyId)
-        .get();
-    return snapshot.data() as Map<String, dynamic>;
+    try {
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('propert')
+          .doc(widget.propertyId)
+          .get();
+      Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+      setState(() {
+        subcategory = data['subcategory'];
+        category = data['subcategory'];
+      });
+      return data;
+    } catch (e) {
+      print('Error fetching property data: $e');
+      return {}; // Return an empty map in case of error
+    }
   }
+  bool shouldDisplayBalconyAndBathroom() {
+    return !(subcategory == 'Plot / Land' ||
+        subcategory == 'Commercial Space' ||
+        subcategory == 'Hostel/PG/Service Apartment');
+  }
+  bool yearsold() {
+    return !(subcategory == 'Plot / Land' ||
 
+        subcategory == 'Hostel/PG/Service Apartment');
+  }
+  bool total() {
+
+    return !(category == 'Rent' ||category == 'Lease'
+        || subcategory == 'Hostel/PG/Service Apartment');
+  }
+  bool dimensionandroad() {
+
+    return !(category == 'Rent' ||category == 'Lease' ||subcategory == 'Flat'
+        || subcategory == 'Hostel/PG/Service Apartment');
+  }
+  bool possesion() {
+
+        return !(subcategory == 'Plot / Land' ||category == 'Rent' ||category == 'Lease'
+            || subcategory == 'Hostel/PG/Service Apartment');
+  }
+  bool parking() {
+
+    return !(subcategory == 'Plot / Land'
+        || subcategory == 'Hostel/PG/Service Apartment');
+  }
+  bool floornumbertype () {
+
+    return !(subcategory == 'Plot / Land' || subcategory == 'Villa / Independent House'
+        || subcategory == 'Hostel/PG/Service Apartment');
+  }
+  bool facing() {
+    return !(
+        subcategory == 'Hostel/PG/Service Apartment');
+  }
+  bool corner() {
+    return !(subcategory == 'Flat' ||
+        subcategory == 'Villa / Independent House' ||
+        subcategory == 'Hostel/PG/Service Apartment');
+  }
+  bool undivided() {
+
+    return !(subcategory == 'Plot / Land' || subcategory == 'Villa / Independent House' ||category == 'Rent' ||category == 'Lease'
+        || subcategory == 'Hostel/PG/Service Apartment');
+  }
+  bool superbuild () {
+
+    return !(subcategory == 'Plot / Land' || subcategory == 'Commercial Space' || subcategory == 'Villa / Independent House' ||category == 'Rent' ||category == 'Lease'
+        || subcategory == 'Hostel/PG/Service Apartment');
+  }
   @override
   Widget build(BuildContext context) {
-    bool isInWishlist = false; // Assuming a variable to check wishlist status
+    // bool isInWishlist = false; // Assuming a variable to check wishlist status
 
     return Scaffold(
       appBar: AppBar(
@@ -833,9 +890,10 @@ class _WhislitsState extends State<Whislits> {
           Container(
             child: CircleAvatar(
               radius: 25,
+              backgroundColor: isInWishlist ? Colors.red : Colors.green,
               child: IconButton(
                 onPressed: () {
-                  // saveToWishlist();
+                  saveToWishlist();
                 },
                 icon: SvgPicture.asset(
                   'assets/images/HeartIcon.svg',
@@ -929,7 +987,7 @@ class _WhislitsState extends State<Whislits> {
                               child: Container(
                                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                                 child: Text(
-         " ${propertyData['category']}",
+                                  " ${propertyData['category']}",
                                   style: TextStyle(
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold,
@@ -991,6 +1049,7 @@ class _WhislitsState extends State<Whislits> {
                       Row(
                         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+
                           Expanded(
                             child: Text(
                               " ${propertyData['propertyOwner']}",
@@ -1032,7 +1091,7 @@ class _WhislitsState extends State<Whislits> {
                             child: Padding(
                               padding: EdgeInsets.only(left: 5),
                               child: Text(
-         " ${propertyData['addressLine']}",
+                                " ${propertyData['addressLine']}",
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -1074,10 +1133,12 @@ class _WhislitsState extends State<Whislits> {
                         ),
                       ),
                       SizedBox(height: 5),
+          if (shouldDisplayBalconyAndBathroom()) ...[
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: [
+
 
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 10),
@@ -1108,39 +1169,40 @@ class _WhislitsState extends State<Whislits> {
                                   ),
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.withOpacity(0.2),
-                                    borderRadius: BorderRadius.circular(20.0),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SvgPicture.asset(
-                                        'assets/images/BathRoom.svg', // Path to bathroom SVG asset
-                                        width: 24,
-                                        height: 24,
-                                        color: Color.fromRGBO(139, 200, 62, 1.0),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/images/BathRoom.svg', // Path to bathroom SVG asset
+                                      width: 24,
+                                      height: 24,
+                                      color: Color.fromRGBO(139, 200, 62, 1.0),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      " ${propertyData['bathroom']} bathroom",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.black,
                                       ),
-                                      SizedBox(width: 8),
-                                      Text(
-                                        " ${propertyData['bathroom']} bathroom",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
+                            ),
+                          ],
 
                         ),
                       ),
+                      ],
                       SizedBox(height:10),
                       if (_currentPosition != null)
                         Padding(
@@ -1245,149 +1307,162 @@ class _WhislitsState extends State<Whislits> {
                               ),
                             ],
                             rows: [
-
-                                DataRow(
-                                  cells: [
-                                    DataCell(
-                                      Text(
-                                        'Years old :',
-                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
-                                      ),
+                            if (yearsold()) ...[
+                              DataRow(
+                                cells: [
+                                  DataCell(
+                                    Text(
+                                      'Years old :',
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
                                     ),
-                                    DataCell(
-                                      Text(
-                                        "${propertyData['yearsOld']} year old",
-                                        style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
-                                      ),
+                                  ),
+                                  DataCell(
+                                    Text(
+                                      "${propertyData['yearsOld']} year old",
+                                      style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
+                              ),
 
-
-                                DataRow(
-                                  cells: [
-                                    DataCell(
-                                      Text(
-                                        'Dimension :',
-                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
-                                      ),
+],
+                                if (dimensionandroad()) ...[
+                              DataRow(
+                                cells: [
+                                  DataCell(
+                                    Text(
+                                      'Dimension :',
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
                                     ),
-                                    DataCell(
-                                      Text(
-                                        " ${propertyData['dimension']} ",
-                                        style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
-                                      ),
+                                  ),
+                                  DataCell(
+                                    Text(
+                                      " ${propertyData['dimension']} ",
+                                      style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
+                              ),
 
-
-                                DataRow(
-                                  cells: [
-                                    DataCell(
-                                      Text(
-                                        'undivided share :',
-                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
-                                      ),
+],
+          if (undivided()) ...[
+                              DataRow(
+                                cells: [
+                                  DataCell(
+                                    Text(
+                                      'undivided share :',
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
                                     ),
-                                    DataCell(
-                                      Text(
-                                        " ${propertyData['undividedshare']}  undivided share",
-                                        style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
-                                      ),
+                                  ),
+                                  DataCell(
+                                    Text(
+                                      " ${propertyData['undividedshare']}  undivided share",
+                                      style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
+                              ),
+                                ],
+                                if (total()) ...[
 
-
-                                DataRow(
-                                  cells: [
-                                    DataCell(
-                                      Text(
-                                        'Area type :',
-                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
-                                      ),
+                              DataRow(
+                                cells: [
+                                  DataCell(
+                                    Text(
+                                      'Area type :',
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
                                     ),
-                                    DataCell(
-                                      Text(
-                                        "${propertyData['area']}  ${propertyData['areaType']}",
-                                        style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
-                                      ),
+                                  ),
+                                  DataCell(
+                                    Text(
+                                      "${propertyData['totalArea']}  ${propertyData['areaType']}",
+                                      style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
                                     ),
-                                  ],
-                                ),
-
-
-                                DataRow(
-                                  cells: [
-                                    DataCell(
-                                      Text(
-                                        'Furnished Status :',
-                                        style: TextStyle(fontSize:16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
-                                      ),
+                                  ),
+                                ],
+                              ),
+],
+          if (shouldDisplayBalconyAndBathroom()) ...[
+                              DataRow(
+                                cells: [
+                                  DataCell(
+                                    Text(
+                                      'Furnished Status :',
+                                      style: TextStyle(fontSize:16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
                                     ),
-                                    DataCell(
-                                      Text(
-                                        "${propertyData['furnishingType']}",
-                                        style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
-                                      ),
+                                  ),
+                                  DataCell(
+                                    Text(
+                                      "${propertyData['furnishingType']}",
+                                      style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
                                     ),
-                                  ],
-                                ),
-
-
-                                DataRow(
-                                  cells: [
-                                    DataCell(
-                                      Text(
-                                        'superbuildup area :',
-                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
-                                      ),
+                                  ),
+                                ],
+                              ),
+],
+          if (superbuild()) ...[
+                              DataRow(
+                                cells: [
+                                  DataCell(
+                                    Text(
+                                      'superbuildup area :',
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
                                     ),
-                                    DataCell(
-                                      Text(
-                                        "${propertyData['superbuildup']}",
-                                        style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
-                                      ),
+                                  ),
+                                  DataCell(
+                                    Text(
+                                      "${propertyData['superbuildup']}",
+                                      style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
                                     ),
-                                  ],
-                                ),
-
-                                DataRow(
-                                  cells: [
-                                    DataCell(
-                                      Text(
-                                        'road controller :',
-                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
-                                      ),
+                                  ),
+                                ],
+                              ),
+          ],
+          if (dimensionandroad()) ...[
+                              DataRow(
+                                cells: [
+                                  DataCell(
+                                    Text(
+                                      'road Size :',
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
                                     ),
-                                    DataCell(
-                                      Text(
-                                        " ${propertyData['roadController']}",
-                                        style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
-                                      ),
+                                  ),
+                                  DataCell(
+                                    Text(
+                                      " ${propertyData['roadController']}",
+                                      style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
                                     ),
-                                  ],
-                                ),
-
-
+                                  ),
+                                ],
+                              ),
+],
+                              if (corner()) ...[
                                 DataRow(
                                   cells: [
                                     DataCell(
                                       Text(
                                         'Is this a corner area?',
-                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: ColorUtils.primaryColor(),
+                                        ),
                                       ),
                                     ),
                                     DataCell(
                                       Text(
-                                        "${propertyData['isCornerArea']}",
-                                        style: TextStyle(fontSize: 16, color: ColorUtils.primaryColor(),),
+                                        corner() ? 'Yes' : 'No',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: ColorUtils.primaryColor(),
+                                        ),
                                       ),
                                     ),
                                   ],
-                                ),
+                                )
 
+                              ],
+          if (parking()) ...[
                               DataRow(
                                 cells: [
                                   DataCell(
@@ -1398,148 +1473,155 @@ class _WhislitsState extends State<Whislits> {
                                   ),
                                   DataCell(
                                     Text(
-                                      "${propertyData['parkingIncluded']}",
-                                      style: TextStyle(fontSize: 16, color: ColorUtils.primaryColor(),),
+                                      propertyData['parkingIncluded'] ? 'Included' : 'Not Included',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: ColorUtils.primaryColor(),
+                                      ),
+                                    ),
+                                  )
+
+                                ],
+                              ),
+                                  ],
+                                  if (facing()) ...[
+                              DataRow(
+                                cells: [
+                                  DataCell(
+                                    Text(
+                                      'Facing Direction :',
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
+                                    ),
+                                  ),
+                                  DataCell(
+                                    Container(
+                                      child: Row(
+                                        children: propertyFacing.map((facing) {
+                                          return Padding(
+                                            padding: EdgeInsets.all(10.0),
+                                            child: Container(
+
+
+                                              child: Center(
+                                                child: Text(
+                                                  facing,
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: ColorUtils.primaryColor(),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        }).toList(),
+                                      ),
                                     ),
                                   ),
                                 ],
                               ),
+],
+                                  if (parking()) ...[
+                              DataRow(
+                                cells: [
+                                  DataCell(
+                                    Text(
+                                      'Parking Type :',
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
+                                    ),
+                                  ),
+                                  DataCell(
+                                    Text(
+                                      "${propertyData['parkingType']}",
+                                      style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              DataRow(
+                                cells: [
+                                  DataCell(
+                                    Text(
+                                      'Car parking :',
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
+                                    ),
+                                  ),
+                                  DataCell(
+                                    Text(
+                                      "${propertyData['carparking']}",
+                                      style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              DataRow(
+                                cells: [
+                                  DataCell(
+                                    Text(
+                                      'Bike parking :',
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
+                                    ),
+                                  ),
+                                  DataCell(
+                                    Text(
+                                      "${propertyData['bikeParkingCount']}",
+                                      style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                                ],
+                                if (possesion()) ...[
+                              DataRow(
+                                cells: [
+                                  DataCell(
+                                    Text(
+                                      'Possesion type :',
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
+                                    ),
+                                  ),
+                                  DataCell(
+                                    Text("  ${propertyData['possessionType']}",
 
-                                DataRow(
-                                  cells: [
-                                    DataCell(
-                                      Text(
-                                        'Facing Direction :',
-                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
-                                      ),
+                                      style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
                                     ),
-                                    DataCell(
-                                      Container(
-                                        child: Row(
-                                          children: propertyFacing.map((facing) {
-                                            return Padding(
-                                              padding: EdgeInsets.all(10.0),
-                                              child: Container(
+                                  ),
 
+                                ],
+                              ),
+],
+          if (floornumbertype()) ...[
+                              DataRow(
+                                cells: [
+                                  DataCell(
+                                    Text(
+                                      'Floor number :',
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
+                                    ),
+                                  ),
+                                  DataCell(
 
-                                                child: Center(
-                                                  child: Text(
-                                                    facing,
-                                                    style: TextStyle(
-                                                      fontSize: 16,
-                                                      color: ColorUtils.primaryColor(),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          }).toList(),
-                                        ),
-                                      ),
+                                    Text(" ${propertyData['floorNumber']}",
+                                      style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
                                     ),
-                                  ],
-                                ),
-
-                                DataRow(
-                                  cells: [
-                                    DataCell(
-                                      Text(
-                                        'Parking Type :',
-                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
-                                      ),
+                                  ),
+                                ],
+                              ),
+                              DataRow(
+                                cells: [
+                                  DataCell(
+                                    Text(
+                                      'Floor type :',
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
                                     ),
-                                    DataCell(
-                                      Text(
-                                        "${propertyData['parkingType']}",
-                                        style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
-                                      ),
+                                  ),
+                                  DataCell(
+                                    Text(" ${propertyData['floorType']}",
+                                      style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
                                     ),
-                                  ],
-                                ),
-                                DataRow(
-                                  cells: [
-                                    DataCell(
-                                      Text(
-                                        'Car parking :',
-                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
-                                      ),
-                                    ),
-                                    DataCell(
-                                      Text(
-                                        "${propertyData['carparking']}",
-                                        style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                DataRow(
-                                  cells: [
-                                    DataCell(
-                                      Text(
-                                        'Bike parking :',
-                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
-                                      ),
-                                    ),
-                                    DataCell(
-                                      Text(
-                                        "${propertyData['bikeParkingCount']}",
-                                        style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-
-                                DataRow(
-                                  cells: [
-                                    DataCell(
-                                      Text(
-                                        'Possesion type :',
-                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
-                                      ),
-                                    ),
-                                    DataCell(
-                                      Text("  ${propertyData['possessionType']}",
-
-                                        style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
-                                      ),
-                                    ),
-
-                                  ],
-                                ),
-
-
-                                DataRow(
-                                  cells: [
-                                    DataCell(
-                                      Text(
-                                        'Floor number :',
-                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
-                                      ),
-                                    ),
-                                    DataCell(
-
-          Text(" ${propertyData['floorNumber']}",
-                                        style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                DataRow(
-                                  cells: [
-                                    DataCell(
-                                      Text(
-                                        'Floor type :',
-                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),),
-                                      ),
-                                    ),
-                                    DataCell(
-                                      Text(" ${propertyData['floorType']}",
-                                        style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-
+                                  ),
+                                ],
+                              ),
+],
                               DataRow(
                                 cells: [
                                   DataCell(
@@ -1645,6 +1727,131 @@ class _WhislitsState extends State<Whislits> {
             );
           }
         },
+      ),
+      floatingActionButton: Stack(
+        children: [
+          // Options menu positioned above the floating action button when _showOptions is true
+          if (_showOptions)
+            Positioned(
+              bottom: 80.0, // Adjust the position as needed
+              right: 16.0,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(right: 8.0),
+                        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[800],
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        child: Text('know more', style: TextStyle(color: Colors.white)),
+                      ),
+                      FloatingActionButton(backgroundColor: widget.customTeal,
+                        heroTag: 'know more',
+                        mini: true,
+                        onPressed: () {
+                          _showModalBottomSheet();
+                          setState(() {
+                            _showOptions = false;
+                          });
+                        },
+                        child: SvgPicture.asset(color:Colors.white,
+                          'assets/images/knowmore.svg', // Ensure the SVG files are in your assets folder
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8.0),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(right: 8.0),
+                        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[800],
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        child: Text('chat support', style: TextStyle(color: Colors.white)),
+                      ),
+                      FloatingActionButton(backgroundColor: widget.customTeal,
+                        heroTag: 'chat support',
+                        mini: true,
+                        onPressed: () {
+                          // Implement your second option action
+                          setState(() {
+                            _showOptions = false;
+                          });
+                        },
+                        child: SvgPicture.asset(
+                          'assets/images/ChatIcon.svg',color:Colors.white, // Ensure the SVG files are in your assets folder
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8.0),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(right: 8.0),
+                        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[800],
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        child: Text('share', style: TextStyle(color: Colors.white)),
+                      ),
+                      FloatingActionButton(backgroundColor: widget.customTeal,
+                        heroTag: 'share',
+                        mini: true,
+                        onPressed: () {
+                          _launchWhatsApp();
+                          // Implement your third option action
+                          setState(() {
+                            _showOptions = false;
+                          });
+                        },
+                        child: SvgPicture.asset(
+                          'assets/images/ShareIcon.svg',color:Colors.white, // Ensure the SVG files are in your assets folder
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          // Main Floating action button
+          Positioned(
+            bottom: 16.0,
+            right: 16.0,
+            child: CircleAvatar(
+              radius: 25,
+              backgroundColor: widget.customTeal, // Change to desired color
+              child: IconButton(
+                icon: Icon(
+                  _showOptions ? Icons.close : Icons.add,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _showOptions = !_showOptions;
+                  });
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -286,7 +286,10 @@ class _AllPageState extends State<AllPage> {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 }
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return Center(child: LoadingAnimationWidget.dotsTriangle(
+                    color: ColorUtils.primaryColor(),
+                    size: 50,
+                  ),);
                 }
                 if (snapshot.data!.docs.isEmpty) {
                   return Center(child: Text('No properties found'));
@@ -1067,9 +1070,10 @@ class _VieageState extends State<Vieage> {
           Container(
             child: CircleAvatar(
               radius: 25,
+              backgroundColor: isInWishlist ? Colors.red : Colors.green,
               child: IconButton(
                 onPressed: () {
-                  // saveToWishlist();
+                  saveToWishlist();
                 },
                 icon: SvgPicture.asset(
                   'assets/images/HeartIcon.svg',
@@ -1907,7 +1911,10 @@ class _VieageState extends State<Vieage> {
               future: nearbyplace(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return Center(child: LoadingAnimationWidget.dotsTriangle(
+                    color: ColorUtils.primaryColor(),
+                    size: 50,
+                  ),);
                 }
 
                 if (snapshot.hasError) {
@@ -1935,7 +1942,10 @@ class _VieageState extends State<Vieage> {
               future: fetchPaymentRows(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return Center(child: LoadingAnimationWidget.dotsTriangle(
+                    color: ColorUtils.primaryColor(),
+                    size: 50,
+                  ),);
                 }
 
                 if (snapshot.hasError) {

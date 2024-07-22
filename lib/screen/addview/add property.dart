@@ -2973,8 +2973,7 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
           'addressLine': widget.addressLineController.text,
           'area': widget.areaController.text,
           'locationaddress': widget.locationaddress,
-          'createdAt': DateFormat('MMMM d, y \'at\' h:mm:ss a zzz').format(
-              DateTime.now()),
+          'createdAt': Timestamp.now(),
           'landmark': widget.landmarkController.text,
           'latitude': widget.latitudeController.text,
           'longitude': widget.longitudeController.text,

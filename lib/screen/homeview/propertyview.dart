@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:share/share.dart';
 
 import 'package:spaceships/colorcode.dart';
@@ -1522,7 +1523,10 @@ class _PropertyViewState extends State<PropertyView> {
                     future: nearbyplace(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
+                        return Center(     child: LoadingAnimationWidget.inkDrop(
+                          color: ColorUtils.primaryColor(),
+                          size: 50,
+                        ),);
                       }
 
                       if (snapshot.hasError) {
@@ -1550,7 +1554,10 @@ class _PropertyViewState extends State<PropertyView> {
                     future: fetchPaymentRows(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
+                        return Center(     child: LoadingAnimationWidget.inkDrop(
+                          color: ColorUtils.primaryColor(),
+                          size: 50,
+                        ),);
                       }
 
                       if (snapshot.hasError) {
