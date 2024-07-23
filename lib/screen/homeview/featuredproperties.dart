@@ -148,26 +148,46 @@ class _AllPageState extends State<Featured> {
                             SizedBox(width: 8),
                             Stack(
                               children: [
-                                Container(
-                                  width: 140,
-                                  height: 140,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    color: Colors.grey,
-                                    image: wishlistItem['PropertyImages'] != null &&
-                                        wishlistItem['PropertyImages'].isNotEmpty
-                                        ? DecorationImage(
-                                      image: NetworkImage(wishlistItem['PropertyImages'][0]),
+
+                              Container(
+                              width: 140,
+                              height: 140,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20.0),
+                                color: Colors.grey,
+                              ),
+                              child: wishlistItem['PropertyImages'] == null || wishlistItem['PropertyImages'].isEmpty
+                                  ? Icon(Icons.image, size: 50)
+                                  : ClipRRect(
+                                borderRadius: BorderRadius.circular(20.0),
+                                child: Stack(
+                                  fit: StackFit.expand,
+                                  children: [
+                                    Image.network(
+                                      wishlistItem['PropertyImages'][0],
                                       fit: BoxFit.cover,
-                                    )
-                                        : null,
-                                  ),
-                                  child: wishlistItem['PropertyImages'] == null ||
-                                      wishlistItem['PropertyImages'].isEmpty
-                                      ? Icon(Icons.image, size: 50)
-                                      : null,
+                                      loadingBuilder: (context, child, progress) {
+                                        if (progress == null) {
+                                          return child;
+                                        } else {
+                                          return Center(
+                                            child: LoadingAnimationWidget.fourRotatingDots(
+                                              color: ColorUtils.primaryColor(),
+                                              size: 50,
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return Center(child: Icon(Icons.error));
+                                      },
+                                    ),
+                                  ],
                                 ),
-                                Positioned(
+                              ),
+                            ),
+
+                            Positioned(
                                   bottom: 8,
                                   left: 10,
                                   child: Container(

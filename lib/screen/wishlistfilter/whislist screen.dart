@@ -15,6 +15,7 @@ import 'package:spaceships/screen/filter.dart';
 import 'package:spaceships/screen/homeview/home.dart';
 import 'package:spaceships/screen/profileedit/profile%20page.dart';
 import 'package:spaceships/screen/search%20screen.dart';
+import 'package:spaceships/screen/wishlistfilter/tune.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:video_player/video_player.dart';
 import '../homeview/propertyview.dart';
@@ -90,7 +91,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Screen(onApplyFilters: (Map<String, dynamic> filters) {  },
+                MaterialPageRoute(builder: (context) => Tune(onApplyFilters: (Map<String, dynamic> filters) {  },
 
                 )),
               );

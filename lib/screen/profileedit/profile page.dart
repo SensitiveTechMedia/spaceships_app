@@ -1,15 +1,10 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:spaceships/colorcode.dart';
-import 'package:spaceships/screen/filter.dart';
 import 'package:spaceships/screen/homeview/home.dart';
 import 'package:spaceships/screen/profileedit/editprofile.dart';
 import 'package:spaceships/screen/search%20screen.dart';

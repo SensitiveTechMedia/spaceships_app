@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:spaceships/Common/Constants/color_helper.dart';
 import 'package:spaceships/colorcode.dart';
 import 'package:spaceships/jvproperty/addpropertyjvproperties.dart';
@@ -6,6 +8,7 @@ import 'package:spaceships/jvproperty/tabbar/inventory.dart';
 import 'package:spaceships/jvproperty/tabbar/lease.dart';
 import 'package:spaceships/jvproperty/tabbar/rent.dart';
 import 'package:spaceships/jvproperty/tabbar/sell.dart';
+import 'package:spaceships/screen/category/All.dart';
 
 
 class PropertyInventory extends StatefulWidget {
@@ -111,14 +114,14 @@ class _PropertyInventoryState extends State<PropertyInventory> {
     ),
     // GridView section
     Padding(
-    padding: const EdgeInsets.all(10.0),
+    padding: const EdgeInsets.all(2.0),
     child: GridView.builder(
     shrinkWrap: true,
     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-    crossAxisCount: 2, // Number of tiles in each row
-    mainAxisSpacing: 5.0, // Space between rows
-    crossAxisSpacing: 5.0, // Space between columns
-    childAspectRatio: 1.5, // Aspect ratio of each tile
+    crossAxisCount: 4, // Number of tiles in each row
+    mainAxisSpacing: 0.0, // Space between rows
+    crossAxisSpacing: 0.0, // Space between columns
+    childAspectRatio: 1.0, // Aspect ratio of each tile
     ),
     itemCount: categories.length,
     itemBuilder: (BuildContext context, int index) {
@@ -174,7 +177,7 @@ class _PropertyInventoryState extends State<PropertyInventory> {
     style: TextStyle(
     color: isSelected? Colors.white : Colors.white,
     fontWeight: FontWeight.bold,
-    fontSize: 20.0,
+    fontSize: 15.0,
     ),
     ),
     ],
@@ -184,20 +187,200 @@ class _PropertyInventoryState extends State<PropertyInventory> {
     );                  }),
     ),
 
-    Expanded(
-    child: ListView.builder(
-    itemCount: 2,
-    itemBuilder: (BuildContext context, int index) {
-    return ListTile(
-    title: Text('Property Name'),
-    subtitle:Text ("Address"),
-    onTap: () {
-    // Handle list item tap
-    },
-    );
-    },
-    ),
-    ),
+        Expanded(
+          child: StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance.collection('propert').snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: LoadingAnimationWidget.dotsTriangle(
+                    color: ColorUtils.primaryColor(),
+                    size: 50,
+                  ),
+                );
+              }
+              if (snapshot.data!.docs.isEmpty) {
+                return Center(child: Text('No properties found'));
+              }
+
+              return ListView.builder(
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  var doc = snapshot.data!.docs[index];
+                  var wishlistItem = doc.data() as Map<String, dynamic>;
+
+                  return ListTile(
+                    contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Vieage(
+                            videoUrl: List<String>.from(wishlistItem['videos'] ?? []),
+                            landmark: wishlistItem['landmark'] ?? '',
+                            latitude: wishlistItem['latitude'] ?? '',
+                            locationAddress: wishlistItem['locationaddress'] ?? '',
+                            longitude: wishlistItem['longitude'] ?? '',
+                            nearbyPlaces: List<Map<String, dynamic>>.from(wishlistItem['nearbyPlaces'] ?? []),
+                            parkingIncluded: wishlistItem['parkingIncluded'] ?? '',
+                            parkingType: wishlistItem['parkingType'] ?? '',
+                            possessionType: wishlistItem['possessionType'] ?? '',
+                            postUid: wishlistItem['propertyId'] ?? '',
+                            propertyFacing: List<String>.from(wishlistItem['propertyFacing'] ?? []),
+                            paymentRows: List<Map<String, dynamic>>.from(wishlistItem['paymentRows'] ?? []),
+                            roadController: wishlistItem['roadController'] ?? '',
+                            superbuildup: wishlistItem['superbuildup'] ?? '',
+                            totalArea: wishlistItem['totalArea'] ?? '',
+                            undividedShare: wishlistItem['undividedshare'] ?? '',
+                            yearsOld: wishlistItem['yearsOld'] ?? '',
+                            category: wishlistItem['category'] ?? '',
+                            subcategory: wishlistItem['subcategory'] ?? '',
+                            propertyType: wishlistItem['propertyType'] ?? '',
+                            propertyOwner: wishlistItem['propertyOwner'] ?? '',
+                            addressLine: wishlistItem['addressLine'] ?? '',
+                            amenities: List<String>.from(wishlistItem['amenities'] ?? []),
+                            area: wishlistItem['area'] ?? '',
+                            bikeParkingCount: wishlistItem['bikeParkingCount'] ?? '',
+                            carParkingCount: wishlistItem['carParkingCount'] ?? '',
+                            dimension: wishlistItem['dimension'] ?? '',
+                            doorNo: wishlistItem['doorNo'] ?? '',
+                            floorType: wishlistItem['floorType'] ?? '',
+                            floorNumber: wishlistItem['floorNumber'] ?? '',
+                            furnishingType: wishlistItem['furnishingType'] ?? '',
+                            isCornerArea: wishlistItem['isCornerArea'] ?? false,
+                            featuredStatus: wishlistItem['featuredStatus'] ?? false,
+                            balcony: wishlistItem['balcony'] ?? '',
+                            bathroom: wishlistItem['bathroom'] ?? '',
+                            propertyId: wishlistItem['propertyId'] ?? '',
+                            imageUrl: wishlistItem['PropertyImages'] ?? '',
+                          ),
+                        ),
+                      );
+                    },
+                    title: Container(
+                      height: 150,
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(160, 161, 164, 1000),
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      child: Row(
+                        children: [
+                          SizedBox(width: 8),
+                          Stack(
+                            children: [
+                              Container(
+                                width: 140,
+                                height: 140,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  color: Colors.grey,
+                                ),
+                                child: wishlistItem['PropertyImages'] == null || wishlistItem['PropertyImages'].isEmpty
+                                    ? Center(child: Icon(Icons.image, size: 50))
+                                    : Stack(
+                                  fit: StackFit.expand,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      child: Image.network(
+                                        wishlistItem['PropertyImages'][0],
+                                        fit: BoxFit.cover,
+                                        loadingBuilder: (context, child, progress) {
+                                          if (progress == null) {
+                                            return child;
+                                          } else {
+                                            return Center(
+                                              child: LoadingAnimationWidget.fourRotatingDots(
+                                                color: ColorUtils.primaryColor(),
+                                                size: 50,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return Center(child: Icon(Icons.error));
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 8,
+                                left: 10,
+                                child: Container(
+                                  width: 85,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: ColorUtils.primaryColor(),
+                                  ),
+                                  child: Text(
+                                    wishlistItem['subcategory'] ?? 'cat',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(width: 15.0),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 20),
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    wishlistItem['propertyType'] ?? 'No Title',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: ColorUtils.primaryColor(),
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 4.0),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.location_on,
+                                      color: ColorUtils.primaryColor(),
+                                      size: 20,
+                                    ),
+                                    FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        wishlistItem['area'] ?? 'No Address',
+                                        style: TextStyle(
+                                          color: ColorUtils.primaryColor(),
+                                          fontSize: 10,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 20.0),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ),
+
+
     ],
     ),
     );

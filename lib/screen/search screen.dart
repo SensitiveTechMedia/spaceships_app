@@ -3,9 +3,9 @@ import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:spaceships/colorcode.dart';
-import 'package:spaceships/screen/a.dart';
-
+import 'package:spaceships/screen/filter.dart';
 import 'package:spaceships/screen/homeview/home.dart';
 import 'package:spaceships/screen/profileedit/profile%20page.dart';
 import 'package:spaceships/screen/wishlistfilter/whislist%20screen.dart'; // Import Firestore
@@ -227,16 +227,49 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Search Property'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(60.0),
+        child: Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.6),
+                spreadRadius: 12,
+                blurRadius: 8,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
+          child: AppBar(
+            backgroundColor: ColorUtils.primaryColor(),
+            iconTheme: IconThemeData(color: Colors.white),
+            title: Text("Search Property",style: TextStyle(color: Colors.white),),
+
+
+            actions: [
+              IconButton(
+                icon: Icon(Icons.tune, color: Colors.white,),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Screen(onApplyFilters: (Map<String, dynamic> filters) {  },
+
+                    )),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: FocusScope(
           node: FocusScopeNode(),
           child: Column(
+
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
+            children: [ SizedBox(height: 20,),
               TextFormField(
                 focusNode: _searchFocusNode,
                 controller: _searchController,
@@ -283,16 +316,36 @@ class _SearchScreenState extends State<SearchScreen> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20.0),
                                 color: Colors.grey,
-                                image: property.propertyImages.isNotEmpty
-                                    ? DecorationImage(
-                                  image: NetworkImage(property.propertyImages[0]),
-                                  fit: BoxFit.cover,
-                                )
-                                    : null,
                               ),
                               child: property.propertyImages.isEmpty
-                                  ? Icon(Icons.image, size: 50)
-                                  : null,
+                                  ? Center(child: Icon(Icons.image, size: 50))
+                                  : Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    child: Image.network(
+                                      property.propertyImages[0],
+                                      fit: BoxFit.cover,
+                                      loadingBuilder: (context, child, progress) {
+                                        if (progress == null) {
+                                          return child;
+                                        } else {
+                                          return Center(
+                                            child: LoadingAnimationWidget.fourRotatingDots(
+                                              color: ColorUtils.primaryColor(),
+                                              size: 50,
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return Center(child: Icon(Icons.error));
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
 
                             Positioned(

@@ -15,20 +15,15 @@ import 'package:spaceships/jvproperty/jv%20properties.dart';
 import 'package:spaceships/jvproperty/propertyinventory.dart';
 import 'package:spaceships/jvproperty/propertyservices.dart';
 import 'package:spaceships/screen/Notification.dart';
-
 import 'package:spaceships/screen/addview/add%20property.dart';
-import 'package:spaceships/screen/addview/viewproperty.dart';
 import 'package:spaceships/screen/category/All.dart';
 import 'package:spaceships/screen/filter.dart';
 import 'package:spaceships/screen/helpsupport.dart';
 import 'package:spaceships/screen/homeview/featuredproperties.dart';
-
 import 'package:spaceships/screen/profileedit/profile%20page.dart';
 import 'package:spaceships/screen/registerloginforgot/loginoption.dart';
 import 'package:spaceships/screen/search%20screen.dart';
-
 import 'package:spaceships/screen/wishlistfilter/whislist%20screen.dart';
-import '../a.dart';
 import 'propertyview.dart';
 class HomeScreen extends StatefulWidget {
   final String username;

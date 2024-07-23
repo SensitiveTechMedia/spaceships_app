@@ -12,7 +12,6 @@ import 'package:spaceships/colorcode.dart';
 import 'package:spaceships/screen/addview/add%20property.dart';
 import 'package:spaceships/screen/filter.dart';
 import 'package:spaceships/screen/search%20screen.dart';
-import 'package:spaceships/screen/videoplayer.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:video_player/video_player.dart';
 
@@ -371,22 +370,36 @@ class _AllPageState extends State<AllPage> {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20.0),
                                     color: Colors.grey,
-                                    image: wishlistItem['PropertyImages'] != null &&
-                                        wishlistItem['PropertyImages']
-                                            .isNotEmpty
-                                        ? DecorationImage(
-                                      image: NetworkImage(wishlistItem[
-                                      'PropertyImages'][0]),
-                                      fit: BoxFit.cover,
-                                    )
-                                        : null,
                                   ),
-                                  child: wishlistItem['PropertyImages'] ==
-                                      null ||
-                                      wishlistItem['PropertyImages']
-                                          .isEmpty
-                                      ? Icon(Icons.image, size: 50)
-                                      : null,
+                                  child: wishlistItem['PropertyImages'] == null || wishlistItem['PropertyImages'].isEmpty
+                                      ? Center(child: Icon(Icons.image, size: 50))
+                                      : Stack(
+                                    fit: StackFit.expand,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(20.0),
+                                        child: Image.network(
+                                          wishlistItem['PropertyImages'][0],
+                                          fit: BoxFit.cover,
+                                          loadingBuilder: (context, child, progress) {
+                                            if (progress == null) {
+                                              return child;
+                                            } else {
+                                              return Center(
+                                                child: LoadingAnimationWidget.fourRotatingDots(
+                                                  color: ColorUtils.primaryColor(),
+                                                  size: 50,
+                                                ),
+                                              );
+                                            }
+                                          },
+                                          errorBuilder: (context, error, stackTrace) {
+                                            return Center(child: Icon(Icons.error));
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 // Positioned(
                                 //   left: 8,
