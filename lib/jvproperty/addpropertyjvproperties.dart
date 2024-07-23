@@ -481,7 +481,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
   String areaType = 'Sq.Ft'; // Initial value
   int yearsOld = 0;
   bool isCornerArea = false;
-  bool freshproperty = false;
+  bool freshproperty = true;
 
   List<String> areaTypes = ['Sq.Ft', 'Acre', 'Cents', 'Guntha']; // List of types
   List<String> propertyFacing = [];
@@ -540,6 +540,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
       // Check if property owner or consultant is selected
       if (propertyOwnerController.text.isEmpty) {
         missingFields.add(" Please select Property Owner or Consultant");
+
       }
 
       // Check required fields based on category and subcategory
@@ -588,14 +589,14 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
         }
 
       }
-      if ( widget.subcategory == 'Villa / Independent House' ||widget.subcategory == 'Commercial Space' || widget.subcategory == 'Plot / Land') {
-        if (widget.category == 'sell' && dimensionController.text.isEmpty) {
-          missingFields.add("Dimension");
-        }
-
-        // Check road length
-        if (widget.category == 'sell' && roadController.text.isEmpty) {
-          missingFields.add("Road Length");
+      if (widget.subcategory == 'Villa / Independent House' || widget.subcategory == 'Commercial Space' || widget.subcategory == 'Plot / Land') {
+        if (widget.category == 'Sell') {
+          if (dimensionController.text.isEmpty) {
+            missingFields.add("Please enter Dimension");
+          }
+          if (roadController.text.isEmpty) {
+            missingFields.add("Please enter Road Length");
+          }
         }
       }
 
@@ -609,6 +610,11 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
       if (widget.subcategory == 'Commercial Space' || widget.subcategory == 'Flat') {
         if (widget.category == 'Sell' &&undividedController.text.isEmpty) {
           missingFields.add("please enter Undivided Share");
+        }
+      }
+      if (widget.subcategory == 'Commercial Space' || widget.subcategory == 'Flat') {
+        if (widget.category == 'Sell' &&roadController.text.isEmpty) {
+          missingFields.add("please enter road length");
         }
       }
       // Check if payment type is selected
@@ -1059,7 +1065,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                         margin: EdgeInsets.only(right: 5, ),
                         decoration: BoxDecoration(
                           color: isSelected ? customTeal : Colors.transparent,
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(10),
                           border: Border.all(color: ColorUtils.primaryColor(),),
                         ),
                         child: Column(
@@ -1546,9 +1552,6 @@ class _AddressPageState extends State<AddressPage> {
     bool floor = !(widget.subcategory == 'Plot / Land' || widget.subcategory == 'Villa / Independent House'|| widget.subcategory == 'Hostel/PG/Service Apartment');
     bool _validateFields() {
       List<String> missingFields = [];
-
-
-
       if (widget.subcategory == 'Commercial Space' || widget.subcategory == 'Flat') {
         if (floorNumberController.text.isEmpty) {
           missingFields.add("please enter floor number");

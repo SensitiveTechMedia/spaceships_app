@@ -123,7 +123,7 @@ class _TuneScreenState extends State<Tune> {
                     });
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 35.0),
+                    padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 40.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12.0),
                       border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
@@ -231,13 +231,14 @@ class _TuneScreenState extends State<Tune> {
                     ElevatedButton(
                       onPressed: _applyFilters,
                       child: Text('Apply Filters', style: TextStyle(color: Colors.white)),
-                      style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).primaryColor),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ColorUtils.primaryColor(),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5), // Border radius of 5
+                        ),
+                      ),
                     ),
-                    ElevatedButton(
-                      onPressed: _clearFilters,
-                      child: Text('Clear Filters', style: TextStyle(color: Colors.white)),
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                    ),
+
                   ],
                 ),
               ],
@@ -248,12 +249,28 @@ class _TuneScreenState extends State<Tune> {
           // Right side with white background
 
           Expanded(
-
-            child: Container(
-              color: Colors.white,
-              child: _buildRightSection(),
+            child: Column(
+              children: [
+                Expanded(
+                  child: Container(
+                    color: Colors.white,
+                    child: _buildRightSection(),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: _clearFilters,
+                  child: Text('Clear Filters', style: TextStyle(color: Colors.white)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5), // Border radius of 5
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
+
         ],
       ),
     );
@@ -296,7 +313,7 @@ class _TuneScreenState extends State<Tune> {
             children: [
               Icon(buySelected ? Icons.check_box : Icons.check_box_outline_blank),
               SizedBox(width: 8),
-              Text('Buy', style: TextStyle(fontSize: 15)),
+              Text('Buy', style: TextStyle(fontSize: 14)),
             ],
           ),
         ),
@@ -316,7 +333,7 @@ class _TuneScreenState extends State<Tune> {
             children: [
               Icon(rentSelected ? Icons.check_box : Icons.check_box_outline_blank),
               SizedBox(width: 8),
-              Text('Rent', style: TextStyle(fontSize: 16)),
+              Text('Rent', style: TextStyle(fontSize: 14)),
             ],
           ),
         ),
@@ -337,7 +354,7 @@ class _TuneScreenState extends State<Tune> {
             children: [
               Icon(leaseSelected ? Icons.check_box : Icons.check_box_outline_blank),
               SizedBox(width: 8),
-              Text('Lease', style: TextStyle(fontSize: 16)),
+              Text('Lease', style: TextStyle(fontSize: 14)),
             ],
           ),
         ),
@@ -369,7 +386,7 @@ class _TuneScreenState extends State<Tune> {
                           : Icons.check_box_outline_blank,
                     ),
                     SizedBox(width: 8),
-                    Text(subcategory, style: TextStyle(fontSize: 11)),
+                    Text(subcategory, style: TextStyle(fontSize: 12)),
                   ],
                 ),
               ),
@@ -405,7 +422,7 @@ class _TuneScreenState extends State<Tune> {
                           : Icons.check_box_outline_blank,
                     ),
                     SizedBox(width: 8),
-                    Text(propertyType, style: TextStyle(fontSize: 14)),
+                    Text(propertyType, style: TextStyle(fontSize: 12)),
                   ],
                 ),
               ),
@@ -449,7 +466,7 @@ class _TuneScreenState extends State<Tune> {
         children: [
           Icon(furnishedStatusSelected.contains(status) ? Icons.check_box : Icons.check_box_outline_blank),
           SizedBox(width: 8),
-          Text(status, style: TextStyle(fontSize: 18)),
+          Text(status, style: TextStyle(fontSize: 12)),
         ],
       ),
     );
@@ -479,7 +496,7 @@ class _TuneScreenState extends State<Tune> {
                           : Icons.check_box_outline_blank,
                     ),
                     SizedBox(width: 8),
-                    Text(direction, style: TextStyle(fontSize: 16)),
+                    Text(direction, style: TextStyle(fontSize: 12)),
                   ],
                 ),
               ),
@@ -518,7 +535,7 @@ class _TuneScreenState extends State<Tune> {
                           : Icons.check_box_outline_blank,
                     ),
                     SizedBox(width: 8),
-                    Text(option, style: TextStyle(fontSize: 16)),
+                    Text(option, style: TextStyle(fontSize: 12)),
                   ],
                 ),
               ),
@@ -649,112 +666,101 @@ class TuneResultsScreen extends StatelessWidget {
                     ),
                   );
                 },
-                title: Container(
-                  height: 150,
-                  decoration: BoxDecoration(
-                    color: Color.fromRGBO(160, 161, 164, 1), // Corrected color opacity
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                  child: Row(
-                    children: [
-                      SizedBox(width: 8),
-                      Stack(
-                        children: [
-                          Container(
-                            width: 140,
-                            height: 140,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20.0),
-                              color: Colors.grey,
-                              image: (property['imageUrl'] != null && property['imageUrl'] != "")
-                                  ? DecorationImage(
-                                image: NetworkImage(property['imageUrl']!),
-                                fit: BoxFit.cover,
-                              )
+                title: Padding(
+                  padding: const EdgeInsets.only(top: 18.0),
+                  child: Container(
+                    height: 150,
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(160, 161, 164, 1000), // Corrected color opacity
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    child: Row(
+                      children: [
+                        SizedBox(width: 8),
+                        Stack(
+                          children: [
+                            Container(
+                              width: 140,
+                              height: 140,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20.0),
+                                color: Colors.grey,
+                                image: (property['imageUrl'] != null && property['imageUrl'] != "")
+                                    ? DecorationImage(
+                                  image: NetworkImage(property['imageUrl']!),
+                                  fit: BoxFit.cover,
+                                )
+                                    : null,
+                              ),
+                              child: (property['imageUrl'] == null || property['imageUrl'] == "")
+                                  ? Icon(Icons.image, size: 50)
                                   : null,
                             ),
-                            child: (property['imageUrl'] == null || property['imageUrl'] == "")
-                                ? Icon(Icons.image, size: 50)
-                                : null,
-                          ),
-                          Positioned(
-                            bottom: 8,
-                            left: 10,
-                            child: Container(
-                              width: 85,
-                              height: 20,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: Color.fromRGBO(143, 0, 255, 0.55),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  property['propertyType'],
-                                  style: TextStyle(color: Colors.white, fontSize: 14),
+                            Positioned(
+                              bottom: 8,
+                              left: 10,
+                              child: Container(
+                                width: 85,
+                                height: 20,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Color.fromRGBO(143, 0, 255, 0.55),
                                 ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(width: 15.0),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 20),
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                property['propertyType'] ?? 'No Title',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: ColorUtils.primaryColor(),
-                                  fontSize: 24,
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 4.0),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.location_on,
-                                  color: ColorUtils.primaryColor(),
-                                  size: 20,
-                                ),
-                                FittedBox(
-                                  fit: BoxFit.scaleDown,
+                                child: Center(
                                   child: Text(
-                                    property['addressLine'] ?? 'No Address',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: ColorUtils.primaryColor(),
-                                      fontSize: 15,
-                                    ),
+                                    property['propertyType'],
+                                    style: TextStyle(color: Colors.white, fontSize: 14),
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
-                            Row(
-                              children: [
-                                FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    property['propertyId'] ?? 'No ID',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: ColorUtils.primaryColor(),
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 20.0),
                           ],
                         ),
-                      ),
-                    ],
+                        SizedBox(width: 15.0),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 20),
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  property['propertyType'] ?? 'No Title',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: ColorUtils.primaryColor(),
+                                    fontSize: 24,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 4.0),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.location_on,
+                                    color: ColorUtils.primaryColor(),
+                                    size: 20,
+                                  ),
+                                  FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      property['addressLine'] ?? 'No Address',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: ColorUtils.primaryColor(),
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              SizedBox(height: 20.0),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );

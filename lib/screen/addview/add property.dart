@@ -625,7 +625,7 @@ TextEditingController superbuildupController=TextEditingController();
   String areaType = 'Sq.Ft'; // Initial value
   int yearsOld = 0;
   bool isCornerArea = false;
-  bool freshproperty = false;
+  bool freshproperty = true;
 
   List<String> areaTypes = ['Sq.Ft', 'Acre', 'Cents', 'Guntha']; // List of types
   List<String> propertyFacing = [];
@@ -1065,7 +1065,7 @@ TextEditingController superbuildupController=TextEditingController();
                 ],
               ),
               SizedBox(height: 20),
-    if (yearsolddata) ...[
+
     Text(
     "Is this a fresh property?",
     style: TextStyle(
@@ -1099,6 +1099,7 @@ TextEditingController superbuildupController=TextEditingController();
     ],
     ),
     SizedBox(height: 10),
+              if (yearsolddata) ...[
     if (!freshproperty) ...[
     Text(
     'Years old*:',
@@ -1206,7 +1207,7 @@ TextEditingController superbuildupController=TextEditingController();
                       margin: EdgeInsets.only(right: 5, ),
                       decoration: BoxDecoration(
                         color: isSelected ? customTeal : Colors.transparent,
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: ColorUtils.primaryColor(),),
                       ),
                       child: Column(

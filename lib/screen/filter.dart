@@ -124,7 +124,7 @@ class _FilterScreenState extends State<Screen> {
                     });
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 35.0),
+                    padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 40.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12.0),
                       border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
@@ -186,8 +186,6 @@ class _FilterScreenState extends State<Screen> {
                     child: Center(child: Text('Furnished status', style: TextStyle(fontSize: 14))),
                   ),
                 ),
-
-
                 VerticalDivider(thickness: 5),
                 GestureDetector(
                   onTap: () {
@@ -239,8 +237,6 @@ class _FilterScreenState extends State<Screen> {
                         ),
                       ),
                     ),
-
-
                   ],
                 ),
               ],
@@ -555,7 +551,7 @@ class FilteredResultsScreen extends StatelessWidget {
   final Map<String, dynamic> filters;
   const FilteredResultsScreen({Key? key, required this.filters}) : super(key: key);
   Future<List<Map<String, dynamic>>> fetchFilteredData(Map<String, dynamic> filters) async {
-    print("Fetching filtered data with filters: $filters");
+
 
     final QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('propert').get();
     final List<QueryDocumentSnapshot> docs = querySnapshot.docs;
@@ -563,7 +559,7 @@ class FilteredResultsScreen extends StatelessWidget {
 
     for (var doc in docs) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      print("Checking document: ${doc.id} with data: $data");
+
 
       bool matchesFilter = false; // Start with false
 
@@ -592,13 +588,10 @@ class FilteredResultsScreen extends StatelessWidget {
         matchesFilter |= filters['parkingOptions'].contains(data['parkingType']);
       }
 
-      print("Document matches filter: $matchesFilter");
       if (matchesFilter) {
         filteredData.add(data);
       }
     }
-
-    print("Filtered data: $filteredData");
     return filteredData;
   }
 
@@ -649,7 +642,7 @@ class FilteredResultsScreen extends StatelessWidget {
             itemCount: filteredData.length,
             itemBuilder: (context, index) {
               final property = filteredData[index];
-              print("Displaying property: $property");
+
               String propertyId = 'property$index';
               return ListTile(
 
