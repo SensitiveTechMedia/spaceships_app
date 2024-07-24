@@ -607,7 +607,6 @@ class PropertyDetailsScreen extends StatefulWidget {
   @override
   _PropertyDetailsScreenState createState() => _PropertyDetailsScreenState();
 }
-
 class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
   TextEditingController propertyOwnerController = TextEditingController();
   TextEditingController possesiontypeController = TextEditingController();
@@ -619,6 +618,7 @@ TextEditingController undividedController =TextEditingController();
 TextEditingController superbuildupController=TextEditingController();
   final TextEditingController balconyController=TextEditingController();
   final  TextEditingController bathroomController=TextEditingController();
+  final TextEditingController amountController = TextEditingController();
   Color customTeal = Color(0xFF8F00FF);
   String paymentType = "One-Time";
   String possessionType = "Under Construction";
@@ -678,6 +678,13 @@ TextEditingController superbuildupController=TextEditingController();
     bool superbuild = !( widget.subcategory == 'Villa / Independent House'|| widget.subcategory == 'Commercial Space'|| widget.category == 'Rent' || widget.category == 'Lease'|| widget.subcategory == 'Hostel/PG/Service Apartment'|| widget.subcategory == 'Plot / Land');
     bool dimensionroad  = !(widget.subcategory == 'Flat'|| widget.category == 'Rent' || widget.category == 'Lease'|| widget.subcategory == 'Hostel/PG/Service Apartment');
     bool furnishing = !(widget.subcategory == 'Plot / Land' || widget.subcategory == 'Commercial Space'|| widget.subcategory == 'Hostel/PG/Service Apartment');
+    Future<void> _showToastsOneByOne(List<String> messages) async {
+      for (String message in messages) {
+        _showToast(message); // Show the toast message
+        await Future.delayed(Duration(seconds: 1)); // Wait for 1 second (or adjust as needed)
+      }
+    }
+
     bool _validateFields() {
       List<String> missingFields = [];
 
@@ -696,81 +703,90 @@ TextEditingController superbuildupController=TextEditingController();
         }
       }
 
-        if (widget.subcategory == 'Flat' || widget.subcategory == 'Commercial Space' || widget.subcategory == 'Villa / Independent House') {
+      if (widget.subcategory == 'Flat' || widget.subcategory == 'Commercial Space' || widget.subcategory == 'Villa / Independent House') {
+        if (freshproperty == true) {
+          // Don't ask for years old data
+        } else {
           if (yearsOld <= 0) { // Assuming you want to check for non-positive values
             missingFields.add("Years Old (must be greater than 0)");
           }
         }
+      }
+
+
+      if (widget.subcategory == 'Flat' || widget.subcategory == 'Villa / Independent House' || widget.subcategory == 'Commercial Space' || widget.subcategory == 'Plot / Land') {
+        if (propertyFacing.isEmpty) {
+          missingFields.add("Please Select Property Facing");
+        }
+      }
+
+      if (widget.subcategory == 'Flat' || widget.subcategory == 'Commercial Space' || widget.subcategory == 'Villa / Independent House') {
+        if (widget.category == 'Sell' && possesiontypeController.text.isEmpty) {
+          missingFields.add("Please select Possession Type");
+        }
+      }
+
+      if (widget.subcategory == 'Flat' || widget.subcategory == 'Villa / Independent House') {
+        if (furnishingTypeController.text.isEmpty) {
+          missingFields.add("Please select Furnishing Type");
+        }
+      }
+
+      if (widget.subcategory == 'Commercial Space' || widget.subcategory == 'Plot / Land') {
+        if (isCornerArea == null) { // Assuming a radio button or similar control
+          missingFields.add("Please select Is this a Corner Area?");
+        }
+      }
       if (widget.subcategory == 'Flat' ||
           widget.subcategory == 'Villa / Independent House' ||
           widget.subcategory == 'Commercial Space' ||
           widget.subcategory == 'Plot / Land') {
-
         if (widget.category == 'Sell' && totalAreaController.text.isEmpty) {
           missingFields.add("Please enter the Total Area");
         }
       }
 
-      if (widget.subcategory == 'Flat' || widget.subcategory == 'Villa / Independent House' ||widget.subcategory == 'Commercial Space' || widget.subcategory == 'Plot / Land') {
-        if (propertyFacing.isEmpty) {
-          missingFields.add("Please Select Property Facing");
-        }
-      }
-      if (widget.subcategory == 'Flat'  || widget.subcategory == 'Commercial Space' || widget.subcategory == 'Villa / Independent House') {
-        if (widget.category == 'Sell' &&possesiontypeController.text.isEmpty) {
-          missingFields.add("please select possesion type");
-        }
-      }
-      if (widget.subcategory == 'Flat'  || widget.subcategory == 'Villa / Independent House') {
-        if (furnishingTypeController.text.isEmpty) {
-          missingFields.add("please select Furnishing Type");
-        }
-      }
-      if (widget.subcategory == 'Commercial Space' || widget.subcategory == 'Plot / Land') {
-        if (isCornerArea == null) { // Assuming a radio button or similar control
-          missingFields.add("please select Is this a Corner Area?");
-        }
-
-      }
-      if ( widget.subcategory == 'Villa / Independent House' ||widget.subcategory == 'Commercial Space' || widget.subcategory == 'Plot / Land') {
-        if (widget.category == 'sell' && dimensionController.text.isEmpty) {
+      if (widget.subcategory == 'Villa / Independent House' || widget.subcategory == 'Commercial Space' || widget.subcategory == 'Plot / Land') {
+        if (widget.category == 'Sell' && dimensionController.text.isEmpty) {
           missingFields.add("Dimension");
         }
 
         // Check road length
-        if (widget.category == 'sell' && roadController.text.isEmpty) {
+        if (widget.category == 'Sell' && roadController.text.isEmpty) {
           missingFields.add("Road Length");
         }
       }
 
-      if (widget.subcategory == 'Flat' ||widget.subcategory == 'Flat' ) {
+      if (widget.subcategory == 'Flat' || widget.subcategory == 'Flat') {
         if (widget.category == 'Sell' && superbuildupController.text.isEmpty) {
-          missingFields.add("please enter Superbuildup Area");
+          missingFields.add("Please enter Superbuildup Area");
         }
+      }
 
-      }
-      // Additional checks can be added here based on other categories or subcategories
       if (widget.subcategory == 'Commercial Space' || widget.subcategory == 'Flat') {
-        if (widget.category == 'Sell' &&undividedController.text.isEmpty) {
-          missingFields.add("please enter Undivided Share");
+        if (widget.category == 'Sell' && undividedController.text.isEmpty) {
+          missingFields.add("Please enter Undivided Share");
         }
       }
+
       if (paymentRows.isEmpty) {
         missingFields.add("Please enter Payment Type");
       }
 
-      if (paymentType.isEmpty) {
+      if (paymentTypes.isEmpty) {
         missingFields.add("Please select Payment Type");
       }
-
+      if (amountController.text.isEmpty) {
+        missingFields.add("Please Add payment details");
+      }
       if (missingFields.isNotEmpty) {
-        String message = "Please fill  the following details:\n-${missingFields.join('\n-')}";
-        _showToast( message);
+        _showToastsOneByOne(missingFields);
         return false; // Validation failed
       }
 
       return true; // All validations passed
     }
+
 
 
 
@@ -1065,7 +1081,7 @@ TextEditingController superbuildupController=TextEditingController();
                 ],
               ),
               SizedBox(height: 20),
-
+              if (yearsolddata) ...[
     Text(
     "Is this a fresh property?",
     style: TextStyle(
@@ -1099,7 +1115,7 @@ TextEditingController superbuildupController=TextEditingController();
     ],
     ),
     SizedBox(height: 10),
-              if (yearsolddata) ...[
+
     if (!freshproperty) ...[
     Text(
     'Years old*:',
@@ -1594,7 +1610,6 @@ TextEditingController superbuildupController=TextEditingController();
     );
   }
 }
-
 class PaymentRow {
   TextEditingController amountController = TextEditingController();
   String selectedCategory;
@@ -1612,16 +1627,13 @@ class PaymentRow {
     };
   }
 }
-
 class AddressPage extends StatefulWidget {
   final String category;
   final String subcategory;
   final String propertyType;
-
   final bool isCornerArea;
   final bool freshproperty;
   final TextEditingController propertyOwnerController;
-
 final TextEditingController balconyController;
 final TextEditingController bathroomController;
   final TextEditingController furnishingTypeController;
@@ -1663,7 +1675,6 @@ final TextEditingController bathroomController;
   @override
   _AddressPageState createState() => _AddressPageState();
 }
-
 class _AddressPageState extends State<AddressPage> {
   final TextEditingController floorNumberController = TextEditingController();
   String floorType = ''; // Variable to store selected floor type
@@ -1692,46 +1703,54 @@ class _AddressPageState extends State<AddressPage> {
   @override
   Widget build(BuildContext context) {
     bool floor = !(widget.subcategory == 'Plot / Land' || widget.subcategory == 'Villa / Independent House'|| widget.subcategory == 'Hostel/PG/Service Apartment');
+    Future<void> _showToastsOneByOne(List<String> messages) async {
+      for (String message in messages) {
+        _showToast(message); // Show the toast message
+        await Future.delayed(Duration(seconds: 1)); // Wait for 1 second (or adjust as needed)
+      }
+    }
+
     bool _validateFields() {
       List<String> missingFields = [];
 
-
-
       if (widget.subcategory == 'Commercial Space' || widget.subcategory == 'Flat') {
         if (floorNumberController.text.isEmpty) {
-          missingFields.add("please enter floor number");
+          missingFields.add("Please enter floor number");
         }
         if (floorType.isEmpty) {
-          missingFields.add("please enter floor type");
+          missingFields.add("Please enter floor type");
         }
       }
-      if (widget.subcategory == 'Commercial Space' || widget.subcategory == 'Plot / Land'|| widget.subcategory == 'Villa / Independent House'|| widget.subcategory == 'Flat'|| widget.subcategory == 'Hostel/PG/Service Apartment' ) {
+      if (widget.subcategory == 'Commercial Space' ||
+          widget.subcategory == 'Plot / Land' ||
+          widget.subcategory == 'Villa / Independent House' ||
+          widget.subcategory == 'Flat' ||
+          widget.subcategory == 'Hostel/PG/Service Apartment') {
         if (latitudeController.text.isEmpty) {
-          missingFields.add("please Select your location");
+          missingFields.add("Please select your location");
         }
         if (doorNoController.text.isEmpty) {
-          missingFields.add("please enter door no");
+          missingFields.add("Please enter door number");
         }
         if (addressLineController.text.isEmpty) {
-          missingFields.add("please enter address");
+          missingFields.add("Please enter address");
         }
         if (areaController.text.isEmpty) {
-          missingFields.add("please enter area");
+          missingFields.add("Please enter area");
         }
         if (landmarkController.text.isEmpty) {
-          missingFields.add("please enter landmark");
+          missingFields.add("Please enter landmark");
         }
       }
-      // Check if payment type is selected
 
       if (missingFields.isNotEmpty) {
-        String message = "Please fill  the following data:\n-${missingFields.join('\n-')}";
-        _showToast( message);
+        _showToastsOneByOne(missingFields);
         return false; // Validation failed
       }
 
       return true; // All validations passed
     }
+
     return Scaffold(
       appBar:PreferredSize(
         preferredSize: Size.fromHeight(60.0),
@@ -2055,14 +2074,11 @@ keyboardType: TextInputType.number,
     );
   }
 }
-
 class AmentiesScreen extends StatefulWidget {
-
   final String category;
   final String subcategory;
   final String propertyType;
   final TextEditingController propertyOwnerController;
-
 final int yearsOld;
   final TextEditingController furnishingTypeController;
   final TextEditingController totalAreaController;
@@ -2118,24 +2134,38 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
     );
   }
   bool parkingIncluded = false;
+  Future<void> _showToastsOneByOne(List<String> messages) async {
+    for (String message in messages) {
+      _showToast(message); // Show the toast message
+      await Future.delayed(Duration(seconds: 1)); // Wait for 1 second (or adjust as needed)
+    }
+  }
+
   bool _validateFields() {
     List<String> missingFields = [];
 
-
-    if (widget.subcategory == 'Commercial Space' ||widget.subcategory == 'Hostel/PG/Service Apartment' || widget.subcategory == 'Plot / Land'|| widget.subcategory == 'Villa / Independent House'|| widget.subcategory == 'Flat') {
+    if (widget.subcategory == 'Commercial Space' ||
+        widget.subcategory == 'Hostel/PG/Service Apartment' ||
+        widget.subcategory == 'Plot / Land' ||
+        widget.subcategory == 'Villa / Independent House' ||
+        widget.subcategory == 'Flat') {
       if (amenities.isEmpty) {
         missingFields.add("Please enter amenities.");
       }
       if (nearbyPlaces.isEmpty) {
-        missingFields.add("please enter nearbyplaces details");
+        missingFields.add("Please enter nearby places details.");
       }
     }
-    // Check if payment type is selected
-    if (widget.subcategory == 'Commercial Space'|| widget.subcategory == 'Villa / Independent House' || widget.subcategory == 'Flat') {
+
+    // Check if parking type is selected
+    if (widget.subcategory == 'Commercial Space' ||
+        widget.subcategory == 'Villa / Independent House' ||
+        widget.subcategory == 'Flat') {
       if (parkingIncluded) {
         if (parkingType.isEmpty) {
           missingFields.add("Please select a parking type.");
         }
+        // Uncomment if you want to check for car and bike parking counts
         // if (carParkingCount <= 0) {
         //   missingFields.add("Please specify the number of car parking spaces.");
         // }
@@ -2143,18 +2173,16 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
         //   missingFields.add("Please specify the number of bike parking spaces.");
         // }
       }
-
     }
 
-
     if (missingFields.isNotEmpty) {
-      String message = "Please fill in the following fields:\n-${missingFields.join('\n-')}";
-      _showToast( message);
+      _showToastsOneByOne(missingFields);
       return false; // Validation failed
     }
 
     return true; // All validations passed
   }
+
   String parkingType = '';
   int carParkingCount = 0;
   int bikeParkingCount = 0;
@@ -2794,13 +2822,21 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
   Color customTeal = Color(0xFF8F00FF);
   bool isUploadingVideo = false; // Track video uploading state
   bool isSubmitting = false; // Track property submission state
+  Future<void> _showToastsOneByOne(List<String> messages) async {
+    for (String message in messages) {
+      _showToast(message); // Show the toast message
+      await Future.delayed(Duration(seconds: 1)); // Wait for 1 second (or adjust as needed)
+    }
+  }
+
   bool _validateFields() {
     List<String> missingFields = [];
 
-
-
-
-    if (widget.subcategory == 'Commercial Space' || widget.subcategory == 'Plot / Land'|| widget.subcategory == 'Villa / Independent House'|| widget.subcategory == 'Hostel/PG/Service Apartment' || widget.subcategory == 'Flat') {
+    if (widget.subcategory == 'Commercial Space' ||
+        widget.subcategory == 'Plot / Land' ||
+        widget.subcategory == 'Villa / Independent House' ||
+        widget.subcategory == 'Hostel/PG/Service Apartment' ||
+        widget.subcategory == 'Flat') {
       if (propertyImages.isEmpty) {
         missingFields.add("Please select image.");
       }
@@ -2808,16 +2844,15 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
         missingFields.add("Please upload video.");
       }
     }
-    // Check if payment type is selected
 
     if (missingFields.isNotEmpty) {
-      String message = "Please fill in the following fields:\n-${missingFields.join('\n-')}";
-      _showToast(message);
+      _showToastsOneByOne(missingFields);
       return false; // Validation failed
     }
 
     return true; // All validations passed
   }
+
   void removePhoto(int index) {
     setState(() {
       propertyImages.removeAt(index);

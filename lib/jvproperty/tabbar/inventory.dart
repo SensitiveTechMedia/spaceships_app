@@ -112,12 +112,6 @@ class _inventorytabState extends State<inventorytab> with TickerProviderStateMix
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
-
-
-
-
-
           SizedBox(height: 50),
         ],
       ),
@@ -150,7 +144,6 @@ class RoundedRectIndicator extends Decoration {
   @override
   BoxPainter createBoxPainter([VoidCallback? onChanged]) => _painter;
 }
-
 class _RoundedRectPainter extends BoxPainter {
   final Paint _paint;
   final double radius;

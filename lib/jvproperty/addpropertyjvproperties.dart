@@ -91,7 +91,7 @@ class _CategoryScreenState extends State<JvAddProperty> {
           ),),
       ),
       backgroundColor: Colors.white,
-      body: Center(
+      body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
           child: Column(
@@ -127,7 +127,7 @@ class _CategoryScreenState extends State<JvAddProperty> {
                         decoration: BoxDecoration(
                           color: isSelected ? customTeal : Colors.white,
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: ColorUtils.primaryColor(),),
+                          border: Border.all(color: ColorUtils.primaryColor()),
                         ),
                         child: Row(
                           children: [
@@ -155,74 +155,126 @@ class _CategoryScreenState extends State<JvAddProperty> {
                 ),
               ),
               SizedBox(height: 20),
-              if (_selectedSubcategoryIndex != -1 &&
-                  subcategories[_selectedSubcategoryIndex]["name"] == "Flat") // Show text field only when "Flat" is selected
+              if (_selectedSubcategoryIndex != -1)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Enter Property Type:',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: ColorUtils.primaryColor(),
+                    if (subcategories[_selectedSubcategoryIndex]["name"] == "Villa / Independent House" ||
+                        subcategories[_selectedSubcategoryIndex]["name"] == "Flat")
+                      Text(
+                        'Enter BHK Value:',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: ColorUtils.primaryColor(),
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Container(
-                          width: 36, // Adjust width to change circle size
-                          height: 39, // Adjust height to change circle size
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: ColorUtils.primaryColor(), // Background color of the circle
+                    if (subcategories[_selectedSubcategoryIndex]["name"] == "Villa / Independent House" ||
+                        subcategories[_selectedSubcategoryIndex]["name"] == "Flat")
+                      SizedBox(height: 10),
+                    if (subcategories[_selectedSubcategoryIndex]["name"] == "Villa / Independent House" ||
+                        subcategories[_selectedSubcategoryIndex]["name"] == "Flat")
+                      Row(
+                        children: [
+                          Container(
+                            width: 36, // Adjust width to change circle size
+                            height: 39, // Adjust height to change circle size
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: ColorUtils.primaryColor(), // Background color of the circle
+                            ),
+                            child: IconButton(
+                              icon: Icon(Icons.remove, color: Colors.white),
+                              onPressed: () {
+                                setState(() {
+                                  if (bhkValue > 1) bhkValue--; // Decrease value, minimum 1
+                                });
+                              },
+                            ),
                           ),
-                          child: IconButton(
-                            icon: Icon(Icons.remove, color: Colors.white),
-                            onPressed: () {
-                              setState(() {
-                                if (bhkValue > 1) bhkValue--; // Decrease value, minimum 1
-                              });
-                            },
+                          SizedBox(width: 10),
+                          Text(
+                            '$bhkValue BHK',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: ColorUtils.primaryColor(),
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 10,),
-                        Text(
-                          '$bhkValue BHK',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: ColorUtils.primaryColor(),
+                          SizedBox(width: 10),
+                          Container(
+                            width: 36, // Adjust width to change circle size
+                            height: 39, // Adjust height to change circle size
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: ColorUtils.primaryColor(), // Background color of the circle
+                            ),
+                            child: IconButton(
+                              icon: Icon(Icons.add, color: Colors.white), // Icon with custom teal color
+                              onPressed: () {
+                                setState(() {
+                                  bhkValue++; // Increase value
+                                });
+                              },
+                              padding: EdgeInsets.all(0), // Optional: Remove default padding
+                              iconSize: 24, // Adjust icon size if needed
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 10,),
-                        Container(
-                          width: 36, // Adjust width to change circle size
-                          height: 39, // Adjust height to change circle size
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: ColorUtils.primaryColor(), // Background color of the circle
+                        ],
+                      ),
+                    if (subcategories[_selectedSubcategoryIndex]["name"] == "Villa / Independent House")
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 20),
+                          Text(
+                            'Select Property Type:',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: ColorUtils.primaryColor(),
+                            ),
                           ),
-                          child: IconButton(
-                            icon: Icon(Icons.add, color: Colors.white), // Icon with custom teal color
-                            onPressed: () {
-                              setState(() {
-                                bhkValue++; // Increase value
-                              });
-                            },
-                            padding: EdgeInsets.all(0), // Optional: Remove default padding
-                            iconSize: 24, // Adjust icon size if needed
+                          SizedBox(height: 10),
+                          Wrap(
+                            spacing: 10,
+                            runSpacing: 10,
+                            children: List.generate(
+                              propertyTypes["Villa / Independent House"]!.length,
+                                  (index) {
+                                bool isSelected = _selectedPropertyType == propertyTypes["Villa / Independent House"]![index];
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedPropertyType = propertyTypes["Villa / Independent House"]![index];
+                                    });
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                                    decoration: BoxDecoration(
+                                      color: isSelected ? customTeal : Colors.white,
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(color: ColorUtils.primaryColor()),
+                                    ),
+                                    child: Text(
+                                      propertyTypes["Villa / Independent House"]![index],
+                                      style: TextStyle(
+                                        color: isSelected ? Colors.white : customTeal,
+                                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
-                        )
-
-                      ],
-                    ),
+                        ],
+                      ),
                   ],
                 ),
-
               if (_selectedSubcategoryIndex != -1 &&
-                  subcategories[_selectedSubcategoryIndex]["name"] != "Flat") // Show property types list for other subcategories
+                  subcategories[_selectedSubcategoryIndex]["name"] != "Flat" &&
+                  subcategories[_selectedSubcategoryIndex]["name"] != "Villa / Independent House")
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -253,7 +305,7 @@ class _CategoryScreenState extends State<JvAddProperty> {
                               decoration: BoxDecoration(
                                 color: isSelected ? customTeal : Colors.white,
                                 borderRadius: BorderRadius.circular(8),
-                                border: Border.all(color: ColorUtils.primaryColor(),),
+                                border: Border.all(color: ColorUtils.primaryColor()),
                               ),
                               child: Text(
                                 propertyTypes[subcategories[_selectedSubcategoryIndex]["name"]]![index],
@@ -270,6 +322,7 @@ class _CategoryScreenState extends State<JvAddProperty> {
                   ],
                 ),
               SizedBox(height: 20),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -317,35 +370,45 @@ class _CategoryScreenState extends State<JvAddProperty> {
                       ),
                       child: SizedBox(
                         height: 50,
+
                         child: ElevatedButton(
                           onPressed: () {
                             if (_selectedSubcategoryIndex == -1) {
-                              _showToast( "Please select a subcategory.");
-                            } else if (_selectedPropertyType.isEmpty &&
-                                subcategories[_selectedSubcategoryIndex]["name"] != "Flat") {
-                              _showToast( "Please select a property type.");
+                              _showToast("Please select a subcategory.");
                             } else {
                               String selectedSubcategory = subcategories[_selectedSubcategoryIndex]["name"];
-                              String selectedPropertyType = subcategories[_selectedSubcategoryIndex]["name"] == "Flat"
-                                  ? '$bhkValue BHK'
-                                  : _selectedPropertyType.isNotEmpty
-                                  ? _selectedPropertyType
-                                  : "Select Property Type";
+                              String selectedPropertyType = "";
 
-                              print("Selected Subcategory: $selectedSubcategory, Property Type: $selectedPropertyType");
+                              if (selectedSubcategory == "Flat" || selectedSubcategory == "Villa / Independent House") {
+                                selectedPropertyType = '$bhkValue BHK';
+                                if (selectedSubcategory == "Villa / Independent House") {
+                                  String propertyType = _selectedPropertyType.isNotEmpty
+                                      ? _selectedPropertyType
+                                      : "Select Property Type";
+                                  selectedPropertyType = '$propertyType, $selectedPropertyType'; // Combine property type and BHK value
+                                }
+                              } else {
+                                selectedPropertyType = _selectedPropertyType.isNotEmpty
+                                    ? _selectedPropertyType
+                                    : "Select Property Type";
+                              }
 
-                              print("Selected Subcategory: $selectedSubcategory, Property Type: $selectedPropertyType");
+                              if (selectedPropertyType == "Select Property Type" && selectedSubcategory != "Flat" && selectedSubcategory != "Villa / Independent House") {
+                                _showToast("Please select a property type.");
+                              } else {
+                                print("Selected Subcategory: $selectedSubcategory, Property Type: $selectedPropertyType");
 
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => PropertyDetailsScreen(
-
-                                    subcategory: selectedSubcategory,
-                                    propertyType: selectedPropertyType, category: category,
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => PropertyDetailsScreen(
+                                      category: category,
+                                      subcategory: selectedSubcategory,
+                                      propertyType: selectedPropertyType,
+                                    ),
                                   ),
-                                ),
-                              );
+                                );
+                              }
                             }
                           },
                           style: ElevatedButton.styleFrom(
@@ -365,6 +428,7 @@ class _CategoryScreenState extends State<JvAddProperty> {
                             ],
                           ),
                         ),
+
                       ),
                     ),
                   ),
@@ -454,16 +518,16 @@ class PropertyDetailsScreen extends StatefulWidget {
   final String category;
   final String subcategory;
   final String propertyType;
-
+  final int? bhkValue;
   PropertyDetailsScreen({
     required this.category,
     required this.subcategory,
     required this.propertyType,
+    this.bhkValue,
   });
   @override
   _PropertyDetailsScreenState createState() => _PropertyDetailsScreenState();
 }
-
 class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
   TextEditingController propertyOwnerController = TextEditingController();
   TextEditingController possesiontypeController = TextEditingController();
@@ -534,13 +598,19 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
     bool superbuild = !( widget.subcategory == 'Villa / Independent House'|| widget.subcategory == 'Commercial Space'|| widget.category == 'Rent' || widget.category == 'Lease'|| widget.subcategory == 'Hostel/PG/Service Apartment'|| widget.subcategory == 'Plot / Land');
     bool dimensionroad  = !(widget.subcategory == 'Flat'|| widget.category == 'Rent' || widget.category == 'Lease'|| widget.subcategory == 'Hostel/PG/Service Apartment');
     bool furnishing = !(widget.subcategory == 'Plot / Land' || widget.subcategory == 'Commercial Space'|| widget.subcategory == 'Hostel/PG/Service Apartment');
+    Future<void> _showToastsOneByOne(List<String> messages) async {
+      for (String message in messages) {
+        _showToast(message); // Show the toast message
+        await Future.delayed(Duration(seconds: 1)); // Wait for 1 second (or adjust as needed)
+      }
+    }
+
     bool _validateFields() {
       List<String> missingFields = [];
 
       // Check if property owner or consultant is selected
       if (propertyOwnerController.text.isEmpty) {
-        missingFields.add(" Please select Property Owner or Consultant");
-
+        missingFields.add("Property Owner or Consultant");
       }
 
       // Check required fields based on category and subcategory
@@ -554,82 +624,87 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
       }
 
       if (widget.subcategory == 'Flat' || widget.subcategory == 'Commercial Space' || widget.subcategory == 'Villa / Independent House') {
-        if (yearsOld <= 0) { // Assuming you want to check for non-positive values
-          missingFields.add("Years Old (must be greater than 0)");
+        if (freshproperty == true) {
+          // Don't ask for years old data
+        } else {
+          if (yearsOld <= 0) { // Assuming you want to check for non-positive values
+            missingFields.add("Years Old (must be greater than 0)");
+          }
         }
       }
+
       if (widget.subcategory == 'Flat' ||
           widget.subcategory == 'Villa / Independent House' ||
           widget.subcategory == 'Commercial Space' ||
           widget.subcategory == 'Plot / Land') {
-
         if (widget.category == 'Sell' && totalAreaController.text.isEmpty) {
           missingFields.add("Please enter the Total Area");
         }
       }
 
-      if (widget.subcategory == 'Flat' || widget.subcategory == 'Villa / Independent House' ||widget.subcategory == 'Commercial Space' || widget.subcategory == 'Plot / Land') {
+      if (widget.subcategory == 'Flat' || widget.subcategory == 'Villa / Independent House' || widget.subcategory == 'Commercial Space' || widget.subcategory == 'Plot / Land') {
         if (propertyFacing.isEmpty) {
           missingFields.add("Please Select Property Facing");
         }
       }
-      if (widget.subcategory == 'Flat'  || widget.subcategory == 'Commercial Space' || widget.subcategory == 'Villa / Independent House') {
-        if (widget.category == 'Sell' &&possesiontypeController.text.isEmpty) {
-          missingFields.add("please select possesion type");
+
+      if (widget.subcategory == 'Flat' || widget.subcategory == 'Commercial Space' || widget.subcategory == 'Villa / Independent House') {
+        if (widget.category == 'Sell' && possesiontypeController.text.isEmpty) {
+          missingFields.add("Please select Possession Type");
         }
       }
-      if (widget.subcategory == 'Flat'  || widget.subcategory == 'Villa / Independent House') {
+
+      if (widget.subcategory == 'Flat' || widget.subcategory == 'Villa / Independent House') {
         if (furnishingTypeController.text.isEmpty) {
-          missingFields.add("please select Furnishing Type");
+          missingFields.add("Please select Furnishing Type");
         }
       }
+
       if (widget.subcategory == 'Commercial Space' || widget.subcategory == 'Plot / Land') {
         if (isCornerArea == null) { // Assuming a radio button or similar control
-          missingFields.add("please select Is this a Corner Area?");
+          missingFields.add("Please select Is this a Corner Area?");
         }
-
       }
+
       if (widget.subcategory == 'Villa / Independent House' || widget.subcategory == 'Commercial Space' || widget.subcategory == 'Plot / Land') {
-        if (widget.category == 'Sell') {
-          if (dimensionController.text.isEmpty) {
-            missingFields.add("Please enter Dimension");
-          }
-          if (roadController.text.isEmpty) {
-            missingFields.add("Please enter Road Length");
-          }
+        if (widget.category == 'Sell' && dimensionController.text.isEmpty) {
+          missingFields.add("Dimension");
+        }
+
+        // Check road length
+        if (widget.category == 'Sell' && roadController.text.isEmpty) {
+          missingFields.add("Road Length");
         }
       }
 
-      if (widget.subcategory == 'Flat' ||widget.subcategory == 'Flat' ) {
+      if (widget.subcategory == 'Flat' || widget.subcategory == 'Flat') {
         if (widget.category == 'Sell' && superbuildupController.text.isEmpty) {
-          missingFields.add("please enter Superbuildup Area");
+          missingFields.add("Please enter Superbuildup Area");
         }
+      }
 
-      }
-      // Additional checks can be added here based on other categories or subcategories
       if (widget.subcategory == 'Commercial Space' || widget.subcategory == 'Flat') {
-        if (widget.category == 'Sell' &&undividedController.text.isEmpty) {
-          missingFields.add("please enter Undivided Share");
+        if (widget.category == 'Sell' && undividedController.text.isEmpty) {
+          missingFields.add("Please enter Undivided Share");
         }
       }
-      if (widget.subcategory == 'Commercial Space' || widget.subcategory == 'Flat') {
-        if (widget.category == 'Sell' &&roadController.text.isEmpty) {
-          missingFields.add("please enter road length");
-        }
-      }
-      // Check if payment type is selected
+
       if (paymentRows.isEmpty) {
-        missingFields.add("please enter Payment Type");
+        missingFields.add("Please enter Payment Type");
+      }
+
+      if (paymentType.isEmpty) {
+        missingFields.add("Please select Payment Type");
       }
 
       if (missingFields.isNotEmpty) {
-        String message = "Please fill  the following details:\n-${missingFields.join('\n-')}";
-        _showToast( message);
+        _showToastsOneByOne(missingFields);
         return false; // Validation failed
       }
 
       return true; // All validations passed
     }
+
 
 
 
@@ -925,7 +1000,14 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
               ),
               SizedBox(height: 20),
               if (yearsolddata) ...[
-                Text("Is this Fresh property?", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),)),
+                Text(
+                  "Is this a fresh property?",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: ColorUtils.primaryColor(), // Replace with ColorUtils.primaryColor() if you have a custom color utility
+                  ),
+                ),
                 Row(
                   children: [
                     Radio(
@@ -950,73 +1032,67 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                     Text('No'),
                   ],
                 ),
-
-
-                Text(
-                  'Years old* :',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: ColorUtils.primaryColor(),
-                  ),
-                ),
                 SizedBox(height: 10),
-                Row(
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: ColorUtils.primaryColor(), // Replace with your desired background color
-                      ),
-                      child: IconButton(
-                        icon: Icon(Icons.remove,color: Colors.white,),iconSize: 20,
-                        onPressed: () {
-                          setState(() {
-                            if (yearsOld > 0) {
-                              yearsOld--;
-                            }
-                          });
-                        },
-                        // Icon color
-                      ),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      '$yearsOld',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color:ColorUtils.primaryColor(), // Replace with your desired background color
-                      ),
-                      child: IconButton(
-                        icon: Icon(Icons.add,color: Colors.white,),
-                        onPressed: () {
-                          setState(() {
-                            yearsOld++;
-                          });
-                        },
-                        color: Colors.black, // Icon color
-                      ),
-                    )
 
-                  ],
-                ),
-
-                SizedBox(height: 20),
+                if (!freshproperty) ...[
+                  Text(
+                    'Years old*:',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: ColorUtils.primaryColor(), // Replace with ColorUtils.primaryColor() if you have a custom color utility
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: ColorUtils.primaryColor(), // Replace with your desired background color
+                        ),
+                        child: IconButton(
+                          icon: Icon(Icons.remove, color: Colors.white),
+                          iconSize: 20,
+                          onPressed: () {
+                            setState(() {
+                              if (yearsOld > 0) {
+                                yearsOld--;
+                              }
+                            });
+                          },
+                        ),
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        '$yearsOld',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      SizedBox(width: 5),
+                      Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: ColorUtils.primaryColor(), // Replace with your desired background color
+                        ),
+                        child: IconButton(
+                          icon: Icon(Icons.add, color: Colors.white),
+                          onPressed: () {
+                            setState(() {
+                              yearsOld++;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ] else
+                  SizedBox.shrink(),
               ],
+
               if (facingdata) ...[
                 Text(
                   'Property Facing* :',
@@ -1452,7 +1528,6 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
     );
   }
 }
-
 class PaymentRow {
   TextEditingController amountController = TextEditingController();
   String selectedCategory;
@@ -1470,16 +1545,13 @@ class PaymentRow {
     };
   }
 }
-
 class AddressPage extends StatefulWidget {
   final String category;
   final String subcategory;
   final String propertyType;
-
   final bool isCornerArea;
   final bool freshproperty;
   final TextEditingController propertyOwnerController;
-
   final TextEditingController balconyController;
   final TextEditingController bathroomController;
   final TextEditingController furnishingTypeController;
@@ -1521,7 +1593,6 @@ class AddressPage extends StatefulWidget {
   @override
   _AddressPageState createState() => _AddressPageState();
 }
-
 class _AddressPageState extends State<AddressPage> {
   final TextEditingController floorNumberController = TextEditingController();
   String floorType = ''; // Variable to store selected floor type
@@ -1550,43 +1621,54 @@ class _AddressPageState extends State<AddressPage> {
   @override
   Widget build(BuildContext context) {
     bool floor = !(widget.subcategory == 'Plot / Land' || widget.subcategory == 'Villa / Independent House'|| widget.subcategory == 'Hostel/PG/Service Apartment');
+    Future<void> _showToastsOneByOne(List<String> messages) async {
+      for (String message in messages) {
+        _showToast(message); // Show the toast message
+        await Future.delayed(Duration(seconds: 1)); // Wait for 1 second (or adjust as needed)
+      }
+    }
+
     bool _validateFields() {
       List<String> missingFields = [];
+
       if (widget.subcategory == 'Commercial Space' || widget.subcategory == 'Flat') {
         if (floorNumberController.text.isEmpty) {
-          missingFields.add("please enter floor number");
+          missingFields.add("Please enter floor number");
         }
         if (floorType.isEmpty) {
-          missingFields.add("please enter floor type");
+          missingFields.add("Please enter floor type");
         }
       }
-      if (widget.subcategory == 'Commercial Space' || widget.subcategory == 'Plot / Land'|| widget.subcategory == 'Villa / Independent House'|| widget.subcategory == 'Flat'|| widget.subcategory == 'Hostel/PG/Service Apartment' ) {
+      if (widget.subcategory == 'Commercial Space' ||
+          widget.subcategory == 'Plot / Land' ||
+          widget.subcategory == 'Villa / Independent House' ||
+          widget.subcategory == 'Flat' ||
+          widget.subcategory == 'Hostel/PG/Service Apartment') {
         if (latitudeController.text.isEmpty) {
-          missingFields.add("please Select your location");
+          missingFields.add("Please select your location");
         }
         if (doorNoController.text.isEmpty) {
-          missingFields.add("please enter door no");
+          missingFields.add("Please enter door number");
         }
         if (addressLineController.text.isEmpty) {
-          missingFields.add("please enter address");
+          missingFields.add("Please enter address");
         }
         if (areaController.text.isEmpty) {
-          missingFields.add("please enter area");
+          missingFields.add("Please enter area");
         }
         if (landmarkController.text.isEmpty) {
-          missingFields.add("please enter landmark");
+          missingFields.add("Please enter landmark");
         }
       }
-      // Check if payment type is selected
 
       if (missingFields.isNotEmpty) {
-        String message = "Please fill  the following data:\n-${missingFields.join('\n-')}";
-        _showToast( message);
+        _showToastsOneByOne(missingFields);
         return false; // Validation failed
       }
 
       return true; // All validations passed
     }
+
     return Scaffold(
       appBar:PreferredSize(
         preferredSize: Size.fromHeight(60.0),
@@ -1910,14 +1992,11 @@ class _AddressPageState extends State<AddressPage> {
     );
   }
 }
-
 class AmentiesScreen extends StatefulWidget {
-
   final String category;
   final String subcategory;
   final String propertyType;
   final TextEditingController propertyOwnerController;
-
   final int yearsOld;
   final TextEditingController furnishingTypeController;
   final TextEditingController totalAreaController;
@@ -1973,24 +2052,38 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
     );
   }
   bool parkingIncluded = false;
+  Future<void> _showToastsOneByOne(List<String> messages) async {
+    for (String message in messages) {
+      _showToast(message); // Show the toast message
+      await Future.delayed(Duration(seconds: 1)); // Wait for 1 second (or adjust as needed)
+    }
+  }
+
   bool _validateFields() {
     List<String> missingFields = [];
 
-
-    if (widget.subcategory == 'Commercial Space' ||widget.subcategory == 'Hostel/PG/Service Apartment' || widget.subcategory == 'Plot / Land'|| widget.subcategory == 'Villa / Independent House'|| widget.subcategory == 'Flat') {
+    if (widget.subcategory == 'Commercial Space' ||
+        widget.subcategory == 'Hostel/PG/Service Apartment' ||
+        widget.subcategory == 'Plot / Land' ||
+        widget.subcategory == 'Villa / Independent House' ||
+        widget.subcategory == 'Flat') {
       if (amenities.isEmpty) {
         missingFields.add("Please enter amenities.");
       }
       if (nearbyPlaces.isEmpty) {
-        missingFields.add("please enter nearbyplaces details");
+        missingFields.add("Please enter nearby places details.");
       }
     }
-    // Check if payment type is selected
-    if (widget.subcategory == 'Commercial Space'|| widget.subcategory == 'Villa / Independent House' || widget.subcategory == 'Flat') {
+
+    // Check if parking type is selected
+    if (widget.subcategory == 'Commercial Space' ||
+        widget.subcategory == 'Villa / Independent House' ||
+        widget.subcategory == 'Flat') {
       if (parkingIncluded) {
         if (parkingType.isEmpty) {
           missingFields.add("Please select a parking type.");
         }
+        // Uncomment if you want to check for car and bike parking counts
         // if (carParkingCount <= 0) {
         //   missingFields.add("Please specify the number of car parking spaces.");
         // }
@@ -1998,18 +2091,16 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
         //   missingFields.add("Please specify the number of bike parking spaces.");
         // }
       }
-
     }
 
-
     if (missingFields.isNotEmpty) {
-      String message = "Please fill in the following fields:\n-${missingFields.join('\n-')}";
-      _showToast( message);
+      _showToastsOneByOne(missingFields);
       return false; // Validation failed
     }
 
     return true; // All validations passed
   }
+
   String parkingType = '';
   int carParkingCount = 0;
   int bikeParkingCount = 0;
@@ -2649,13 +2740,21 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
   Color customTeal = Color(0xFF8F00FF);
   bool isUploadingVideo = false; // Track video uploading state
   bool isSubmitting = false; // Track property submission state
+  Future<void> _showToastsOneByOne(List<String> messages) async {
+    for (String message in messages) {
+      _showToast(message); // Show the toast message
+      await Future.delayed(Duration(seconds: 1)); // Wait for 1 second (or adjust as needed)
+    }
+  }
+
   bool _validateFields() {
     List<String> missingFields = [];
 
-
-
-
-    if (widget.subcategory == 'Commercial Space' || widget.subcategory == 'Plot / Land'|| widget.subcategory == 'Villa / Independent House'|| widget.subcategory == 'Hostel/PG/Service Apartment' || widget.subcategory == 'Flat') {
+    if (widget.subcategory == 'Commercial Space' ||
+        widget.subcategory == 'Plot / Land' ||
+        widget.subcategory == 'Villa / Independent House' ||
+        widget.subcategory == 'Hostel/PG/Service Apartment' ||
+        widget.subcategory == 'Flat') {
       if (propertyImages.isEmpty) {
         missingFields.add("Please select image.");
       }
@@ -2663,16 +2762,15 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
         missingFields.add("Please upload video.");
       }
     }
-    // Check if payment type is selected
 
     if (missingFields.isNotEmpty) {
-      String message = "Please fill in the following fields:\n-${missingFields.join('\n-')}";
-      _showToast(message);
+      _showToastsOneByOne(missingFields);
       return false; // Validation failed
     }
 
     return true; // All validations passed
   }
+
   void removePhoto(int index) {
     setState(() {
       propertyImages.removeAt(index);
@@ -2853,7 +2951,15 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
       setState(() {
         isSubmitting = false; // Stop submitting indicator
       });
-
+      Fluttertoast.showToast(
+        msg: "Property uploaded successfully!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
       print('Property submitted successfully!');
     } catch (e) {
       print('Error submitting property: $e');
