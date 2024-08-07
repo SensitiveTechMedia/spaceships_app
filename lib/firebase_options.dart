@@ -59,7 +59,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCumrB8byZbpHeS9si50-Q1N3wzoYa-4NY',
-    appId: '1:920411121805:android:420554a6782cdac9449ac4',
+    appId: '1:920411121805:android:9e1a0b6cb38422f9449ac4',
     messagingSenderId: '920411121805',
     projectId: 'spaceships-51250',
     databaseURL: 'https://spaceships-51250-default-rtdb.firebaseio.com',
@@ -68,12 +68,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCW2UGlUfCw4N79Qq_n2R5A6jIKG0N6dpA',
-    appId: '1:920411121805:ios:499b67392aaa92cf449ac4',
+    appId: '1:920411121805:ios:cfc83b689789710b449ac4',
     messagingSenderId: '920411121805',
     projectId: 'spaceships-51250',
     databaseURL: 'https://spaceships-51250-default-rtdb.firebaseio.com',
     storageBucket: 'spaceships-51250.appspot.com',
-    iosClientId: '920411121805-665em574h8j4cketbvh8enikapiubrhf.apps.googleusercontent.com',
-    iosBundleId: 'com.example.spaceships',
+    iosClientId: '920411121805-spmj4m0as50co1fll0o0piouov38jdss.apps.googleusercontent.com',
+    iosBundleId: 'com.app.spaceships',
   );
 }

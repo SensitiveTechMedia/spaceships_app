@@ -8,6 +8,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:920411121805:android:9e1a0b6cb38422f9449ac4",
+        "android_client_info": {
+          "package_name": "com.app.spaceships"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "920411121805-p8e2452lko373k0h97anqafforphngh1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCumrB8byZbpHeS9si50-Q1N3wzoYa-4NY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "920411121805-p8e2452lko373k0h97anqafforphngh1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "920411121805-665em574h8j4cketbvh8enikapiubrhf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.spaceships"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:920411121805:android:420554a6782cdac9449ac4",
         "android_client_info": {
           "package_name": "com.example.spaceships"
@@ -30,6 +66,13 @@
             {
               "client_id": "920411121805-p8e2452lko373k0h97anqafforphngh1.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "920411121805-665em574h8j4cketbvh8enikapiubrhf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.spaceships"
+              }
             }
           ]
         }
