@@ -11,7 +11,8 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:spaceships/colorcode.dart';
 
 class SupportScreen extends StatefulWidget {
-  const SupportScreen({super.key});
+   SupportScreen({super.key});
+  final FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   State<SupportScreen> createState() => _SupportScreenState();
@@ -191,7 +192,8 @@ class _SupportScreenState extends State<SupportScreen> {
               StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('support')
-                    .orderBy('submittedDate', descending: true) // Order by date
+                    // .where('userUID', isEqualTo: FirebaseAuth.instance.currentUser?.uid)// Filter by userUID
+                    .orderBy('submittedDate', descending: true) // Order by submittedDate
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -218,8 +220,9 @@ class _SupportScreenState extends State<SupportScreen> {
                       final comment = doc['comment'] as String;
                       final status = doc['status'] as String;
                       final submittedDate = (doc['submittedDate'] as Timestamp).toDate();
-                      final userUID = doc['userUID'] as String;
                       final docId = doc.id;
+
+                      // Format date
                       String createDay = DateFormat('dd').format(submittedDate);
                       String createMonth = DateFormat('MMMM').format(submittedDate);
                       String createHour = DateFormat('hh').format(submittedDate);
@@ -230,16 +233,16 @@ class _SupportScreenState extends State<SupportScreen> {
                         children: [
                           GestureDetector(
                             onTap: () {
-    Navigator.push(
-    context,
-    MaterialPageRoute(
-    builder: (context) => ResponseScreen(
-    docId: docId,
-    issue: issue,
-
-    submittedDate: submittedDate,
-    status: status,
-    ),),
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ResponseScreen(
+                                    docId: docId,
+                                    issue: issue,
+                                    submittedDate: submittedDate,
+                                    status: status,
+                                  ),
+                                ),
                               );
                             },
                             child: Container(
@@ -341,7 +344,6 @@ class _SupportScreenState extends State<SupportScreen> {
                                               ],
                                             ),
                                           ),
-
                                           RichText(
                                             text: TextSpan(
                                               style: const TextStyle(color: Colors.black),
@@ -413,6 +415,7 @@ class _SupportScreenState extends State<SupportScreen> {
                   );
                 },
               ),
+
             ],
           ),
         ),
