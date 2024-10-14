@@ -109,191 +109,198 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: height * 0.02,
-            ),
-
-            Center(
-              child: Stack(
-                children: [
-                  CircleAvatar(
-                    maxRadius: 56,
-                    backgroundImage: NetworkImage(_userImage),
-                    // Use a default image if the user's profile picture is not available
-                    child: _userImage.isEmpty
-                        ? Text(
-                      _userName.isNotEmpty ? _userName[0].toUpperCase() : 'hi',
-                      style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-                    )
-                        : null,
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: GestureDetector(
-                      onTap: () {
-                        _openImagePicker(); // Function to open image picker
-                      },
-                      child: CircleAvatar(
-                        maxRadius: 17,
-                        backgroundColor: Theme.of(context).colorScheme.surface,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: height * 0.02,
+              ),
+        
+              Center(
+                child: Stack(
+                  children: [
+                    CircleAvatar(
+                      maxRadius: 56,
+                      backgroundImage: NetworkImage(_userImage),
+                      // Use a default image if the user's profile picture is not available
+                      child: _userImage.isEmpty
+                          ? Text(
+                        _userName.isNotEmpty ? _userName[0].toUpperCase() : 'hi',
+                        style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                      )
+                          : null,
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: GestureDetector(
+                        onTap: () {
+                          _openImagePicker(); // Function to open image picker
+                        },
                         child: CircleAvatar(
-                          maxRadius: 15,
-                          child: Icon(
-                            Icons.edit_rounded,
-                            size: 17,
-                            color: Theme.of(context).colorScheme.surface,
+                          maxRadius: 17,
+                          backgroundColor: Theme.of(context).colorScheme.surface,
+                          child: CircleAvatar(
+                            maxRadius: 15,
+                            child: Icon(
+                              Icons.edit_rounded,
+                              size: 17,
+                              color: Theme.of(context).colorScheme.surface,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-
-            SizedBox(
-              height: height * 0.03,
-            ),
-            TextFormField(
-              onChanged: (value) {},
-              controller: nameController,
-              decoration: InputDecoration(
-                fillColor: Theme.of(context).colorScheme.onPrimary,
-                filled: true,
-                prefixIcon: Icon(
-                  Icons.person,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                border: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                focusedBorder: GradientOutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  gradient: const LinearGradient(
-                    colors: [ColorCodes.green, ColorCodes.teal],
-                  ),
-                  width: 2,
-                ),
-                hintText: "Full Name",
+        
+              SizedBox(
+                height: height * 0.03,
               ),
-            ),
-            SizedBox(
-              height: height * 0.02,
-            ),
-            TextFormField(
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter number';
-                }
-                return null;
-              },
-              controller: numberController,
-              keyboardType: TextInputType.phone,
-              onChanged: (value) {},
-              decoration: InputDecoration(
-                fillColor: Theme.of(context).colorScheme.onPrimary,
-                filled: true,
-                prefixIcon: Icon(
-                  Icons.call_outlined,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                border: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                focusedBorder: GradientOutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  gradient: const LinearGradient(
-                    colors: [ColorCodes.green, ColorCodes.teal],
+              TextFormField(
+                onChanged: (value) {},
+                controller: nameController,
+                decoration: InputDecoration(
+                  fillColor: Theme.of(context).colorScheme.onPrimary,
+                  filled: true,
+                  prefixIcon: Icon(
+                    Icons.person,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
-                  width: 2,
-                ),
-                hintText: "Enter Number",
-              ),
-            ),
-            SizedBox(
-              height: height * 0.02,
-            ),
-            TextFormField(
-              onChanged: (value) {},
-              controller: emailController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                fillColor: Theme.of(context).colorScheme.onPrimary,
-                filled: true,
-                prefixIcon: Icon(
-                  Icons.mail_outline,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                border: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                focusedBorder: GradientOutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  gradient: const LinearGradient(
-                    colors: [ColorCodes.green, ColorCodes.teal],
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  width: 2,
+                  focusedBorder: GradientOutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    gradient: const LinearGradient(
+                      colors: [ColorCodes.green, ColorCodes.teal],
+                    ),
+                    width: 2,
+                  ),
+                  hintText: "Full Name",
                 ),
-                hintText: "Email",
               ),
-            ),
-
-         const SizedBox(height: 80,),
-            Center(
-              child: SizedBox(
-                width: 200, // Set your desired width
-                height: 50, // Set your desired height
-                child: ElevatedButton(
-                  onPressed: () async {
-                    // Get the current user
-                    User? user = FirebaseAuth.instance.currentUser;
-                    if (user != null) {
-                      try {
-                        // Update user data in Firestore
-                        await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
-                          'name': nameController.text,
-                          'number': numberController.text,
-                          'email': emailController.text,
-                          // Update the 'createdAt' field with the current timestamp
-                          'createdAt': FieldValue.serverTimestamp(),
-                        });
+              SizedBox(
+                height: height * 0.02,
+              ),
+              TextFormField(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter number';
+                  }
+                  return null;
+                },
+                controller: numberController,
+                keyboardType: TextInputType.phone,
+                onChanged: (value) {},
+                decoration: InputDecoration(
+                  fillColor: Theme.of(context).colorScheme.onPrimary,
+                  filled: true,
+                  prefixIcon: Icon(
+                    Icons.call_outlined,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  focusedBorder: GradientOutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    gradient: const LinearGradient(
+                      colors: [ColorCodes.green, ColorCodes.teal],
+                    ),
+                    width: 2,
+                  ),
+                  hintText: "Enter Number",
+                ),
+              ),
+              SizedBox(
+                height: height * 0.02,
+              ),
+              TextFormField(
+                onChanged: (value) {},
+                controller: emailController,
+                enabled: false,
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(
+                  fillColor: Theme.of(context).colorScheme.onPrimary,
+                  filled: true,
+                  prefixIcon: Icon(
+                    Icons.mail_outline,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                 suffixIcon: Icon(
+                    Icons.check_circle,
+                    color: Colors.green,
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  focusedBorder: GradientOutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    gradient: const LinearGradient(
+                      colors: [ColorCodes.green, ColorCodes.teal],
+                    ),
+                    width: 2,
+                  ),
+                  hintText: "Email",
+                ),
+              ),
+        
+           const SizedBox(height: 80,),
+              Center(
+                child: SizedBox(
+                  width: 200, // Set your desired width
+                  height: 50, // Set your desired height
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      // Get the current user
+                      User? user = FirebaseAuth.instance.currentUser;
+                      if (user != null) {
+                        try {
+                          // Update user data in Firestore
+                          await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+                            'name': nameController.text,
+                            'number': numberController.text,
+                            'email': emailController.text,
+                            // Update the 'createdAt' field with the current timestamp
+                            'createdAt': FieldValue.serverTimestamp(),
+                          });
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                            content: Text("Profile updated successfully"),
+                          ));
+                        } catch (e) {
+                          print("Error updating profile: $e");
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                            content: Text("Failed to update profile"),
+                          ));
+                        }
+                      } else {
                         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          content: Text("Profile updated successfully"),
-                        ));
-                      } catch (e) {
-                        print("Error updating profile: $e");
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          content: Text("Failed to update profile"),
+                          content: Text("User not logged in"),
                         ));
                       }
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text("User not logged in"),
-                      ));
-                    }
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all<Color>(   ColorUtils.primaryColor(),), // Set button color
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all<Color>(   ColorUtils.primaryColor(),), // Set button color
+                    ),
+                    child: const Text("Save",style: TextStyle(color: Colors.white),),
                   ),
-                  child: const Text("Save",style: TextStyle(color: Colors.white),),
                 ),
               ),
-            ),
-
-
-            SizedBox(
-              height: height * 0.02,
-            ),
-          ],
+        
+        
+              SizedBox(
+                height: height * 0.02,
+              ),
+            ],
+          ),
         ),
       ),
     );

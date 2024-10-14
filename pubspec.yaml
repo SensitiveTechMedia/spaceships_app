@@ -42,7 +42,7 @@ dependencies:
   cloud_firestore: ^5.0.0
   firebase_auth: ^5.0.0
   firebase_core: ^3.0.0
-  google_sign_in: ^6.2.1
+
   image_picker: ^1.1.2
   firebase_storage: ^12.1.0
   email_otp: ^2.1.2
@@ -65,6 +65,7 @@ dependencies:
   fluttertoast: ^8.2.6
   dropdown_button2: ^2.3.9
   loading_animation_widget: ^1.2.1
+  permission_handler: ^11.3.1
 
 dev_dependencies:
   flutter_test:

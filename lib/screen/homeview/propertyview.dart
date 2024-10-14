@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 
 import 'package:spaceships/colorcode.dart';
@@ -80,7 +81,8 @@ class _PropertyViewState extends State<PropertyView> {
   DateTime? selectedDate;
   String formattedDate = '';
   bool _showOptions = false;
-
+   bool _locationDenied = false;
+   bool _locationPermanentlyDenied = false;
   int _currentImageIndex = 0;
   late PageController _pageController;
   String? userName;
@@ -108,7 +110,7 @@ class _PropertyViewState extends State<PropertyView> {
     // } else {
     //   print('No video URL available.');
     // }
-
+    _requestLocationPermission();
     _checkIfInWishlist();
     fetchLocation();
     fetchpropertyimges();
@@ -123,6 +125,47 @@ class _PropertyViewState extends State<PropertyView> {
     super.dispose();
   }
 
+   Future<void> _requestLocationPermission() async {
+     PermissionStatus status = await Permission.location.status;
+
+     if (status.isGranted) {
+       // Permission granted, get current location
+       _getCurrentLocation();
+     } else if (status.isDenied) {
+       // Location permission is denied, show button to request permission
+       setState(() {
+         _locationDenied = true;
+       });
+     } else if (status.isPermanentlyDenied) {
+       // Permission is permanently denied, open app settings
+       setState(() {
+         _locationPermanentlyDenied = true;
+       });
+     }
+   }
+
+   Future<void> _getCurrentLocation() async {
+     try {
+       _currentPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+       setState(() {
+         // Update the map with the current position
+       });
+     } catch (e) {
+       print('Error fetching location: $e');
+     }
+   }
+
+   Future<void> _requestPermissionAgain() async {
+     PermissionStatus status = await Permission.location.request();
+     if (status.isGranted) {
+       // Permission granted, get current location
+       _getCurrentLocation();
+       setState(() {
+         _locationDenied = false;
+         _locationPermanentlyDenied = false;
+       });
+     }
+   }
   Future<List<Map<String, dynamic>>> nearbyplace() async {
     DocumentSnapshot doc = await FirebaseFirestore.instance.collection('propert').doc(widget.propertyId).get();
     return List<Map<String, dynamic>>.from(doc['nearbyPlaces']);
@@ -984,19 +1027,22 @@ class _PropertyViewState extends State<PropertyView> {
                   const SizedBox(height: 10),
                   if (_currentPosition != null)
                     Padding(
-                      padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
                       child: Container(
                         width: 300,
                         height: 300,
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey, ),
+                          border: Border.all(color: Colors.grey),
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(20.0),
                           child: GoogleMap(
                             initialCameraPosition: CameraPosition(
-                              target: LatLng(double.parse(widget.latitude), double.parse(widget.longitude)),
+                              target: LatLng(
+                                _currentPosition!.latitude,
+                                _currentPosition!.longitude,
+                              ),
                               zoom: 15,
                             ),
                             onMapCreated: (GoogleMapController controller) {
@@ -1005,14 +1051,62 @@ class _PropertyViewState extends State<PropertyView> {
                             markers: {
                               Marker(
                                 markerId: const MarkerId('property_location'),
-                                position: LatLng(double.parse(widget.latitude), double.parse(widget.longitude)),
+                                position: LatLng(
+                                  _currentPosition!.latitude,
+                                  _currentPosition!.longitude,
+                                ),
                               ),
                             },
                           ),
-
                         ),
                       ),
-                    ),
+                    )
+
+                  // If location permission is denied, show message and button
+                  else if (_locationDenied)
+                    Column(
+                      children: [
+                        Text('Location permission is denied.'),
+                        ElevatedButton(
+                          onPressed: _requestPermissionAgain,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:  ColorUtils.primaryColor(),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0), // Match with the container
+                            ),
+                          ),
+                          child: Text('Allow Location '),
+                        ),
+                      ],
+                    )
+
+                  // If location permission is permanently denied, show message and button to open app settings
+                  else if (_locationPermanentlyDenied)
+                      Column(
+                        children: [
+                          Text('Location permission is permanently denied.'),
+    ElevatedButton(
+    onPressed: () {
+    openAppSettings();
+    },
+    style: ElevatedButton.styleFrom(
+      backgroundColor:  ColorUtils.primaryColor(),
+      foregroundColor: Colors.white,
+    shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(5.0), // Match with the container
+    ),
+    ),
+    child: Text('Allow Location'),
+    ),
+
+                        ],
+                      )
+
+                    // Show fetching location if permission is not granted and location is not available
+                    else
+                      Center(child: Text('Fetching location...')),
+
                   Padding(
                     padding: const EdgeInsets.only(left: 10.0),
                     child: Container(
@@ -1565,7 +1659,7 @@ class _PropertyViewState extends State<PropertyView> {
                   const SizedBox(height: 50,),
                   // Container(child: Text("Gated Community: ${gatedCommunity.isNotEmpty ? gatedCommunity : 'Not specified'}")),
 
-                ]),
+            ]),
     ),
           ),
         ]

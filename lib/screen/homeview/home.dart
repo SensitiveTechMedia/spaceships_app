@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
@@ -166,7 +167,7 @@ bool featuredStatus = false;
     );
     fetchProperties();
     fetchUserDetails();
-    _bannerFuture = _fetchBanners();
+    _bannersStream();
     _startAutoScroll();
   }
   Future<void> fetchUserDetail() async {
@@ -186,20 +187,21 @@ bool featuredStatus = false;
       print('Error fetching user details: $e');
     }
   }
-  Future<List<Map<String, dynamic>>> _fetchBanners() async {
-    final QuerySnapshot snapshot =
-    await FirebaseFirestore.instance.collection('banners').get();
-    List<Map<String, dynamic>> banners = snapshot.docs.map((doc) {
-      List<String> imageUrls = List<String>.from(doc['images']); // Get all images from the 'images' array
-      // Filter out invalid or empty URLs
-      imageUrls.removeWhere((url) => url.isEmpty || !url.startsWith('http'));
-      return {
-        'imageUrls': imageUrls,
-      };
-    }).toList();
-
-    return banners;
+  Stream<List<Map<String, dynamic>>> _bannersStream() {
+    return FirebaseFirestore.instance
+        .collection('banners')
+        .snapshots()
+        .map((QuerySnapshot snapshot) {
+      return snapshot.docs.map((doc) {
+        List<String> imageUrls = List<String>.from(doc['images']);
+        imageUrls.removeWhere((url) => url.isEmpty || !url.startsWith('http')); // Filter invalid URLs
+        return {
+          'imageUrls': imageUrls,
+        };
+      }).toList();
+    });
   }
+
   void _startAutoScroll() {
     _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
       if (_pageController.hasClients) {
@@ -1045,93 +1047,78 @@ bool featuredStatus = false;
                     ),
                   ),
                 ),
-      
-            FutureBuilder<List<Map<String, dynamic>>>(
-              future: _bannerFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: Container(
-                      child: Container(
-                        child: LoadingAnimationWidget.dotsTriangle(
-                          color: ColorUtils.primaryColor(),
-                          size: 50,
-                        ),
-                      ),),);
-                }
-      
-                if (snapshot.hasError) {
-                  return const Center(child: Text('Error fetching data'));
-                }
-      
-                final banners = snapshot.data;
-      
-                if (banners == null || banners.isEmpty) {
-                  return const Center(child: Text('No banners available'));
-                }
-      
-                return Padding(
-                  padding: const EdgeInsets.all(9.0),
-                  child: Container(
-                    height: 200,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: PageView.builder(
-                      controller: _pageController,
-                      itemCount: banners.length,
-                      itemBuilder: (context, index) {
-                        final banner = banners[index];
-                        final imageUrls = banner['imageUrls'] as List<String>;
-      
-                        return ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: imageUrls.length,
-                          itemBuilder: (context, imageIndex) {
-                            final imageUrl = imageUrls[imageIndex];
-                            return Padding(
-                              padding: const EdgeInsets.all(1.0),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10.0),
-                                child: Image.network(
-                                  imageUrl,
-                                  fit: BoxFit.cover,
-                                  width: MediaQuery.of(context).size.width - 20, // Adjust width as needed
-                                  height: 200,
-    loadingBuilder: (context, child, progress) {
-    if (progress == null) {
-    return child;
-    } else {
-    return Center(
-      child: LoadingAnimationWidget.inkDrop(
-        color: ColorUtils.primaryColor(),
-        size: 50,
-      ),
-    ); }
-    },
-    ),
-                              )
-
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ),
+          StreamBuilder<List<Map<String, dynamic>>>(
+            stream: _bannersStream(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
                 );
-              },
-            ),
-      
-      
+              }
+
+              if (snapshot.hasError) {
+                return const Center(child: Text('Error fetching data'));
+              }
+
+              final banners = snapshot.data;
+
+              if (banners == null || banners.isEmpty) {
+                return const Center(child: Text('No banners available'));
+              }
+
+              return Padding(
+                padding: const EdgeInsets.all(9.0),
+                child: Container(
+                  height: 200,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: PageView.builder(
+                    controller: _pageController,
+                    itemCount: banners.length,
+                    itemBuilder: (context, index) {
+                      final banner = banners[index];
+                      final imageUrls = banner['imageUrls'] as List<String>;
+
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: imageUrls.length,
+                        itemBuilder: (context, imageIndex) {
+                          final imageUrl = imageUrls[imageIndex];
+                          return Padding(
+                            padding: const EdgeInsets.all(1.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10.0),
+                              child: CachedNetworkImage(
+                                imageUrl: imageUrl,
+                                fit: BoxFit.cover,
+                                width: MediaQuery.of(context).size.width - 20,
+                                height: 200,
+
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              );
+            },
+          ),
+
       const SizedBox(
         height: 10,
       ),
@@ -1597,7 +1584,6 @@ bool featuredStatus = false;
               isCornerArea: isCornerArea,
               featuredStatus: featuredStatus,
               propertyId: propertyId,
-
               possessionType: possessionType,
               areaType: areaType,
               propertyFacing: propertyFacing,
@@ -1616,7 +1602,7 @@ bool featuredStatus = false;
               parkingType: parkingType,
               carParkingCount: carParkingCount,
               bikeParkingCount: bikeParkingCount,
-              latitude: latitude.toString(), // Convert String to String
+              latitude: latitude.toString(),
               longitude: longitude.toString(),
               videoUrl: [videoUrl],
             ),
@@ -1637,17 +1623,25 @@ bool featuredStatus = false;
         child: Stack(
           children: [
             // Image background
-            Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(imageUrl),
-                  fit: BoxFit.cover,
-                ),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(35.0),
-                  topRight: Radius.circular(35.0),
-                  bottomLeft: Radius.circular(1),
-                  bottomRight: Radius.circular(25.0),
+            CachedNetworkImage(
+              imageUrl: imageUrl,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => Center(
+                child: CircularProgressIndicator(),
+              ),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(35.0),
+                    topRight: Radius.circular(35.0),
+                    bottomLeft: Radius.circular(1),
+                    bottomRight: Radius.circular(25.0),
+                  ),
                 ),
               ),
             ),
@@ -1711,7 +1705,7 @@ bool featuredStatus = false;
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(width: 3,),
+                    const SizedBox(width: 3),
                     Text(
                       propertyType,
                       style: const TextStyle(
@@ -1726,22 +1720,6 @@ bool featuredStatus = false;
                 ),
               ),
             ),
-            // Positioned(
-            //   top: 15,
-            //   left: 60,
-            //   right: 0,
-            //   child: Container(
-            //     padding: EdgeInsets.symmetric(vertical: 2, horizontal: 10),
-            //     decoration: BoxDecoration(
-            //       borderRadius: BorderRadius.only(
-            //         bottomLeft: Radius.circular(0),
-            //         bottomRight: Radius.circular(15),
-            //       ),
-            //     ),
-            //     child:
-            //   ),
-            // ),
-            // Text
             Positioned(
               bottom: 0,
               left: 190,
@@ -1760,6 +1738,7 @@ bool featuredStatus = false;
         ),
       ),
     );
+
   }
 
 

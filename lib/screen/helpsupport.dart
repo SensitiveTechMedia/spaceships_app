@@ -8,11 +8,12 @@ import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+
 import 'package:spaceships/colorcode.dart';
 
+
 class SupportScreen extends StatefulWidget {
-   SupportScreen({super.key});
-  final FirebaseAuth auth = FirebaseAuth.instance;
+  SupportScreen({super.key});
 
   @override
   State<SupportScreen> createState() => _SupportScreenState();
@@ -22,21 +23,28 @@ class _SupportScreenState extends State<SupportScreen> {
   final List<String> items = [
     'Issue with An Property',
     'Issue with Refund',
-    'Issue with Booking property',
-    'Leave Feedback'
+    'Issue with Land',
+    'Leave Feedback',
+    'Others',
   ];
   String? selectedValue;
   TextEditingController description = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  User? _user;
+  @override
+  void initState() {
+    super.initState();
+    _user = _auth.currentUser; // Get the current user
+  }
 
   Future<void> _submitSupportRequest() async {
     if (selectedValue != null && description.text.isNotEmpty) {
       try {
-        final FirebaseAuth auth = FirebaseAuth.instance;
         final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
         // Get the current user's UID
-        String uid = auth.currentUser?.uid ?? 'unknown';
+        String uid = _user?.uid ?? 'unknown';
 
         await firestore.collection('support').add({
           'issue': selectedValue,
@@ -54,29 +62,59 @@ class _SupportScreenState extends State<SupportScreen> {
 
         // Optionally show a success message
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Support request submitted successfully')),
+          SnackBar(content: Text('Support request submitted successfully')),
         );
       } catch (e) {
         // Optionally show an error message
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to submit support request')),
+          SnackBar(content: Text('Failed to submit support request')),
         );
       }
     } else {
       // Optionally show a message if validation fails
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill in all fields')),
+        SnackBar(content: Text('Please fill in all fields')),
       );
     }
   }
-
   @override
   Widget build(BuildContext context) {
+    if (_user == null) {
+      // If the user is not authenticated, show a message or redirect to login
+      return Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(50.0),
+          child: Container(
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: Offset(0, 5), // changes position of shadow
+                ),
+              ],
+            ),
+            child: AppBar(
+              backgroundColor:  ColorUtils.primaryColor(), // Example app bar background color
+              title: Text(
+                "Help & Support",
+                style: TextStyle(color: Colors.white),
+              ),
+              iconTheme: IconThemeData(color: Colors.white),
+            ),
+          ),
+        ),
+        body: Center(
+          child: Text('Please log in to view this page.'),
+        ),
+      );
+    }
     return Scaffold(
       key: _scaffoldKey,
 
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(50.0),
+        preferredSize: Size.fromHeight(50.0),
         child: Container(
           decoration: BoxDecoration(
             boxShadow: [
@@ -84,17 +122,17 @@ class _SupportScreenState extends State<SupportScreen> {
                 color: Colors.grey.withOpacity(0.5),
                 spreadRadius: 5,
                 blurRadius: 7,
-                offset: const Offset(0, 5), // changes position of shadow
+                offset: Offset(0, 5), // changes position of shadow
               ),
             ],
           ),
           child: AppBar(
             backgroundColor:  ColorUtils.primaryColor(), // Example app bar background color
-            title: const Text(
+            title: Text(
               "Help & Support",
               style: TextStyle(color: Colors.white),
             ),
-            iconTheme: const IconThemeData(color: Colors.white),
+            iconTheme: IconThemeData(color: Colors.white),
           ),
         ),
       ),
@@ -165,7 +203,7 @@ class _SupportScreenState extends State<SupportScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               GestureDetector(
                 onTap: _submitSupportRequest,
                 child: Container(
@@ -188,16 +226,16 @@ class _SupportScreenState extends State<SupportScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20), // Add some space between the form and the list
+              SizedBox(height: 20), // Add some space between the form and the list
               StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('support')
-                    // .where('userUID', isEqualTo: FirebaseAuth.instance.currentUser?.uid)// Filter by userUID
-                    .orderBy('submittedDate', descending: true) // Order by submittedDate
+                    .where('userUID', isEqualTo: FirebaseAuth.instance.currentUser?.uid) // Filter by userUID
+                // .orderBy('submittedDate', descending: true) // Order by submittedDate
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return Center(child: CircularProgressIndicator());
                   }
 
                   if (snapshot.hasError) {
@@ -207,7 +245,7 @@ class _SupportScreenState extends State<SupportScreen> {
                   final data = snapshot.data?.docs ?? [];
 
                   if (data.isEmpty) {
-                    return const Center(child: Text('No support requests found'));
+                    return Center(child: Text('No support requests found'));
                   }
 
                   return ListView.builder(
@@ -408,13 +446,14 @@ class _SupportScreenState extends State<SupportScreen> {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 10), // Space between list items
+                          SizedBox(height: 10), // Space between list items
                         ],
                       );
                     },
                   );
                 },
               ),
+
 
             ],
           ),
@@ -434,7 +473,7 @@ class ResponseScreen extends StatefulWidget {
   final DateTime submittedDate;
   final String status;
 
-  const ResponseScreen({super.key, 
+  ResponseScreen({
     required this.docId,
     required this.issue,
     required this.submittedDate,
@@ -482,7 +521,7 @@ class _ResponseScreenState extends State<ResponseScreen> {
 
         // Optionally show a success message
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Response sent successfully')),
+          SnackBar(content: Text('Response sent successfully')),
         );
 
         // Clear the text field and image
@@ -493,7 +532,7 @@ class _ResponseScreenState extends State<ResponseScreen> {
       } catch (e) {
         // Optionally show an error message
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to send response')),
+          SnackBar(content: Text('Failed to send response')),
         );
       } finally {
         setState(() {
@@ -527,7 +566,7 @@ class _ResponseScreenState extends State<ResponseScreen> {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(60.0),
+        preferredSize: Size.fromHeight(60.0),
         child: Container(
           decoration: BoxDecoration(
             boxShadow: [
@@ -535,14 +574,14 @@ class _ResponseScreenState extends State<ResponseScreen> {
                 color: Colors.grey.withOpacity(0.6),
                 spreadRadius: 12,
                 blurRadius: 8,
-                offset: const Offset(0, 3), // changes position of shadow
+                offset: Offset(0, 3), // changes position of shadow
               ),
             ],
           ),
           child: AppBar(
             backgroundColor: ColorUtils.primaryColor(),
-            iconTheme: const IconThemeData(color: Colors.white),
-            title: const Text('Support Screen', style: TextStyle(color: Colors.white)),
+            iconTheme: IconThemeData(color: Colors.white),
+            title: Text('Support Screen', style: TextStyle(color: Colors.white)),
           ),
         ),
       ),
@@ -558,19 +597,19 @@ class _ResponseScreenState extends State<ResponseScreen> {
                     children: [
                       Text(
                         "Date: $createDay $createMonth $createHour:$createMinute:$createSeconds",
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       Text(
                         "Issue: ${widget.issue}",
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       Text(
                         "Status: ${widget.status}",
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
                       Expanded(
                         child: StreamBuilder<QuerySnapshot>(
                           stream: firestore.collection('support').doc(widget.docId).collection('responses').orderBy('respondedDate').snapshots(),
@@ -590,8 +629,8 @@ class _ResponseScreenState extends State<ResponseScreen> {
                                 return Align(
                                   alignment: isClient ? Alignment.centerRight : Alignment.centerLeft,
                                   child: Container(
-                                    margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                                    padding: const EdgeInsets.all(10),
+                                    margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                    padding: EdgeInsets.all(10),
                                     decoration: BoxDecoration(
                                       color: isCurrentUser ? ColorUtils.primaryColor() : isClient ? Colors.green[100] : Colors.grey[300],
                                       borderRadius: BorderRadius.circular(10),
@@ -599,7 +638,7 @@ class _ResponseScreenState extends State<ResponseScreen> {
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        if (doc['response'] != null) Text(doc['response'], style: const TextStyle(fontSize: 16,color: Colors.white)),
+                                        if (doc['response'] != null) Text(doc['response'], style: TextStyle(fontSize: 16,color: Colors.white)),
                                         if (doc['imageUrl'] != null)
                                           Padding(
                                             padding: const EdgeInsets.only(top: 1.0),
@@ -615,10 +654,10 @@ class _ResponseScreenState extends State<ResponseScreen> {
                                             ),
                                           ),
 
-                                        const SizedBox(height: 5),
+                                        SizedBox(height: 5),
                                         Text(
                                           DateFormat('yyyy-MM-dd – kk:mm').format(doc['respondedDate'].toDate()),
-                                          style: const TextStyle(fontSize: 12, color: Colors.white),
+                                          style: TextStyle(fontSize: 12, color: Colors.white),
                                         ),
                                       ],
                                     ),
@@ -641,22 +680,22 @@ class _ResponseScreenState extends State<ResponseScreen> {
                       child: TextField(
                         controller: responseController,
                         decoration: InputDecoration(
-                          hintText: 'Type your response here...',hintStyle: const TextStyle(color: Colors.white),
+                          hintText: 'Type your response here...',hintStyle: TextStyle(color: Colors.white),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
-                            borderSide: const BorderSide(
+                            borderSide: BorderSide(
                               color: Colors.white,
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
-                            borderSide: const BorderSide(
+                            borderSide: BorderSide(
                               color: Colors.white,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
-                            borderSide: const BorderSide(
+                            borderSide: BorderSide(
                               color: Colors.white,
                             ),
                           ),
@@ -666,7 +705,7 @@ class _ResponseScreenState extends State<ResponseScreen> {
                             padding: const EdgeInsets.only(left: 8.0, right: 10),
                             child: GestureDetector(
                               onTap: _isUploading ? null : _pickImage, // Disable picking image if uploading
-                              child: const CircleAvatar(
+                              child: CircleAvatar(
                                 backgroundColor: Colors.white,
                                 child: Icon(
                                   Icons.photo,
@@ -679,7 +718,7 @@ class _ResponseScreenState extends State<ResponseScreen> {
                             padding: const EdgeInsets.only(right: 8.0),
                             child: GestureDetector(
                               onTap: _isUploading ? null : _sendResponse, // Disable sending response if uploading
-                              child: const CircleAvatar(
+                              child: CircleAvatar(
                                 backgroundColor: Colors.white,
                                 child: Center(
                                   child: Icon(
@@ -694,7 +733,7 @@ class _ResponseScreenState extends State<ResponseScreen> {
                         enabled: !_isUploading, // Disable the text field if uploading
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                   ],
                 ),
               ),

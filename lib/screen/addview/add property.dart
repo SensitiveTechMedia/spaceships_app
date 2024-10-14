@@ -772,9 +772,9 @@ TextEditingController superbuildupController=TextEditingController();
       if (paymentTypes.isEmpty) {
         missingFields.add("Please select Payment Type");
       }
-      if (amountController.text.isEmpty) {
-        missingFields.add("Please Add payment details");
-      }
+      // if (amountController.text.isEmpty) {
+      //   missingFields.add("Please Add payment details");
+      // }
       if (missingFields.isNotEmpty) {
         showToastsOneByOne(missingFields);
         return false; // Validation failed
