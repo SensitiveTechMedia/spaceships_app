@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:spaceships/colorcode.dart';
 
 class  Agentcorner extends StatefulWidget {
+  const Agentcorner({super.key});
+
   @override
   State<Agentcorner> createState() => _AgentcornerState();
 }
@@ -11,7 +13,7 @@ class _AgentcornerState extends State< Agentcorner> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60.0),
+        preferredSize: const Size.fromHeight(60.0),
     child: Container(
     decoration: BoxDecoration(
     boxShadow: [
@@ -19,14 +21,14 @@ class _AgentcornerState extends State< Agentcorner> {
     color: Colors.grey.withOpacity(0.6),
     spreadRadius: 12,
     blurRadius: 8,
-    offset: Offset(0, 3), // changes position of shadow
+    offset: const Offset(0, 3), // changes position of shadow
     ),
     ],
     ),
     child: AppBar(
     backgroundColor: ColorUtils.primaryColor(),
-    iconTheme: IconThemeData(color: Colors.white),
-        title: Text("Agentcorner"),
+    iconTheme: const IconThemeData(color: Colors.white),
+        title: const Text("Agentcorner"),
       ),
     ),
       ),

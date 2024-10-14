@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:spaceships/colorcode.dart';
 
 class inventorytab extends StatefulWidget {
+  const inventorytab({super.key});
+
   @override
   _inventorytabState createState() => _inventorytabState();
 }
 class _inventorytabState extends State<inventorytab> with TickerProviderStateMixin {
-  Color customTeal = Color(0xFF071A4B);
+  Color customTeal = const Color(0xFF071A4B);
   late TabController _tabController;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -62,7 +64,7 @@ class _inventorytabState extends State<inventorytab> with TickerProviderStateMix
                         ),
                         labelColor:   ColorUtils.primaryColor(),
                         unselectedLabelColor: Colors.grey,
-                        tabs: [
+                        tabs: const [
                           Tab(text: 'Inventory out'),
                           Tab(text: 'Pending'),
                         ],
@@ -89,7 +91,7 @@ class _inventorytabState extends State<inventorytab> with TickerProviderStateMix
 
 
   Widget _buildinventoryoutScreen() {
-    return SingleChildScrollView(
+    return const SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -108,7 +110,7 @@ class _inventorytabState extends State<inventorytab> with TickerProviderStateMix
   }
 
   Widget _buildPendingScreen() {
-    return SingleChildScrollView(
+    return const SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -121,8 +123,8 @@ class _inventorytabState extends State<inventorytab> with TickerProviderStateMix
   }
   AppBar _buildAppBar() {
     return AppBar(
-      title: Text("Inventory tab"),
-      actions: [
+      title: const Text("Inventory tab"),
+      actions: const [
 
       ],
     );

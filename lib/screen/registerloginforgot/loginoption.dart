@@ -1,5 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gradient_borders/input_borders/gradient_outline_input_border.dart';
@@ -59,7 +57,7 @@ class LoginOptionScreen extends GetView<LoginOptionController> {
                       color: Theme.of(context).colorScheme.primary,
                       fontSize: 27,
                     ),
-                    children: <TextSpan>[
+                    children: const <TextSpan>[
                       TextSpan(
                         text: ' Spaceships',
                         style: TextStyle(
@@ -81,13 +79,13 @@ class LoginOptionScreen extends GetView<LoginOptionController> {
                       GetBuilder<LoginScreenController>(
                         builder: (controller) {
                           return AnimatedOpacity(
-                            duration: Duration(
+                            duration: const Duration(
                                 seconds: 1), // Adjust the duration as needed
                             opacity: controller.isValid == true
                                 ? 0.0
                                 : 1.0, // Set opacity based on validation result
                             child: controller.isValid == true
-                                ? SizedBox() // Return an empty SizedBox if validation is successful
+                                ? const SizedBox() // Return an empty SizedBox if validation is successful
                                 : Container(
                               width: width * 1,
                               decoration: BoxDecoration(
@@ -100,7 +98,7 @@ class LoginOptionScreen extends GetView<LoginOptionController> {
                                 child: Center(
                                   child: Text(
                                     controller.error,
-                                    style: TextStyle(color: Colors.white),
+                                    style: const TextStyle(color: Colors.white),
                                   ),
                                 ),
                               ),
@@ -159,7 +157,7 @@ class LoginOptionScreen extends GetView<LoginOptionController> {
                                 ),
                                 focusedBorder: GradientOutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
-                                    gradient: LinearGradient(colors: [
+                                    gradient: const LinearGradient(colors: [
                                       ColorCodes.green,
                                       ColorCodes.teal
                                     ]),
@@ -220,7 +218,7 @@ class LoginOptionScreen extends GetView<LoginOptionController> {
                                 ),
                                 focusedBorder: GradientOutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
-                                    gradient: LinearGradient(colors: [
+                                    gradient: const LinearGradient(colors: [
                                       ColorCodes.green,
                                       ColorCodes.teal
                                     ]),
@@ -238,11 +236,11 @@ class LoginOptionScreen extends GetView<LoginOptionController> {
                             // Navigate to Forgot Password screen
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => Forgotpasswordscreen()),
+                              MaterialPageRoute(builder: (context) => const Forgotpasswordscreen()),
                             );
                           },
                             child: Container(
-                              child: Text(
+                              child: const Text(
                                 "Forgot password?",
                                 style: TextStyle(
                                     color: ColorCodes.teal,
@@ -252,20 +250,20 @@ class LoginOptionScreen extends GetView<LoginOptionController> {
                               ),
                             ),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           GetBuilder<LoginScreenController>(
                             builder: (controller) {
                               return GestureDetector(
                                 onTap: () => controller.visibilityToggle(),
                                 child: controller.visibility == true
-                                    ? Text(
+                                    ? const Text(
                                   "Show password",
                                   style: TextStyle(
                                       color: ColorCodes.teal,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14),
                                 )
-                                    : Text(
+                                    : const Text(
                                   "hide password",
                                   style: TextStyle(
                                       color: ColorCodes.teal,
@@ -277,7 +275,7 @@ class LoginOptionScreen extends GetView<LoginOptionController> {
                           ),
                         ],
                       ),
-                     SizedBox(height: 25,),
+                     const SizedBox(height: 25,),
                       GetBuilder<LoginScreenController>(builder: (controller) {
                         return controller.emailController.text.isEmpty ||
                             controller.passwordController.text.isEmpty
@@ -297,17 +295,17 @@ class LoginOptionScreen extends GetView<LoginOptionController> {
                               },
                               style: ButtonStyle(
                                 backgroundColor:
-                                MaterialStateProperty.all<Color>(
+                                WidgetStateProperty.all<Color>(
                                     ColorCodes.green),
                                 overlayColor:
-                                MaterialStateProperty.all<Color>(
+                                WidgetStateProperty.all<Color>(
                                     ColorCodes.green),
                                 shadowColor:
-                                MaterialStateProperty.all<Color>(
+                                WidgetStateProperty.all<Color>(
                                     ColorCodes.green),
-                                minimumSize: MaterialStateProperty.all(
-                                    Size(double.infinity, 55)),
-                                shape: MaterialStateProperty.all<
+                                minimumSize: WidgetStateProperty.all(
+                                    const Size(double.infinity, 55)),
+                                shape: WidgetStateProperty.all<
                                     RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                     borderRadius:
@@ -315,7 +313,7 @@ class LoginOptionScreen extends GetView<LoginOptionController> {
                                   ),
                                 ),
                               ),
-                              child: Text(
+                              child: const Text(
                                 "Login",
                                 style: TextStyle(
                                     color: ColorCodes.white, fontSize: 16),
@@ -327,7 +325,7 @@ class LoginOptionScreen extends GetView<LoginOptionController> {
                   ),
                 ),
 
-            SizedBox(height: 15,),
+            const SizedBox(height: 15,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -361,17 +359,17 @@ class LoginOptionScreen extends GetView<LoginOptionController> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       "Don’t have an account? ",
                     ),
                     InkWell(
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => RegisterScreen()),
+                          MaterialPageRoute(builder: (context) => const RegisterScreen()),
                         );
                       },
-                      child: Text(
+                      child: const Text(
                         "Register",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -380,7 +378,7 @@ class LoginOptionScreen extends GetView<LoginOptionController> {
                     )
                   ],
                 ),
-                SizedBox(height: 100,),
+                const SizedBox(height: 100,),
               ],
             ),
 

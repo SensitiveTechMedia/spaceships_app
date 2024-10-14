@@ -1,20 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:spaceships/Common/Constants/color_helper.dart';
 import 'package:spaceships/colorcode.dart';
 import 'package:spaceships/jvproperty/addpropertyjvproperties.dart';
-import 'package:spaceships/jvproperty/tabbar/inventory.dart';
 import 'package:spaceships/screen/category/All.dart';
 
 class PropertyInventory extends StatefulWidget {
+  const PropertyInventory({super.key});
+
   @override
   State<PropertyInventory> createState() => _PropertyInventoryState();
 }
 
 class _PropertyInventoryState extends State<PropertyInventory> with TickerProviderStateMixin {
   List<String> categories = ["Inventory","Sell", "Lease", "Rent" ];
-  Color customTeal = Color(0xFF8F00FF);
+  Color customTeal = const Color(0xFF8F00FF);
   int _selectedIndex = 0;
   late TabController _tabController;
 
@@ -45,16 +45,16 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
   List<Widget> _buildTabs() {
     switch (_selectedIndex) {
       case 0:
-        return [Tab(text: 'Inventory out'), Tab(text: 'Pending')];
+        return [const Tab(text: 'Inventory out'), const Tab(text: 'Pending')];
 
       case 1:
-        return [Tab(text: 'Sold'), Tab(text: 'Unsold')];
+        return [const Tab(text: 'Sold'), const Tab(text: 'Unsold')];
 
       case 2:
-        return [Tab(text: 'Leaseout'), Tab(text: 'Pending')];
+        return [const Tab(text: 'Leaseout'), const Tab(text: 'Pending')];
 
       case 3:
-        return [Tab(text: 'Rent Out'), Tab(text: 'Pending')];
+        return [const Tab(text: 'Rent Out'), const Tab(text: 'Pending')];
       default:
         return [];
     }
@@ -80,7 +80,7 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
   Widget _buildSoldScreen(String category) {
     print('Selected Category: $category');
     if (category != 'Buy' && category != 'Sold') {
-      return Center(child: Text('Invalid category'));
+      return const Center(child: Text('Invalid category'));
     }
 
     return SingleChildScrollView(
@@ -106,7 +106,7 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
                 );
               }
               if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
-                return Center(child: Text('No properties found'));
+                return const Center(child: Text('No properties found'));
               }
 
               return Column(
@@ -116,7 +116,7 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
                   return Container(
 
                     child: ListTile(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
                       onTap: () {
                         Navigator.push(
                           context,
@@ -170,14 +170,14 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
                       title: Container(
                         height: 150,
                         decoration: BoxDecoration(
-                          color: Color.fromRGBO(160, 161, 164, 1000),
+                          color: const Color.fromRGBO(160, 161, 164, 1000),
                           borderRadius: BorderRadius.circular(30.0),
                         ),
                         child: Row(
                           children: [
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
                             // Display images
-                            Container(
+                            SizedBox(
                               width: 140,
                               height: 140,
                               child: ListView.builder(
@@ -187,7 +187,7 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
                                   return Container(
                                     width: 140,
                                     height: 140,
-                                    margin: EdgeInsets.only(right: 8),
+                                    margin: const EdgeInsets.only(right: 8),
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(20.0),
                                       child: Image.network(
@@ -206,7 +206,7 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
                                           }
                                         },
                                         errorBuilder: (context, error, stackTrace) {
-                                          return Center(child: Icon(Icons.error));
+                                          return const Center(child: Icon(Icons.error));
                                         },
                                       ),
                                     ),
@@ -214,12 +214,12 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
                                 },
                               ),
                             ),
-                            SizedBox(width: 15.0),
+                            const SizedBox(width: 15.0),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SizedBox(height: 20),
+                                  const SizedBox(height: 20),
                                   FittedBox(
                                     fit: BoxFit.scaleDown,
                                     child: Text(
@@ -231,7 +231,7 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: 4.0),
+                                  const SizedBox(height: 4.0),
                                   Row(
                                     children: [
                                       Icon(
@@ -293,7 +293,7 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
           );
         }
         if (snapshot.data!.docs.isEmpty) {
-          return Center(child: Text('No properties found'));
+          return const Center(child: Text('No properties found'));
         }
 
         return ListView.builder(
@@ -303,7 +303,7 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
             var wishlistItem = doc.data() as Map<String, dynamic>;
 
             return ListTile(
-              contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
               onTap: () {
                 Navigator.push(
                   context,
@@ -357,12 +357,12 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
               title: Container(
                 height: 150,
                 decoration: BoxDecoration(
-                  color: Color.fromRGBO(160, 161, 164, 1000),
+                  color: const Color.fromRGBO(160, 161, 164, 1000),
                   borderRadius: BorderRadius.circular(30.0),
                 ),
                 child: Row(
                   children: [
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Stack(
                       children: [
                         Container(
@@ -373,7 +373,7 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
                             color: Colors.grey,
                           ),
                           child: wishlistItem['PropertyImages'] == null || wishlistItem['PropertyImages'].isEmpty
-                              ? Center(child: Icon(Icons.image, size: 50))
+                              ? const Center(child: Icon(Icons.image, size: 50))
                               : Stack(
                             fit: StackFit.expand,
                             children: [
@@ -395,7 +395,7 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
                                     }
                                   },
                                   errorBuilder: (context, error, stackTrace) {
-                                    return Center(child: Icon(Icons.error));
+                                    return const Center(child: Icon(Icons.error));
                                   },
                                 ),
                               ),
@@ -415,7 +415,7 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
                             ),
                             child: Text(
                               wishlistItem['subcategory'] ?? 'cat',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 14,
                               ),
@@ -424,12 +424,12 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
                         ),
                       ],
                     ),
-                    SizedBox(width: 15.0),
+                    const SizedBox(width: 15.0),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
@@ -441,7 +441,7 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
                               ),
                             ),
                           ),
-                          SizedBox(height: 4.0),
+                          const SizedBox(height: 4.0),
                           Row(
                             children: [
                               Icon(
@@ -461,7 +461,7 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
                               ),
                             ],
                           ),
-                          SizedBox(height: 20.0),
+                          const SizedBox(height: 20.0),
                         ],
                       ),
                     ),
@@ -479,7 +479,7 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60.0),
+        preferredSize: const Size.fromHeight(60.0),
         child: Container(
           decoration: BoxDecoration(
             boxShadow: [
@@ -487,27 +487,27 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
                 color: Colors.grey.withOpacity(0.6),
                 spreadRadius: 12,
                 blurRadius: 8,
-                offset: Offset(0, 3), // changes position of shadow
+                offset: const Offset(0, 3), // changes position of shadow
               ),
             ],
           ),
           child: AppBar(
             backgroundColor: ColorUtils.primaryColor(),
-            iconTheme: IconThemeData(color: Colors.white),
-            title: Text(
+            iconTheme: const IconThemeData(color: Colors.white),
+            title: const Text(
               "Property Inventory",
               style: TextStyle(color: Colors.white),
             ),
             actions: <Widget>[
               IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.add_circle,
                   size: 38,
                 ),
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => JvAddProperty()),
+                    MaterialPageRoute(builder: (context) => const JvAddProperty()),
                   );
                   // Implement search functionality here
                 },
@@ -519,7 +519,7 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(height: 25),
+          const SizedBox(height: 25),
           // Padding(
           //   padding: EdgeInsets.only(left: 15.0, right: 15.0), // Adjust horizontal padding as needed
           //   child: GestureDetector(
@@ -567,11 +567,11 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
           //     ),
           //   ),
           // ),
-          SizedBox(height: 10,),
+          const SizedBox(height: 10,),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Padding(
-              padding: EdgeInsets.all(5.0),
+              padding: const EdgeInsets.all(5.0),
               child: Row(
                 children: List.generate(categories.length, (index) {
                   bool isSelected = index == _selectedIndex;
@@ -587,7 +587,7 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
                     child: Container(
                       width: 100,
                       height: 80,
-                      margin: EdgeInsets.symmetric(horizontal: 5),
+                      margin: const EdgeInsets.symmetric(horizontal: 5),
                       decoration: BoxDecoration(
                         color: isSelected ? customTeal : Colors.white,
                         borderRadius: BorderRadius.circular(5),
@@ -596,7 +596,7 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
                           width: 1,
                         ),
                       ),
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -614,7 +614,7 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
                                 : Icons.villa,
                             color: isSelected ? Colors.white : customTeal,
                           ),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                           Text(
                             categories[index],
                             style: TextStyle(
@@ -631,7 +631,7 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
             ),
           ),
           if (_selectedIndex < categories.length)
-            SizedBox(height: 10,),
+            const SizedBox(height: 10,),
             Column(
               children: [
                 TabBar(
@@ -641,14 +641,14 @@ class _PropertyInventoryState extends State<PropertyInventory> with TickerProvid
                   dividerColor: Colors.transparent,
                   indicator: BoxDecoration(
                     color: ColorUtils.primaryColor(),
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
                   ),
                   labelColor: Colors.white,
                   unselectedLabelColor: Colors.black54, // Ensures no underline is present// Unselected text color
                 ),
 
-                SizedBox(height: 10,),
-                Container(
+                const SizedBox(height: 10,),
+                SizedBox(
                   height: 450, // Adjust the height as needed
                   child: TabBarView(
                     controller: _tabController,

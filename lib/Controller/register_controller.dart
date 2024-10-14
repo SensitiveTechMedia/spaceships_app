@@ -22,7 +22,7 @@ class RegisterController extends GetxController {
   final EmailOTP myauth = EmailOTP();
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance; // FirebaseAuth instance
-  final Uuid uuid = Uuid();
+  final Uuid uuid = const Uuid();
 
   void onChangeValueName(String value) {
     if (!RegExp(r'^[a-zA-Z ]+$').hasMatch(value)) {
@@ -62,7 +62,7 @@ class RegisterController extends GetxController {
 
   void startOTPTimer() {
     timerSeconds.value = 30;
-    Timer.periodic(Duration(seconds: 1), (timer) {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
       if (timerSeconds.value > 0) {
         timerSeconds.value--;
       } else {
@@ -105,7 +105,7 @@ class RegisterController extends GetxController {
         otpController.text.isEmpty ||
         passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Please enter all required fields'),
           backgroundColor: Colors.red,
         ),
@@ -130,7 +130,7 @@ class RegisterController extends GetxController {
 
       if (querySnapshot.docs.isNotEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('This email is already registered'),
             backgroundColor: Colors.red,
           ),
@@ -148,11 +148,11 @@ class RegisterController extends GetxController {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen(username: '',)),
+        MaterialPageRoute(builder: (context) => const HomeScreen(username: '',)),
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('User registered successfully'),
           backgroundColor: Colors.green,
         ),

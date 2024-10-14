@@ -6,11 +6,13 @@ import 'package:spaceships/colorcode.dart';
 import 'package:spaceships/screen/category/All.dart';
 
 class selltab extends StatefulWidget {
+  const selltab({super.key});
+
   @override
   _selltabState createState() => _selltabState();
 }
 class _selltabState extends State<selltab> with TickerProviderStateMixin {
-  Color customTeal = Color(0xFF071A4B);
+  Color customTeal = const Color(0xFF071A4B);
   late TabController _tabController;
 
 
@@ -66,7 +68,7 @@ class _selltabState extends State<selltab> with TickerProviderStateMixin {
                         ),
                         labelColor: ColorUtils.primaryColor(),
                         unselectedLabelColor: Colors.grey,
-                        tabs: [
+                        tabs: const [
                           Tab(text: 'Sold'),
                           Tab(text: 'Unsold'),
                         ],
@@ -117,7 +119,7 @@ class _selltabState extends State<selltab> with TickerProviderStateMixin {
                   );
                 }
                 if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
-                  return Center(child: Text('No properties found'));
+                  return const Center(child: Text('No properties found'));
                 }
 
                 return ListView.builder(
@@ -127,7 +129,7 @@ class _selltabState extends State<selltab> with TickerProviderStateMixin {
                     var wishlistItem = doc.data() as Map<String, dynamic>;
 
                     return ListTile(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
                       onTap: () {
                         Navigator.push(
                           context,
@@ -177,12 +179,12 @@ class _selltabState extends State<selltab> with TickerProviderStateMixin {
                       title: Container(
                         height: 150,
                         decoration: BoxDecoration(
-                          color: Color.fromRGBO(160, 161, 164, 1), // Corrected RGBA value
+                          color: const Color.fromRGBO(160, 161, 164, 1), // Corrected RGBA value
                           borderRadius: BorderRadius.circular(30.0),
                         ),
                         child: Row(
                           children: [
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
                             Stack(
                               children: [
                                 Container(
@@ -193,7 +195,7 @@ class _selltabState extends State<selltab> with TickerProviderStateMixin {
                                     color: Colors.grey,
                                   ),
                                   child: wishlistItem['PropertyImages'] == null || wishlistItem['PropertyImages'].isEmpty
-                                      ? Center(child: Icon(Icons.image, size: 50))
+                                      ? const Center(child: Icon(Icons.image, size: 50))
                                       : ClipRRect(
                                     borderRadius: BorderRadius.circular(20.0),
                                     child: Image.network(
@@ -212,7 +214,7 @@ class _selltabState extends State<selltab> with TickerProviderStateMixin {
                                         }
                                       },
                                       errorBuilder: (context, error, stackTrace) {
-                                        return Center(child: Icon(Icons.error));
+                                        return const Center(child: Icon(Icons.error));
                                       },
                                     ),
                                   ),
@@ -230,7 +232,7 @@ class _selltabState extends State<selltab> with TickerProviderStateMixin {
                                     child: Center(
                                       child: Text(
                                         wishlistItem['subcategory'] ?? 'Category',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 14,
                                         ),
@@ -240,12 +242,12 @@ class _selltabState extends State<selltab> with TickerProviderStateMixin {
                                 ),
                               ],
                             ),
-                            SizedBox(width: 15.0),
+                            const SizedBox(width: 15.0),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SizedBox(height: 20),
+                                  const SizedBox(height: 20),
                                   FittedBox(
                                     fit: BoxFit.scaleDown,
                                     child: Text(
@@ -257,7 +259,7 @@ class _selltabState extends State<selltab> with TickerProviderStateMixin {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: 4.0),
+                                  const SizedBox(height: 4.0),
                                   Row(
                                     children: [
                                       Icon(
@@ -277,7 +279,7 @@ class _selltabState extends State<selltab> with TickerProviderStateMixin {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 20.0),
+                                  const SizedBox(height: 20.0),
                                 ],
                               ),
                             ),
@@ -310,12 +312,12 @@ class _selltabState extends State<selltab> with TickerProviderStateMixin {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 
-Container(child: Text("ndndn"),),
+Container(child: const Text("ndndn"),),
 
 
 
 
-          SizedBox(height: 50),
+          const SizedBox(height: 50),
         ],
       ),
 
@@ -324,8 +326,8 @@ Container(child: Text("ndndn"),),
   }
   AppBar _buildAppBar() {
     return AppBar(
-title: Text("Sell tab"),
-      actions: [
+title: const Text("Sell tab"),
+      actions: const [
 
       ],
     );

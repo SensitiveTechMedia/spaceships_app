@@ -2,22 +2,21 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:spaceships/colorcode.dart';
 import 'package:spaceships/screen/addview/map.dart';
 class JvAddProperty extends StatefulWidget {
+  const JvAddProperty({super.key});
+
   @override
   _CategoryScreenState createState() => _CategoryScreenState();
 }
 class _CategoryScreenState extends State<JvAddProperty> {
-  Color customTeal = Color(0xFF8F00FF);
+  Color customTeal = const Color(0xFF8F00FF);
   int _selectedSubcategoryIndex = -1;
   String _selectedPropertyType = "";
   int bhkValue = 1;
@@ -72,7 +71,7 @@ class _CategoryScreenState extends State<JvAddProperty> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60.0),
+        preferredSize: const Size.fromHeight(60.0),
         child: Container(
           decoration: BoxDecoration(
             boxShadow: [
@@ -80,20 +79,20 @@ class _CategoryScreenState extends State<JvAddProperty> {
                 color: Colors.grey.withOpacity(0.6),
                 spreadRadius: 12,
                 blurRadius: 8,
-                offset: Offset(0, 3), // changes position of shadow
+                offset: const Offset(0, 3), // changes position of shadow
               ),
             ],
           ),
           child:AppBar( backgroundColor: ColorUtils.primaryColor(),
 
-            title: Text('Sell Category',style: TextStyle(color: Colors.white),),
-            iconTheme: IconThemeData(color: Colors.white),
+            title: const Text('Sell Category',style: TextStyle(color: Colors.white),),
+            iconTheme: const IconThemeData(color: Colors.white),
           ),),
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -105,8 +104,8 @@ class _CategoryScreenState extends State<JvAddProperty> {
                   color: ColorUtils.primaryColor(),
                 ),
               ),
-              SizedBox(height: 10),
-              Container(
+              const SizedBox(height: 10),
+              SizedBox(
                 height: 420,
                 child: ListView.builder(
                   scrollDirection: Axis.vertical,
@@ -122,8 +121,8 @@ class _CategoryScreenState extends State<JvAddProperty> {
                         });
                       },
                       child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        padding: EdgeInsets.all(20),
+                        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           color: isSelected ? customTeal : Colors.white,
                           borderRadius: BorderRadius.circular(8),
@@ -137,7 +136,7 @@ class _CategoryScreenState extends State<JvAddProperty> {
                                 color: isSelected ? Colors.white : customTeal,
                               ),
                             if (subcategories[index]["icon"] != null)
-                              SizedBox(width: 10),
+                              const SizedBox(width: 10),
                             Flexible(
                               child: Text(
                                 subcategories[index]["name"],
@@ -154,7 +153,7 @@ class _CategoryScreenState extends State<JvAddProperty> {
                   },
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               if (_selectedSubcategoryIndex != -1)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,7 +170,7 @@ class _CategoryScreenState extends State<JvAddProperty> {
                       ),
                     if (subcategories[_selectedSubcategoryIndex]["name"] == "Villa / Independent House" ||
                         subcategories[_selectedSubcategoryIndex]["name"] == "Flat")
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                     if (subcategories[_selectedSubcategoryIndex]["name"] == "Villa / Independent House" ||
                         subcategories[_selectedSubcategoryIndex]["name"] == "Flat")
                       Row(
@@ -184,7 +183,7 @@ class _CategoryScreenState extends State<JvAddProperty> {
                               color: ColorUtils.primaryColor(), // Background color of the circle
                             ),
                             child: IconButton(
-                              icon: Icon(Icons.remove, color: Colors.white),
+                              icon: const Icon(Icons.remove, color: Colors.white),
                               onPressed: () {
                                 setState(() {
                                   if (bhkValue > 1) bhkValue--; // Decrease value, minimum 1
@@ -192,7 +191,7 @@ class _CategoryScreenState extends State<JvAddProperty> {
                               },
                             ),
                           ),
-                          SizedBox(width: 10),
+                          const SizedBox(width: 10),
                           Text(
                             '$bhkValue BHK',
                             style: TextStyle(
@@ -201,7 +200,7 @@ class _CategoryScreenState extends State<JvAddProperty> {
                               color: ColorUtils.primaryColor(),
                             ),
                           ),
-                          SizedBox(width: 10),
+                          const SizedBox(width: 10),
                           Container(
                             width: 36, // Adjust width to change circle size
                             height: 39, // Adjust height to change circle size
@@ -210,13 +209,13 @@ class _CategoryScreenState extends State<JvAddProperty> {
                               color: ColorUtils.primaryColor(), // Background color of the circle
                             ),
                             child: IconButton(
-                              icon: Icon(Icons.add, color: Colors.white), // Icon with custom teal color
+                              icon: const Icon(Icons.add, color: Colors.white), // Icon with custom teal color
                               onPressed: () {
                                 setState(() {
                                   bhkValue++; // Increase value
                                 });
                               },
-                              padding: EdgeInsets.all(0), // Optional: Remove default padding
+                              padding: const EdgeInsets.all(0), // Optional: Remove default padding
                               iconSize: 24, // Adjust icon size if needed
                             ),
                           ),
@@ -226,7 +225,7 @@ class _CategoryScreenState extends State<JvAddProperty> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           Text(
                             'Select Property Type:',
                             style: TextStyle(
@@ -235,7 +234,7 @@ class _CategoryScreenState extends State<JvAddProperty> {
                               color: ColorUtils.primaryColor(),
                             ),
                           ),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           Wrap(
                             spacing: 10,
                             runSpacing: 10,
@@ -250,7 +249,7 @@ class _CategoryScreenState extends State<JvAddProperty> {
                                     });
                                   },
                                   child: Container(
-                                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                                     decoration: BoxDecoration(
                                       color: isSelected ? customTeal : Colors.white,
                                       borderRadius: BorderRadius.circular(8),
@@ -286,7 +285,7 @@ class _CategoryScreenState extends State<JvAddProperty> {
                         color: ColorUtils.primaryColor(),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Wrap(
                       spacing: 10,
                       runSpacing: 10,
@@ -301,7 +300,7 @@ class _CategoryScreenState extends State<JvAddProperty> {
                               });
                             },
                             child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                               decoration: BoxDecoration(
                                 color: isSelected ? customTeal : Colors.white,
                                 borderRadius: BorderRadius.circular(8),
@@ -321,7 +320,7 @@ class _CategoryScreenState extends State<JvAddProperty> {
                     ),
                   ],
                 ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -330,7 +329,7 @@ class _CategoryScreenState extends State<JvAddProperty> {
                     flex: 1,
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.horizontal(left: Radius.circular(20)),
+                        borderRadius: const BorderRadius.horizontal(left: Radius.circular(20)),
                         color: ColorUtils.primaryColor(),
                       ),
                       child: SizedBox(
@@ -345,7 +344,7 @@ class _CategoryScreenState extends State<JvAddProperty> {
                               borderRadius: BorderRadius.circular(15),
                             ),
                           ),
-                          child: Row(
+                          child: const Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(Icons.arrow_back, color: Colors.white),
@@ -360,12 +359,12 @@ class _CategoryScreenState extends State<JvAddProperty> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 1), // Adjust the spacing between the buttons as needed
+                  const SizedBox(width: 1), // Adjust the spacing between the buttons as needed
                   Expanded(
                     flex: 1,
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.horizontal(right: Radius.circular(20)),
+                        borderRadius: const BorderRadius.horizontal(right: Radius.circular(20)),
                         color: ColorUtils.primaryColor(),
                       ),
                       child: SizedBox(
@@ -417,7 +416,7 @@ class _CategoryScreenState extends State<JvAddProperty> {
                               borderRadius: BorderRadius.circular(15),
                             ),
                           ),
-                          child: Row(
+                          child: const Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
@@ -467,7 +466,7 @@ class CategoryItem extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
   final Color customTeal;
-  CategoryItem({
+  const CategoryItem({super.key, 
     required this.title,
     required this.icon,
     required this.isSelected,
@@ -479,7 +478,7 @@ class CategoryItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Padding(
-        padding: EdgeInsets.all(5.0),
+        padding: const EdgeInsets.all(5.0),
         child: Container(
           width: 100,
           height: 80,
@@ -491,7 +490,7 @@ class CategoryItem extends StatelessWidget {
               width: 1,
             ),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -499,7 +498,7 @@ class CategoryItem extends StatelessWidget {
                 icon,
                 color: isSelected ? Colors.white : customTeal,
               ),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               Text(
                 title,
                 style: TextStyle(
@@ -519,7 +518,7 @@ class PropertyDetailsScreen extends StatefulWidget {
   final String subcategory;
   final String propertyType;
   final int? bhkValue;
-  PropertyDetailsScreen({
+  const PropertyDetailsScreen({super.key, 
     required this.category,
     required this.subcategory,
     required this.propertyType,
@@ -539,7 +538,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
   TextEditingController superbuildupController=TextEditingController();
   final TextEditingController balconyController=TextEditingController();
   final  TextEditingController bathroomController=TextEditingController();
-  Color customTeal = Color(0xFF8F00FF);
+  Color customTeal = const Color(0xFF8F00FF);
   String paymentType = "One-Time";
   String possessionType = "Under Construction";
   String areaType = 'Sq.Ft'; // Initial value
@@ -598,14 +597,14 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
     bool superbuild = !( widget.subcategory == 'Villa / Independent House'|| widget.subcategory == 'Commercial Space'|| widget.category == 'Rent' || widget.category == 'Lease'|| widget.subcategory == 'Hostel/PG/Service Apartment'|| widget.subcategory == 'Plot / Land');
     bool dimensionroad  = !(widget.subcategory == 'Flat'|| widget.category == 'Rent' || widget.category == 'Lease'|| widget.subcategory == 'Hostel/PG/Service Apartment');
     bool furnishing = !(widget.subcategory == 'Plot / Land' || widget.subcategory == 'Commercial Space'|| widget.subcategory == 'Hostel/PG/Service Apartment');
-    Future<void> _showToastsOneByOne(List<String> messages) async {
+    Future<void> showToastsOneByOne(List<String> messages) async {
       for (String message in messages) {
         _showToast(message); // Show the toast message
-        await Future.delayed(Duration(seconds: 1)); // Wait for 1 second (or adjust as needed)
+        await Future.delayed(const Duration(seconds: 1)); // Wait for 1 second (or adjust as needed)
       }
     }
 
-    bool _validateFields() {
+    bool validateFields() {
       List<String> missingFields = [];
 
       // Check if property owner or consultant is selected
@@ -661,9 +660,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
       }
 
       if (widget.subcategory == 'Commercial Space' || widget.subcategory == 'Plot / Land') {
-        if (isCornerArea == null) { // Assuming a radio button or similar control
-          missingFields.add("Please select Is this a Corner Area?");
-        }
+        
       }
 
       if (widget.subcategory == 'Villa / Independent House' || widget.subcategory == 'Commercial Space' || widget.subcategory == 'Plot / Land') {
@@ -698,7 +695,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
       }
 
       if (missingFields.isNotEmpty) {
-        _showToastsOneByOne(missingFields);
+        showToastsOneByOne(missingFields);
         return false; // Validation failed
       }
 
@@ -710,7 +707,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
 
     return Scaffold(
       appBar: PreferredSize(
-          preferredSize: Size.fromHeight(60.0),
+          preferredSize: const Size.fromHeight(60.0),
           child: Container(
             decoration: BoxDecoration(
               boxShadow: [
@@ -718,14 +715,14 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                   color: Colors.grey.withOpacity(0.6),
                   spreadRadius: 12,
                   blurRadius: 8,
-                  offset: Offset(0, 3), // changes position of shadow
+                  offset: const Offset(0, 3), // changes position of shadow
                 ),
               ],
             ),
             child: AppBar(
               backgroundColor: ColorUtils.primaryColor(),
-              iconTheme: IconThemeData(color: Colors.white),
-              title: Text('Property Details',style: TextStyle(color: Colors.white),),
+              iconTheme: const IconThemeData(color: Colors.white),
+              title: const Text('Property Details',style: TextStyle(color: Colors.white),),
             ),
           )
       ),
@@ -744,7 +741,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                   color: ColorUtils.primaryColor(),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Row(
                 children: [
                   Expanded(
@@ -754,7 +751,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
                           backgroundColor: ColorUtils.primaryColor(),
-                          shape: RoundedRectangleBorder(
+                          shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(15),
                               topLeft: Radius.circular(15),
@@ -766,7 +763,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                             propertyOwnerController.text = 'Property Owner';
                           });
                         },
-                        child: Text(
+                        child: const Text(
                           'Property Owner',
                           style: TextStyle(fontSize: 16),
                         ),
@@ -775,7 +772,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                         style: OutlinedButton.styleFrom(
                           foregroundColor: ColorUtils.primaryColor(),
                           side: BorderSide(color: ColorUtils.primaryColor(),),
-                          shape: RoundedRectangleBorder(
+                          shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(15),
                               topLeft: Radius.circular(15),
@@ -794,7 +791,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 2), // Add spacing between ElevatedButtons
+                  const SizedBox(width: 2), // Add spacing between ElevatedButtons
                   Expanded(
                     child: Container(
                       child: propertyOwnerController.text == 'Consultant'
@@ -802,7 +799,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
                           backgroundColor: ColorUtils.primaryColor(),
-                          shape: RoundedRectangleBorder(
+                          shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
                               bottomRight: Radius.circular(15),
                               topRight: Radius.circular(15),
@@ -814,7 +811,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                             propertyOwnerController.text = 'Consultant';
                           });
                         },
-                        child: Text(
+                        child: const Text(
                           'Consultant',
                           style: TextStyle(fontSize: 16),
                         ),
@@ -823,7 +820,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                         style: OutlinedButton.styleFrom(
                           foregroundColor: ColorUtils.primaryColor(),
                           side: BorderSide(color: ColorUtils.primaryColor(),),
-                          shape: RoundedRectangleBorder(
+                          shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
                               bottomRight: Radius.circular(15),
                               topRight: Radius.circular(15),
@@ -848,22 +845,22 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                 TextField(
                   keyboardType: TextInputType.number,
                   controller: balconyController,
-                  decoration: InputDecoration(labelText: "Enter number of Balcony",
+                  decoration: const InputDecoration(labelText: "Enter number of Balcony",
                     hintText: 'Enter number of Balcony',
                     border: UnderlineInputBorder(),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 TextField(
                   keyboardType: TextInputType.number,
                   controller: bathroomController,
-                  decoration: InputDecoration(labelText: "Enter number of bathroom",
+                  decoration: const InputDecoration(labelText: "Enter number of bathroom",
                     hintText: 'Enter  number of bathroom',
                     border: UnderlineInputBorder(),
                   ),
                 ),
               ],
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -880,19 +877,19 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                   Container(
                     // Adjust width to change rectangle size
                     height: 35, // Adjust height to change rectangle size
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.green, // Background color
                       borderRadius: BorderRadius.only(bottomRight: Radius.circular(5),topRight: Radius.circular(5)), // Adjust border radius as needed
                     ),
                     child: IconButton(
-                      icon: Icon(Icons.add, color: Colors.white), // Icon with white color
+                      icon: const Icon(Icons.add, color: Colors.white), // Icon with white color
                       onPressed: addPaymentRow, // Function to call when pressed
-                      padding: EdgeInsets.all(0), // Optional: Remove default padding
+                      padding: const EdgeInsets.all(0), // Optional: Remove default padding
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Column(
                 children: [
                   for (int i = 0; i < paymentRows.length; i++)
@@ -902,7 +899,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: [
-                            Container(
+                            SizedBox(
                               width: 150, // Adjust width as needed
                               child: DropdownButtonFormField<String>(
                                 value: paymentRows[i].selectedCategory,
@@ -917,15 +914,15 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                                     child: Text(category),
                                   );
                                 }).toList(),
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   hintText: 'Category',
                                   hintStyle: TextStyle(fontSize: 14),
                                   border: OutlineInputBorder(),
                                 ),
                               ),
                             ),
-                            SizedBox(width: 10),
-                            Container(
+                            const SizedBox(width: 10),
+                            SizedBox(
                               width: 150, // Adjust width as needed
                               child: DropdownButtonFormField<String>(
                                 value: paymentRows[i].selectedType,
@@ -940,35 +937,35 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                                     child: Text(type),
                                   );
                                 }).toList(),
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   hintText: 'Type',
                                   hintStyle: TextStyle(fontSize: 14),
                                   border: OutlineInputBorder(),
                                 ),
                               ),
                             ),
-                            SizedBox(width: 10),
-                            Container(
+                            const SizedBox(width: 10),
+                            SizedBox(
                               width: 100, // Adjust width as needed
                               child: TextField(
                                 controller: paymentRows[i].amountController,
                                 keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   hintText: 'Amount',
                                   hintStyle: TextStyle(fontSize: 14),
                                   border: OutlineInputBorder(),
                                 ),
                               ),
                             ),
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             Column(
                               children: [
                                 Container(height: 55,
-                                  decoration: BoxDecoration(color: Colors.red,
+                                  decoration: const BoxDecoration(color: Colors.red,
                                     borderRadius: BorderRadius.only(topRight: Radius.circular(5),bottomRight: Radius.circular(5),),
                                   ),
                                   child: IconButton(
-                                    icon: Icon(Icons.delete,color: Colors.white,),
+                                    icon: const Icon(Icons.delete,color: Colors.white,),
                                     onPressed: () {
                                       removePaymentRow(i);
                                     },
@@ -981,7 +978,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                         ),
                       ),
                     ),
-                  SizedBox(height: 10,),
+                  const SizedBox(height: 10,),
                   // Container(
                   //   width: 50,  // Adjust width to change rectangle size
                   //   height: 34, // Adjust height to change rectangle size
@@ -998,7 +995,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
 
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               if (yearsolddata) ...[
                 Text(
                   "Is this a fresh property?",
@@ -1019,7 +1016,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                         });
                       },
                     ),
-                    Text('Yes'),
+                    const Text('Yes'),
                     Radio(
                       value: false,
                       groupValue: freshproperty,
@@ -1029,10 +1026,10 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                         });
                       },
                     ),
-                    Text('No'),
+                    const Text('No'),
                   ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
 
                 if (!freshproperty) ...[
                   Text(
@@ -1043,7 +1040,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                       color: ColorUtils.primaryColor(), // Replace with ColorUtils.primaryColor() if you have a custom color utility
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Row(
                     children: [
                       Container(
@@ -1054,7 +1051,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                           color: ColorUtils.primaryColor(), // Replace with your desired background color
                         ),
                         child: IconButton(
-                          icon: Icon(Icons.remove, color: Colors.white),
+                          icon: const Icon(Icons.remove, color: Colors.white),
                           iconSize: 20,
                           onPressed: () {
                             setState(() {
@@ -1065,12 +1062,12 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                           },
                         ),
                       ),
-                      SizedBox(width: 5),
+                      const SizedBox(width: 5),
                       Text(
                         '$yearsOld',
-                        style: TextStyle(fontSize: 18),
+                        style: const TextStyle(fontSize: 18),
                       ),
-                      SizedBox(width: 5),
+                      const SizedBox(width: 5),
                       Container(
                         width: 40,
                         height: 40,
@@ -1079,7 +1076,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                           color: ColorUtils.primaryColor(), // Replace with your desired background color
                         ),
                         child: IconButton(
-                          icon: Icon(Icons.add, color: Colors.white),
+                          icon: const Icon(Icons.add, color: Colors.white),
                           onPressed: () {
                             setState(() {
                               yearsOld++;
@@ -1090,7 +1087,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                     ],
                   ),
                 ] else
-                  SizedBox.shrink(),
+                  const SizedBox.shrink(),
               ],
 
               if (facingdata) ...[
@@ -1102,7 +1099,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                     color: ColorUtils.primaryColor(),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Wrap(
                   children: propertyFacings.map((facing) {
                     bool isSelected = propertyFacing.contains(facing);
@@ -1137,8 +1134,8 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                         });
                       },
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                        margin: EdgeInsets.only(right: 5, ),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        margin: const EdgeInsets.only(right: 5, ),
                         decoration: BoxDecoration(
                           color: isSelected ? customTeal : Colors.transparent,
                           borderRadius: BorderRadius.circular(10),
@@ -1147,7 +1144,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                         child: Column(
                           children: [
                             Icon(iconData, color: isSelected ? Colors.white : customTeal),
-                            SizedBox(height: 1),
+                            const SizedBox(height: 1),
                             Text(
                               facing,
                               style: TextStyle(
@@ -1162,7 +1159,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                   }).toList(),
                 ),
 
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
               ],
               if (possesion) ...[
                 Text(
@@ -1173,7 +1170,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                     color: ColorUtils.primaryColor(),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 //////////
                 Row(
                   children: [
@@ -1184,7 +1181,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white,
                             backgroundColor: ColorUtils.primaryColor(),
-                            shape: RoundedRectangleBorder(
+                            shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(
                                 bottomLeft: Radius.circular(15),
                                 topLeft: Radius.circular(15),
@@ -1196,7 +1193,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                               possesiontypeController.text = 'Under Construction';
                             });
                           },
-                          child: Text(
+                          child: const Text(
                             'Under Construction',
                             style: TextStyle(fontSize: 13),
                           ),
@@ -1205,7 +1202,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                           style: OutlinedButton.styleFrom(
                             foregroundColor: ColorUtils.primaryColor(),
                             side: BorderSide(color: ColorUtils.primaryColor(),),
-                            shape: RoundedRectangleBorder(
+                            shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(
                                 bottomLeft: Radius.circular(15),
                                 topLeft: Radius.circular(15),
@@ -1224,7 +1221,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(width: 2), // Add spacing between ElevatedButtons
+                    const SizedBox(width: 2), // Add spacing between ElevatedButtons
                     Expanded(
                       child: Container(
                         child: possesiontypeController.text == 'Ready-to-move'
@@ -1232,7 +1229,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white,
                             backgroundColor: ColorUtils.primaryColor(),
-                            shape: RoundedRectangleBorder(
+                            shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(
                                 bottomRight: Radius.circular(15),
                                 topRight: Radius.circular(15),
@@ -1244,7 +1241,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                               possesiontypeController.text = 'Ready-to-move';
                             });
                           },
-                          child: Text(
+                          child: const Text(
                             'Ready-to-move',
                             style: TextStyle(fontSize: 15),
                           ),
@@ -1253,7 +1250,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                           style: OutlinedButton.styleFrom(
                             foregroundColor: ColorUtils.primaryColor(),
                             side: BorderSide(color: ColorUtils.primaryColor(),),
-                            shape: RoundedRectangleBorder(
+                            shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(
                                 bottomRight: Radius.circular(15),
                                 topRight: Radius.circular(15),
@@ -1275,7 +1272,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                   ],
                 ),
 
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
               ],
               if (furnishing) ...[
                 Text(
@@ -1286,7 +1283,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                     color: ColorUtils.primaryColor(),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Wrap(
                   spacing: 10,
                   children: furnishingTypes.map((type) {
@@ -1301,10 +1298,10 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                     );
                   }).toList(),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
               ],
               if (cornerarea) ...[
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Text("Is this Corner Area?", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: ColorUtils.primaryColor(),)),
                 Row(
                   children: [
@@ -1317,7 +1314,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                         });
                       },
                     ),
-                    Text('Yes'),
+                    const Text('Yes'),
                     Radio(
                       value: false,
                       groupValue: isCornerArea,
@@ -1327,12 +1324,12 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                         });
                       },
                     ),
-                    Text('No'),
+                    const Text('No'),
                   ],
                 ),
 
 
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
               ],
               if (totalarea) ...[
                 Row(
@@ -1340,14 +1337,14 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                     Expanded(
                       child: TextField(keyboardType: TextInputType.number,
                         controller: totalAreaController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: "Enter total Area",
                           hintText: 'Enter Total Area',
                           border: UnderlineInputBorder(),
                         ),
                       ),
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: DropdownButtonFormField<String>(
                         value: areaType,
@@ -1367,51 +1364,51 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                   ],
                 ),
 
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
               ],
               if (dimensionroad) ...[
                 TextField(
                   controller: dimensionController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Enter dimension',
                     hintText: 'Enter dimension',
                     border: UnderlineInputBorder(),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 TextField(
                   controller: roadController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Road Length',
                     hintText: 'Road Length',
                     border: UnderlineInputBorder(),
                   ),
                 ),
               ],
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               if (undividedshare) ...[
                 TextField(
                   controller: undividedController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Undivided Share',
                     hintText: 'Undivided Share',
                     border: UnderlineInputBorder(),
                   ),
                 ),
 
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
               ],
               if (superbuild) ...[
                 TextField(
                   controller: superbuildupController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'superbuildupArea',
                     hintText: 'superbuildupArea',
                     border: UnderlineInputBorder(),
                   ),
                 ),
 
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
               ],
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1420,7 +1417,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                     flex: 1,
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.horizontal(left: Radius.circular(20)),
+                        borderRadius: const BorderRadius.horizontal(left: Radius.circular(20)),
 
                         color: ColorUtils.primaryColor(), // Your custom background color (teal)
                       ),
@@ -1437,7 +1434,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                               borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
                             ),
                           ),
-                          child: Row(
+                          child: const Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(Icons.arrow_back, color: Colors.white), // Replace with your desired back icon
@@ -1452,12 +1449,12 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 1),
+                  const SizedBox(width: 1),
                   Expanded(
                     flex: 1,
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.horizontal(right: Radius.circular(20)), // Adjust the border radius as needed
+                        borderRadius: const BorderRadius.horizontal(right: Radius.circular(20)), // Adjust the border radius as needed
                         color: ColorUtils.primaryColor(), // Your custom background color (teal)
                       ),
                       child: SizedBox(
@@ -1465,7 +1462,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                         height: 50, // Adjust height as needed
                         child: ElevatedButton(
                           onPressed: () {
-                            if (_validateFields()) {
+                            if (validateFields()) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -1504,7 +1501,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                               borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
                             ),
                           ),
-                          child: Row(
+                          child: const Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
@@ -1567,7 +1564,7 @@ class AddressPage extends StatefulWidget {
   final List<String> propertyFacing;
   final List<PaymentRow> paymentRows;
 
-  AddressPage({
+  const AddressPage({super.key, 
     required this.isCornerArea,
     required this.freshproperty,
     required this.category,
@@ -1617,18 +1614,18 @@ class _AddressPageState extends State<AddressPage> {
   List<String> floorTypes = ['Independent Floor', 'Shared Floor', 'Duplex Property'];
   String? _locationAddress;
   LatLng? _selectedLocation;
-  Color customTeal = Color(0xFF8F00FF);
+  Color customTeal = const Color(0xFF8F00FF);
   @override
   Widget build(BuildContext context) {
     bool floor = !(widget.subcategory == 'Plot / Land' || widget.subcategory == 'Villa / Independent House'|| widget.subcategory == 'Hostel/PG/Service Apartment');
-    Future<void> _showToastsOneByOne(List<String> messages) async {
+    Future<void> showToastsOneByOne(List<String> messages) async {
       for (String message in messages) {
         _showToast(message); // Show the toast message
-        await Future.delayed(Duration(seconds: 1)); // Wait for 1 second (or adjust as needed)
+        await Future.delayed(const Duration(seconds: 1)); // Wait for 1 second (or adjust as needed)
       }
     }
 
-    bool _validateFields() {
+    bool validateFields() {
       List<String> missingFields = [];
 
       if (widget.subcategory == 'Commercial Space' || widget.subcategory == 'Flat') {
@@ -1662,7 +1659,7 @@ class _AddressPageState extends State<AddressPage> {
       }
 
       if (missingFields.isNotEmpty) {
-        _showToastsOneByOne(missingFields);
+        showToastsOneByOne(missingFields);
         return false; // Validation failed
       }
 
@@ -1671,7 +1668,7 @@ class _AddressPageState extends State<AddressPage> {
 
     return Scaffold(
       appBar:PreferredSize(
-        preferredSize: Size.fromHeight(60.0),
+        preferredSize: const Size.fromHeight(60.0),
         child: Container(
           decoration: BoxDecoration(
             boxShadow: [
@@ -1679,29 +1676,29 @@ class _AddressPageState extends State<AddressPage> {
                 color: Colors.grey.withOpacity(0.6),
                 spreadRadius: 12,
                 blurRadius: 8,
-                offset: Offset(0, 3), // changes position of shadow
+                offset: const Offset(0, 3), // changes position of shadow
               ),
             ],
           ),
           child: AppBar(
             backgroundColor: ColorUtils.primaryColor(),
-            iconTheme: IconThemeData(color: Colors.white),
-            title: Text('Address Details',style: TextStyle(color: Colors.white),),
+            iconTheme: const IconThemeData(color: Colors.white),
+            title: const Text('Address Details',style: TextStyle(color: Colors.white),),
           ),
         ),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               if (floor) ...[
                 TextField(
                   keyboardType: TextInputType.number,
                   controller: floorNumberController,
-                  decoration: InputDecoration(labelText: "Enter floor number",
+                  decoration: const InputDecoration(labelText: "Enter floor number",
                     hintText: 'Enter floor number',
                     border: UnderlineInputBorder(),
                   ),
@@ -1726,7 +1723,7 @@ class _AddressPageState extends State<AddressPage> {
                 //     border: UnderlineInputBorder(),
                 //   ),
                 // ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Text(
                   'Floor Type*:',
                   style: TextStyle(
@@ -1735,7 +1732,7 @@ class _AddressPageState extends State<AddressPage> {
                     color: ColorUtils.primaryColor(),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: floorTypes.map((type) {
@@ -1755,7 +1752,7 @@ class _AddressPageState extends State<AddressPage> {
                     );
                   }).toList(),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
               ],
               Row(
                 children: [
@@ -1767,7 +1764,7 @@ class _AddressPageState extends State<AddressPage> {
                       color: ColorUtils.primaryColor(),
                     ),
                   ),
-                  SizedBox(width: 50,),
+                  const SizedBox(width: 50,),
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5), // Adjust the border radius as needed
@@ -1781,7 +1778,7 @@ class _AddressPageState extends State<AddressPage> {
                           final Map<String, dynamic>? selectedLocationData = await Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => MapScreen(),
+                              builder: (context) => const MapScreen(),
                             ),
                           );
                           if (selectedLocationData != null) {
@@ -1802,7 +1799,7 @@ class _AddressPageState extends State<AddressPage> {
                             borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
                           ),
                         ),
-                        child: Row(
+                        child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
@@ -1822,45 +1819,45 @@ class _AddressPageState extends State<AddressPage> {
 
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               if (_locationAddress != null) ...[
 
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
                   ' Address: $_locationAddress',
-                  style: TextStyle(fontSize: 16, color: Colors.green),
+                  style: const TextStyle(fontSize: 16, color: Colors.green),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 TextField(keyboardType: TextInputType.number,
                   controller: doorNoController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Enter door number',
                     hintText: 'Enter door number',
                     border: UnderlineInputBorder(),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 TextField(
                   controller: addressLineController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Enter address line',
                     hintText: 'Enter address line',
                     border: UnderlineInputBorder(),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 TextField(
                   controller: areaController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Enter area',
                     hintText: 'Enter area',
                     border: UnderlineInputBorder(),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 TextField(
                   controller: landmarkController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Enter landmark',
                     hintText: 'Enter landmark',
                     border: UnderlineInputBorder(),
@@ -1868,7 +1865,7 @@ class _AddressPageState extends State<AddressPage> {
                 ),
 
               ],
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -1888,11 +1885,11 @@ class _AddressPageState extends State<AddressPage> {
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: ColorUtils.primaryColor(), // Text color (white)
-                            shape: RoundedRectangleBorder(
+                            shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.horizontal(left: Radius.circular(20)), // Adjust the border radius as needed
                             ),
                           ),
-                          child: Row(
+                          child: const Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(Icons.arrow_back, color: Colors.white), // Replace with your desired back icon
@@ -1907,12 +1904,12 @@ class _AddressPageState extends State<AddressPage> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 1),
+                  const SizedBox(width: 1),
                   Expanded(
                     flex: 1,
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.horizontal(right: Radius.circular(20)), // Adjust the border radius as needed
+                        borderRadius: const BorderRadius.horizontal(right: Radius.circular(20)), // Adjust the border radius as needed
                         color: ColorUtils.primaryColor(), // Your custom background color (teal)
                       ),
                       child: SizedBox(
@@ -1920,7 +1917,7 @@ class _AddressPageState extends State<AddressPage> {
                         height: 50,
                         child: ElevatedButton(
                           onPressed: () {
-                            if (_validateFields()) {
+                            if (validateFields()) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -1971,7 +1968,7 @@ class _AddressPageState extends State<AddressPage> {
                               borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
                             ),
                           ),
-                          child: Row(
+                          child: const Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
@@ -2025,7 +2022,7 @@ class AmentiesScreen extends StatefulWidget {
   final String? selectedLocation;
   final bool isCornerArea;
   final bool freshproperty;
-  AmentiesScreen({
+  const AmentiesScreen({super.key, 
     required this.category,
     required this.subcategory,
     required this.propertyType,
@@ -2055,7 +2052,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
   Future<void> _showToastsOneByOne(List<String> messages) async {
     for (String message in messages) {
       _showToast(message); // Show the toast message
-      await Future.delayed(Duration(seconds: 1)); // Wait for 1 second (or adjust as needed)
+      await Future.delayed(const Duration(seconds: 1)); // Wait for 1 second (or adjust as needed)
     }
   }
 
@@ -2105,7 +2102,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
   int carParkingCount = 0;
   int bikeParkingCount = 0;
   int nearbyDistance = 0; // Initialize nearby distance
-  Color customTeal = Color(0xFF8F00FF);
+  Color customTeal = const Color(0xFF8F00FF);
   List<String> amenities = [];
   List<Map<String, dynamic>> nearbyPlaces = [];
   List<String> parkingTypes = ['Covered Parking', 'Open Parking'];
@@ -2187,7 +2184,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
     bool parking = !(widget.subcategory == 'Plot / Land' || widget.subcategory == 'Hostel/PG/Service Apartment');
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60.0),
+        preferredSize: const Size.fromHeight(60.0),
         child: Container(
           decoration: BoxDecoration(
             boxShadow: [
@@ -2195,14 +2192,14 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                 color: Colors.grey.withOpacity(0.6),
                 spreadRadius: 12,
                 blurRadius: 8,
-                offset: Offset(0, 3), // changes position of shadow
+                offset: const Offset(0, 3), // changes position of shadow
               ),
             ],
           ),
           child: AppBar(
             backgroundColor: ColorUtils.primaryColor(),
-            iconTheme: IconThemeData(color: Colors.white),
-            title: Text('Amenties,Nearby/Parking',style: TextStyle(color: Colors.white),),
+            iconTheme: const IconThemeData(color: Colors.white),
+            title: const Text('Amenties,Nearby/Parking',style: TextStyle(color: Colors.white),),
           ),
         ),
       ),
@@ -2214,7 +2211,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Wrap(
                 spacing: 8.0,
                 children: amenities.map((amenity) {
@@ -2228,7 +2225,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
               ),
               TextField(
                 controller: amenitiesController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: "Enter Amenties",
                   hintText: '(e.g., Swimming Pool,Gym,Garden)',
                   hintStyle: TextStyle(fontSize: 14),
@@ -2240,7 +2237,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                   }
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 'Nearby :',
                 style: TextStyle(
@@ -2249,7 +2246,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                   color: ColorUtils.primaryColor(),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Container(
                 decoration: BoxDecoration(
                   // color: Colors.blueGrey, // Background color of the outer container
@@ -2263,20 +2260,20 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                       // Optional: Adjust padding for inner content
                       child: Row(
                         children: [
-                          SizedBox(width: 10),
+                          const SizedBox(width: 10),
                           Expanded(
                             child: Text(place['place']),
                           ),
-                          SizedBox(width: 5),
+                          const SizedBox(width: 5),
                           Expanded(
                             child: Text('${place['distance']} km'), // Display distance with 'km' suffix
                           ),
                           Container(
-                            decoration: BoxDecoration(borderRadius: BorderRadius.only(topRight:Radius.circular(5),bottomRight: Radius.circular(6),),
+                            decoration: const BoxDecoration(borderRadius: BorderRadius.only(topRight:Radius.circular(5),bottomRight: Radius.circular(6),),
                               color: Colors.red, // Background color set to red
                             ),
                             child: IconButton(
-                              icon: Icon(Icons.delete, color: Colors.white),
+                              icon: const Icon(Icons.delete, color: Colors.white),
                               onPressed: () {
                                 removeNearbyPlace(index);
                               },
@@ -2291,7 +2288,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
 
 
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   // color: Colors.red
                 ),
 
@@ -2300,7 +2297,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                     Expanded(
                       child: TextField(
                         controller: nearbyPlaceController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'e.g., School,',
                           hintText: 'e.g., School, Hospital',
                           hintStyle: TextStyle(fontSize: 11),
@@ -2308,7 +2305,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     Row(
                       children: [
                         Container(
@@ -2319,14 +2316,14 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                             color: ColorUtils.primaryColor(),
                           ),
                           child: IconButton(
-                            icon: Icon(Icons.remove),
+                            icon: const Icon(Icons.remove),
                             color: Colors.white,
                             onPressed: decrementNearbyDistance,
                           ),
                         ),
-                        SizedBox(width: 5,),
+                        const SizedBox(width: 5,),
                         Text('$nearbyDistance km'),
-                        SizedBox(width: 5,),// Display current nearby distance
+                        const SizedBox(width: 5,),// Display current nearby distance
                         Container(
                           width: 36,
                           height: 39,
@@ -2335,21 +2332,21 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                             color: ColorUtils.primaryColor(),
                           ),
                           child: IconButton(
-                            icon: Icon(Icons.add),
+                            icon: const Icon(Icons.add),
                             color: Colors.white,
                             onPressed: incrementNearbyDistance,
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         borderRadius: BorderRadius.only(topRight: Radius.circular(5),bottomRight: Radius.circular(5)),
                         color: Colors.green,
                       ),
                       child: IconButton(
-                        icon: Icon(Icons.add),
+                        icon: const Icon(Icons.add),
                         color: Colors.white,
                         onPressed: addNearbyPlace,
                       ),
@@ -2358,7 +2355,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                 ),
               ),
               if (parking) ...[
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Text(
                   'Parking :',
                   style: TextStyle(
@@ -2378,8 +2375,8 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                         });
                       },
                     ),
-                    Text('Included'),
-                    SizedBox(width: 20),
+                    const Text('Included'),
+                    const SizedBox(width: 20),
                     Radio(
                       value: false,
                       groupValue: parkingIncluded,
@@ -2389,14 +2386,14 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                         });
                       },
                     ),
-                    Text('Not Included'),
+                    const Text('Not Included'),
                   ],
                 ),
                 if (parkingIncluded)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Text(
                         'Parking Type :',
                         style: TextStyle(
@@ -2419,7 +2416,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                           );
                         }).toList(),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Text(
                         'No of Car Parking :',
                         style: TextStyle(
@@ -2438,17 +2435,17 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                               color:ColorUtils.primaryColor(), // Red background color for -
                             ),
                             child: IconButton(
-                              icon: Icon(Icons.remove),
+                              icon: const Icon(Icons.remove),
                               color: Colors.white, // White icon color
                               onPressed: removeCarParking,
                             ),
                           ),
-                          SizedBox(width: 10),
+                          const SizedBox(width: 10),
                           Text(
                             '$carParkingCount',
-                            style: TextStyle(fontSize: 16), // Adjust font size as needed
+                            style: const TextStyle(fontSize: 16), // Adjust font size as needed
                           ),
-                          SizedBox(width: 10),
+                          const SizedBox(width: 10),
                           Container(
                             width: 40,
                             height: 40,
@@ -2457,7 +2454,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                               color: ColorUtils.primaryColor(), // Green background color for +
                             ),
                             child: IconButton(
-                              icon: Icon(Icons.add),
+                              icon: const Icon(Icons.add),
                               color: Colors.white, // White icon color
                               onPressed: addCarParking,
                             ),
@@ -2465,7 +2462,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                         ],
                       ),
 
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Text(
                         'No of Bike Parking :',
                         style: TextStyle(
@@ -2484,17 +2481,17 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                               color:ColorUtils.primaryColor(), // Red background color for -
                             ),
                             child: IconButton(
-                              icon: Icon(Icons.remove),
+                              icon: const Icon(Icons.remove),
                               color: Colors.white, // White icon color
                               onPressed: removeBikeParking,
                             ),
                           ),
-                          SizedBox(width: 10),
+                          const SizedBox(width: 10),
                           Text(
                             '$bikeParkingCount',
-                            style: TextStyle(fontSize: 16), // Adjust font size as needed
+                            style: const TextStyle(fontSize: 16), // Adjust font size as needed
                           ),
-                          SizedBox(width: 10),
+                          const SizedBox(width: 10),
                           Container(
                             height: 40,
                             width: 40,
@@ -2503,7 +2500,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                               color: ColorUtils.primaryColor(), // Green background color for +
                             ),
                             child: IconButton(
-                              icon: Icon(Icons.add),
+                              icon: const Icon(Icons.add),
                               color: Colors.white, // White icon color
                               onPressed: addBikeParking,
                             ),
@@ -2514,7 +2511,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                     ],
                   ),
               ],
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -2523,7 +2520,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                     flex: 1,
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.horizontal(left: Radius.circular(20)),
+                        borderRadius: const BorderRadius.horizontal(left: Radius.circular(20)),
                         color: ColorUtils.primaryColor(), // Your custom background color (teal)
                       ),
                       child: SizedBox(
@@ -2539,7 +2536,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                               borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
                             ),
                           ),
-                          child: Row(
+                          child: const Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(Icons.arrow_back, color: Colors.white), // Replace with your desired back icon
@@ -2554,12 +2551,12 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 1),
+                  const SizedBox(width: 1),
                   Expanded(
                     flex: 1,
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.horizontal(right: Radius.circular(20)), // Adjust the border radius as needed
+                        borderRadius: const BorderRadius.horizontal(right: Radius.circular(20)), // Adjust the border radius as needed
                         color: ColorUtils.primaryColor(), // Your custom background color (teal)
                       ),
                       child: SizedBox(
@@ -2625,7 +2622,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                               borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
                             ),
                           ),
-                          child: Row(
+                          child: const Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
@@ -2689,7 +2686,7 @@ class PropertyMediaScreen extends StatefulWidget {
   final int carParkingCount;
   final int bikeParkingCount;
 
-  PropertyMediaScreen({
+  const PropertyMediaScreen({super.key, 
     required this.category,
     required this.subcategory,
     required this.propertyType,
@@ -2737,13 +2734,13 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
   List<String> uploadedVideos = [];
   File? selectedVideoFile;
   final ImagePicker _picker = ImagePicker();
-  Color customTeal = Color(0xFF8F00FF);
+  Color customTeal = const Color(0xFF8F00FF);
   bool isUploadingVideo = false; // Track video uploading state
   bool isSubmitting = false; // Track property submission state
   Future<void> _showToastsOneByOne(List<String> messages) async {
     for (String message in messages) {
       _showToast(message); // Show the toast message
-      await Future.delayed(Duration(seconds: 1)); // Wait for 1 second (or adjust as needed)
+      await Future.delayed(const Duration(seconds: 1)); // Wait for 1 second (or adjust as needed)
     }
   }
 
@@ -2976,7 +2973,7 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
     print('Building PropertyMediaScreen with ${propertyImages.length} images');
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60.0),
+        preferredSize: const Size.fromHeight(60.0),
         child: Container(
           decoration: BoxDecoration(
             boxShadow: [
@@ -2984,14 +2981,14 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
                 color: Colors.grey.withOpacity(0.6),
                 spreadRadius: 12,
                 blurRadius: 8,
-                offset: Offset(0, 3), // changes position of shadow
+                offset: const Offset(0, 3), // changes position of shadow
               ),
             ],
           ),
           child: AppBar(
             backgroundColor: ColorUtils.primaryColor(),
-            iconTheme: IconThemeData(color: Colors.white),
-            title: Text('Property Media Upload',style: TextStyle(color: Colors.white),),
+            iconTheme: const IconThemeData(color: Colors.white),
+            title: const Text('Property Media Upload',style: TextStyle(color: Colors.white),),
           ),
         ),
       ),
@@ -3013,20 +3010,20 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: _pickImage,
-                    child: Text(
-                      'Add Property Images',
-                      style: TextStyle(color: Colors.white),
-                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ColorUtils.primaryColor(),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),
+                    child: const Text(
+                      'Add Property Images',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               // Display selected images
               if (propertyImages.isNotEmpty) ...[
                 Wrap(
@@ -3049,7 +3046,7 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
                             },
                             child: Container(
                               color: Colors.red,
-                              child: Icon(Icons.clear, color: Colors.white),
+                              child: const Icon(Icons.clear, color: Colors.white),
                             ),
                           ),
                         ),
@@ -3058,7 +3055,7 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
                   }).toList(),
                 ),
               ],
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               // Button to pick video
               Container(
                 decoration: BoxDecoration(
@@ -3070,22 +3067,22 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: isUploadingVideo ? null : _pickVideo,
-                    child: isUploadingVideo
-                        ? CircularProgressIndicator() // Show loading indicator
-                        : Text(
-                      'Upload Video',
-                      style: TextStyle(color: Colors.white),
-                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ColorUtils.primaryColor(),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),
+                    child: isUploadingVideo
+                        ? const CircularProgressIndicator() // Show loading indicator
+                        : const Text(
+                      'Upload Video',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               // Display uploaded videos
               if (uploadedVideos.isNotEmpty) ...[
                 Text(
@@ -3096,7 +3093,7 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
                     color: ColorUtils.primaryColor(),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Wrap(
                   spacing: 8.0,
                   children: uploadedVideos.asMap().entries.map((entry) {
@@ -3121,7 +3118,7 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
                             },
                             child: Container(
                               color: Colors.red,
-                              child: Icon(Icons.clear, color: Colors.white),
+                              child: const Icon(Icons.clear, color: Colors.white),
                             ),
                           ),
                         ),
@@ -3130,7 +3127,7 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
                   }).toList(),
                 ),
               ],
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               // Buttons to navigate back or submit property
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -3139,7 +3136,7 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
                     flex: 1,
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.horizontal(left: Radius.circular(20)),
+                        borderRadius: const BorderRadius.horizontal(left: Radius.circular(20)),
                         color: ColorUtils.primaryColor(),
                       ),
                       child: SizedBox(
@@ -3155,7 +3152,7 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
                               borderRadius: BorderRadius.circular(15),
                             ),
                           ),
-                          child: Row(
+                          child: const Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(Icons.arrow_back, color: Colors.white),
@@ -3170,12 +3167,12 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 1),
+                  const SizedBox(width: 1),
                   Expanded(
                     flex: 1,
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.horizontal(right: Radius.circular(20)),
+                        borderRadius: const BorderRadius.horizontal(right: Radius.circular(20)),
                         color: ColorUtils.primaryColor(),
                       ),
                       child: SizedBox(
@@ -3191,8 +3188,8 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
                             ),
                           ),
                           child: isSubmitting
-                              ? CircularProgressIndicator() // Show loading indicator
-                              : Row(
+                              ? const CircularProgressIndicator() // Show loading indicator
+                              : const Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(

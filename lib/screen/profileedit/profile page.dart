@@ -16,7 +16,7 @@ import '../../Controller/theme_controller.dart';
 class ProfileScreen extends StatefulWidget {
   final String email;
 
-  ProfileScreen({required this.email});
+  const ProfileScreen({super.key, required this.email});
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -39,7 +39,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // Navigate to SearchScreen
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SearchScreen()),
+      MaterialPageRoute(builder: (context) => const SearchScreen()),
     );
   }
 
@@ -47,7 +47,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // Navigate to SearchScreen
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => HomeScreen(username: '',)),
+      MaterialPageRoute(builder: (context) => const HomeScreen(username: '',)),
     );
   }
 
@@ -55,7 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // Navigate to WishlistScreen
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => WishlistScreen()),
+      MaterialPageRoute(builder: (context) => const WishlistScreen()),
     );
   }
   void navigateToProfileScreen (BuildContext context) {
@@ -105,7 +105,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         onWillPop: () async {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen(username: '')),
+        MaterialPageRoute(builder: (context) => const HomeScreen(username: '')),
       );
       return true;
     },
@@ -181,7 +181,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: _userImage.isEmpty
                                 ? Text(
                               _userName.isNotEmpty ? _userName[0].toUpperCase() : 'hi',
-                              style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                              style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
                             )
                                 : null,
                           ),
@@ -195,19 +195,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               onTap: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => EditProfileScreen()),
+                                  MaterialPageRoute(builder: (context) => const EditProfileScreen()),
                                 );
 
                               },
                               child: CircleAvatar(
                                 maxRadius: 17,
-                                backgroundColor: Theme.of(context).colorScheme.background,
+                                backgroundColor: Theme.of(context).colorScheme.surface,
                                 child: CircleAvatar(backgroundColor: ColorUtils.primaryColor(),
                                   maxRadius: 15,
                                   child: Icon(
                                     Icons.edit_rounded,
                                     size: 17,
-                                    color: Theme.of(context).colorScheme.background,
+                                    color: Theme.of(context).colorScheme.surface,
                                   ),
                                 ),
                               ),
@@ -351,7 +351,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 bottom: PreferredSize(
-                  preferredSize: Size.fromHeight(15),
+                  preferredSize: const Size.fromHeight(15),
                   child: Container(
                     width: width * 0.95,
                     height: height * 0.08,
@@ -363,14 +363,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       padding: const EdgeInsets.symmetric(
                           vertical: 9, horizontal: 15),
                       child: TabBar(
-                        overlayColor: MaterialStateProperty.all<Color>(
+                        overlayColor: WidgetStateProperty.all<Color>(
                            ColorUtils.primaryColor(),
                         ),
                         indicator: ShapeDecoration(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(40),
                           ),
-                          color: Theme.of(context).colorScheme.background,
+                          color: Theme.of(context).colorScheme.surface,
                         ),
                         indicatorWeight: 0,
                         indicatorSize: TabBarIndicatorSize.tab,
@@ -381,7 +381,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             .colorScheme
                             .primary
                             .withOpacity(0.3),
-                        tabs: [
+                        tabs: const [
                           Tab(text: 'Transaction'),
                           Tab(text: 'Listings'),
                           Tab(text: 'Sold'),
@@ -393,17 +393,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ];
           },
-          body: SingleChildScrollView(
+          body: const SingleChildScrollView(
             child: Text("hdhdh"),
           ),
 
         ),
       ),
       bottomNavigationBar: Container(
-        color: Color.fromRGBO(143, 0, 255, 1.0),
+        color: const Color.fromRGBO(143, 0, 255, 1.0),
         height: 55,
         child: FlashyTabBar(
-          backgroundColor: Color.fromRGBO(143, 0, 255, 1.0).withOpacity(0),
+          backgroundColor: const Color.fromRGBO(143, 0, 255, 1.0).withOpacity(0),
           selectedIndex: _selectedIndex,
           showElevation: true,
           onItemSelected: (index) {
@@ -443,7 +443,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: Colors.white,
               ),
               // inactiveColor: Colors.white,
-              title: Text(""),
+              title: const Text(""),
               activeColor: Colors.white,
 
             ),
@@ -455,7 +455,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: Colors.white,
               ),
               inactiveColor: Colors.white,
-              title: Text(""),
+              title: const Text(""),
 
             ),
             FlashyTabBarItem(
@@ -467,7 +467,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: Colors.white,
               ),
               inactiveColor: Colors.white,
-              title: Text(""),
+              title: const Text(""),
 
             ),
             FlashyTabBarItem(
@@ -480,7 +480,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               inactiveColor: Colors.white,
 
-              title: Text(""),
+              title: const Text(""),
 
             ),
           ],

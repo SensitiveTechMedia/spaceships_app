@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class NotificationScreen extends StatelessWidget {
-  const NotificationScreen({Key? key}) : super(key: key);
+  const NotificationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +12,7 @@ class NotificationScreen extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(150),
+          preferredSize: const Size.fromHeight(150),
           child: AppBar(
             actions: [
               GestureDetector(
@@ -48,7 +48,7 @@ class NotificationScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(40),
                       ),
-                      color: Theme.of(context).colorScheme.background,
+                      color: Theme.of(context).colorScheme.surface,
                     ),
                     indicatorWeight: 0,
                     indicatorSize: TabBarIndicatorSize.tab,
@@ -57,7 +57,7 @@ class NotificationScreen extends StatelessWidget {
                     labelColor: Theme.of(context).colorScheme.primary,
                     unselectedLabelColor:
                     Theme.of(context).colorScheme.primary.withOpacity(0.3),
-                    tabs: [
+                    tabs: const [
                       Tab(text: 'Notification'),
                       Tab(text: 'Messages'),
                     ],
@@ -67,7 +67,7 @@ class NotificationScreen extends StatelessWidget {
             ),
           ),
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: [
             // Your notification tab content
             Center(

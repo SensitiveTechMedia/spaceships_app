@@ -5,11 +5,13 @@ import 'package:spaceships/colorcode.dart';
 import 'package:spaceships/screen/category/All.dart';
 import 'package:spaceships/screen/filter.dart';
 class Featured extends StatefulWidget {
+  const Featured({super.key});
+
   @override
   _AllPageState createState() => _AllPageState();
 }
 class _AllPageState extends State<Featured> {
-  Color customTeal = Color(0xFF8F00FF);
+  Color customTeal = const Color(0xFF8F00FF);
   @override
   void initState() {
     super.initState();
@@ -18,7 +20,7 @@ class _AllPageState extends State<Featured> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60.0),
+        preferredSize: const Size.fromHeight(60.0),
         child: Container(
           decoration: BoxDecoration(
             boxShadow: [
@@ -26,20 +28,20 @@ class _AllPageState extends State<Featured> {
                 color: Colors.grey.withOpacity(0.6),
                 spreadRadius: 12,
                 blurRadius: 8,
-                offset: Offset(0, 3), // changes position of shadow
+                offset: const Offset(0, 3), // changes position of shadow
               ),
             ],
           ),
           child: AppBar(
             backgroundColor: ColorUtils.primaryColor(), // Example app bar background color
-            title: Text(
+            title: const Text(
               "Featured properties",
               style: TextStyle(color: Colors.white),
             ),
-            iconTheme: IconThemeData(color: Colors.white),
+            iconTheme: const IconThemeData(color: Colors.white),
             actions: [
               IconButton(
-                icon: Icon(Icons.tune),
+                icon: const Icon(Icons.tune),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -58,7 +60,7 @@ class _AllPageState extends State<Featured> {
 
       body: Column(
         children: [
-          SizedBox(height: 20,),
+          const SizedBox(height: 20,),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
@@ -76,7 +78,7 @@ class _AllPageState extends State<Featured> {
                   ),);
                 }
                 if (snapshot.data!.docs.isEmpty) {
-                  return Center(child: Text('No properties found'));
+                  return const Center(child: Text('No properties found'));
                 }
 
                 return ListView.builder(
@@ -86,7 +88,7 @@ class _AllPageState extends State<Featured> {
                     var wishlistItem = doc.data() as Map<String, dynamic>;
 
                     return ListTile(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
                       onTap: () {
                         Navigator.push(
                           context,
@@ -140,12 +142,12 @@ class _AllPageState extends State<Featured> {
                       title: Container(
                         height: 150,
                         decoration: BoxDecoration(
-                          color: Color.fromRGBO(160, 161, 164, 1000),
+                          color: const Color.fromRGBO(160, 161, 164, 1000),
                           borderRadius: BorderRadius.circular(30.0),
                         ),
                         child: Row(
                           children: [
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
                             Stack(
                               children: [
 
@@ -157,7 +159,7 @@ class _AllPageState extends State<Featured> {
                                 color: Colors.grey,
                               ),
                               child: wishlistItem['PropertyImages'] == null || wishlistItem['PropertyImages'].isEmpty
-                                  ? Icon(Icons.image, size: 50)
+                                  ? const Icon(Icons.image, size: 50)
                                   : ClipRRect(
                                 borderRadius: BorderRadius.circular(20.0),
                                 child: Stack(
@@ -179,7 +181,7 @@ class _AllPageState extends State<Featured> {
                                         }
                                       },
                                       errorBuilder: (context, error, stackTrace) {
-                                        return Center(child: Icon(Icons.error));
+                                        return const Center(child: Icon(Icons.error));
                                       },
                                     ),
                                   ],
@@ -199,7 +201,7 @@ class _AllPageState extends State<Featured> {
                                     ),
                                     child: Text(
                                       wishlistItem['subcategory'] ?? 'cat',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 14,
                                       ),
@@ -208,12 +210,12 @@ class _AllPageState extends State<Featured> {
                                 ),
                               ],
                             ),
-                            SizedBox(width: 15.0),
+                            const SizedBox(width: 15.0),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SizedBox(height: 20),
+                                  const SizedBox(height: 20),
                                   FittedBox(
                                     fit: BoxFit.scaleDown,
                                     child: Text(
@@ -225,7 +227,7 @@ class _AllPageState extends State<Featured> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: 4.0),
+                                  const SizedBox(height: 4.0),
                                   Row(
                                     children: [
                                       Icon(
@@ -245,7 +247,7 @@ class _AllPageState extends State<Featured> {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 20.0),
+                                  const SizedBox(height: 20.0),
                                 ],
                               ),
                             ),

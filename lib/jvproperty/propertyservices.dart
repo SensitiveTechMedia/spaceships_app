@@ -64,7 +64,7 @@ class _PropertyservicesState extends State<Propertyservices> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
       builder: (context) => StatefulBuilder(
@@ -83,14 +83,14 @@ class _PropertyservicesState extends State<Propertyservices> {
                   Align(
                     alignment: Alignment.topRight,
                     child: IconButton(
-                      icon: Icon(Icons.close),
+                      icon: const Icon(Icons.close),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
                     ),
                   ),
-                  Text('Enter Given Details for $title', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 15),
+                  Text('Enter Given Details for $title', style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 15),
                   DropdownButtonFormField<String>(
                     value: selectedPropertyType,
                     decoration: InputDecoration(
@@ -109,7 +109,7 @@ class _PropertyservicesState extends State<Propertyservices> {
                       });
                     },
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   TextField(
                     controller: nameController,
                     decoration: InputDecoration(
@@ -117,7 +117,7 @@ class _PropertyservicesState extends State<Propertyservices> {
                       labelText: 'Name',
                     ),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   TextField(
                     controller: mobileController,
                     decoration: InputDecoration(
@@ -126,7 +126,7 @@ class _PropertyservicesState extends State<Propertyservices> {
                     ),
                     keyboardType: TextInputType.phone,
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   TextField(
                     controller: commentController,
                     decoration: InputDecoration(
@@ -135,9 +135,9 @@ class _PropertyservicesState extends State<Propertyservices> {
                     ),
                     maxLines: 3,
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   _isLoading
-                      ? CircularProgressIndicator() // Show circular progress indicator if loading
+                      ? const CircularProgressIndicator() // Show circular progress indicator if loading
                       : Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -179,27 +179,27 @@ class _PropertyservicesState extends State<Propertyservices> {
                                 _isLoading = false; // Stop loading on error
                               });
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
+                                const SnackBar(
                                   content: Text('Error submitting details'),
                                 ),
                               );
                             }
                           },
                           style: ButtonStyle(
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                             ),
-                            backgroundColor: MaterialStateProperty.all<Color>(ColorUtils.primaryColor()),
-                            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                            backgroundColor: WidgetStateProperty.all<Color>(ColorUtils.primaryColor()),
+                            foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
                           ),
-                          child: Text('Submit', style: TextStyle(fontSize: 20)),
+                          child: const Text('Submit', style: TextStyle(fontSize: 20)),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                 ],
               ),
             ),
@@ -214,7 +214,7 @@ class _PropertyservicesState extends State<Propertyservices> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60.0),
+        preferredSize: const Size.fromHeight(60.0),
         child: Container(
           decoration: BoxDecoration(
             boxShadow: [
@@ -222,14 +222,14 @@ class _PropertyservicesState extends State<Propertyservices> {
                 color: Colors.grey.withOpacity(0.6),
                 spreadRadius: 12,
                 blurRadius: 8,
-                offset: Offset(0, 3), // changes position of shadow
+                offset: const Offset(0, 3), // changes position of shadow
               ),
             ],
           ),
           child: AppBar(
             backgroundColor: ColorUtils.primaryColor(),
-            iconTheme: IconThemeData(color: Colors.white),
-            title: Row(
+            iconTheme: const IconThemeData(color: Colors.white),
+            title: const Row(
               children: <Widget>[
                 // Adjust spacing as needed
                 Text("Property Services", style: TextStyle(color: Colors.white)),
@@ -237,9 +237,9 @@ class _PropertyservicesState extends State<Propertyservices> {
             ),
             actions: <Widget>[
               Padding(
-                padding: EdgeInsets.only(right: 16.0), // Adjust the value as needed
+                padding: const EdgeInsets.only(right: 16.0), // Adjust the value as needed
                 child: Padding(
-                  padding: EdgeInsets.all(0.0), // Adjust the margin size as needed
+                  padding: const EdgeInsets.all(0.0), // Adjust the margin size as needed
                   child: CircleAvatar(
                     radius: 18,
                     backgroundColor: Colors.white,
@@ -262,7 +262,7 @@ class _PropertyservicesState extends State<Propertyservices> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2, // Two columns
             crossAxisSpacing: 5.0,
             mainAxisSpacing: 5.0,
@@ -288,11 +288,11 @@ class _PropertyservicesState extends State<Propertyservices> {
                           size: 30.0,
                         ),
                       ),
-                      SizedBox(height: 10.0),
+                      const SizedBox(height: 10.0),
                       Text(
                         propertyTopics[index]["text"],
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 14.0, color: Colors.white), // Set text color to white
+                        style: const TextStyle(fontSize: 14.0, color: Colors.white), // Set text color to white
                       ),
                     ],
                   ),

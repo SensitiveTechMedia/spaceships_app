@@ -11,11 +11,11 @@ Widget getElevatedButton({
   return ElevatedButton(
     onPressed: onTap,
     style: ButtonStyle(
-      backgroundColor: MaterialStateProperty.all<Color>(ColorCodes.green),
-      overlayColor: MaterialStateProperty.all<Color>(ColorCodes.green),
-      shadowColor: MaterialStateProperty.all<Color>(ColorCodes.green),
-      minimumSize: MaterialStateProperty.all(Size(180, 55)),
-      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+      backgroundColor: WidgetStateProperty.all<Color>(ColorCodes.green),
+      overlayColor: WidgetStateProperty.all<Color>(ColorCodes.green),
+      shadowColor: WidgetStateProperty.all<Color>(ColorCodes.green),
+      minimumSize: WidgetStateProperty.all(const Size(180, 55)),
+      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
         RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
@@ -23,7 +23,7 @@ Widget getElevatedButton({
     ),
     child: Text(
       string,
-      style: TextStyle(color: ColorCodes.white, fontSize: 16),
+      style: const TextStyle(color: ColorCodes.white, fontSize: 16),
     ),
   );
 }
@@ -38,11 +38,11 @@ Widget getElevatedButtonLarge({
     child: ElevatedButton(
       onPressed: onTap,
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(ColorCodes.green),
-        overlayColor: MaterialStateProperty.all<Color>(ColorCodes.green),
-        shadowColor: MaterialStateProperty.all<Color>(ColorCodes.green),
-        minimumSize: MaterialStateProperty.all(Size(double.infinity, 55)),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        backgroundColor: WidgetStateProperty.all<Color>(ColorCodes.green),
+        overlayColor: WidgetStateProperty.all<Color>(ColorCodes.green),
+        shadowColor: WidgetStateProperty.all<Color>(ColorCodes.green),
+        minimumSize: WidgetStateProperty.all(const Size(double.infinity, 55)),
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
@@ -50,7 +50,7 @@ Widget getElevatedButtonLarge({
       ),
       child: Text(
         string,
-        style: TextStyle(color: ColorCodes.white, fontSize: 16),
+        style: const TextStyle(color: ColorCodes.white, fontSize: 16),
       ),
     ),
   );
@@ -106,17 +106,17 @@ class CustomElevatedButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onTap,
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(
+        backgroundColor: WidgetStateProperty.all<Color>(
           color ?? Theme.of(context).colorScheme.onPrimary,
         ),
-        overlayColor: MaterialStateProperty.all<Color>(
+        overlayColor: WidgetStateProperty.all<Color>(
           color ?? Theme.of(context).colorScheme.onPrimary,
         ),
-        shadowColor: MaterialStateProperty.all<Color>(
+        shadowColor: WidgetStateProperty.all<Color>(
           color ?? Theme.of(context).colorScheme.onPrimary,
         ),
-        minimumSize: MaterialStateProperty.all(const Size(double.infinity, 55)),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        minimumSize: WidgetStateProperty.all(const Size(double.infinity, 55)),
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius!),
           ),
@@ -234,20 +234,20 @@ class CustomContainer extends Container {
   @override
   BoxDecoration get decoration => BoxDecoration(
         borderRadius: BorderRadius.circular(radius ?? 12),
-        color: backgroundColor ?? Get.theme.colorScheme.background,
+        color: backgroundColor ?? Get.theme.colorScheme.surface,
       );
   @override
   Decoration get foregroundDecoration => BoxDecoration(
         borderRadius: BorderRadius.circular(radius ?? 12),
         border: (borderWidth == null)
             ? Border.all(
-                color: borderColor ?? Get.theme.colorScheme.background,
+                color: borderColor ?? Get.theme.colorScheme.surface,
                 width: 1,
               )
             : (borderWidth == 0)
                 ? null
                 : Border.all(
-                    color: borderColor ?? Get.theme.colorScheme.background,
+                    color: borderColor ?? Get.theme.colorScheme.surface,
                     width: borderWidth!,
                   ),
       );

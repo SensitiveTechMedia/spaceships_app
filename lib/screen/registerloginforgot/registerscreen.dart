@@ -8,14 +8,14 @@ import '../../Common/Widgets/elevated_button.dart';
 import '../../Controller/register_controller.dart';
 
 class RegisterScreen extends GetView<RegisterController> {
-  const RegisterScreen({Key? key}) : super(key: key);
+  const RegisterScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new),
+          icon: const Icon(Icons.arrow_back_ios_new),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -27,7 +27,7 @@ class RegisterScreen extends GetView<RegisterController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               RichText(
                 text: TextSpan(
                   text: "Create your",
@@ -35,7 +35,7 @@ class RegisterScreen extends GetView<RegisterController> {
                     color: Theme.of(context).colorScheme.primary,
                     fontSize: 30,
                   ),
-                  children: <TextSpan>[
+                  children: const <TextSpan>[
                     TextSpan(
                       text: " account",
                       style: TextStyle(
@@ -46,14 +46,14 @@ class RegisterScreen extends GetView<RegisterController> {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 "Welcome to Space Ships",
                 style: TextStyle(
                   color: ColorCodes.teal.withOpacity(0.9),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               GetBuilder<RegisterController>(
                 builder: (controller) {
                   return TextFormField(
@@ -63,7 +63,7 @@ class RegisterScreen extends GetView<RegisterController> {
                       fillColor: Theme.of(context).colorScheme.onPrimary,
                       filled: true,
                       prefixIcon: controller.nameController.text.isEmpty
-                          ? Icon(Icons.person)
+                          ? const Icon(Icons.person)
                           : null,
                       border: OutlineInputBorder(
                         borderSide: BorderSide.none,
@@ -71,7 +71,7 @@ class RegisterScreen extends GetView<RegisterController> {
                       ),
                       focusedBorder: GradientOutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                           colors: [ColorCodes.green, ColorCodes.teal],
                         ),
                         width: 2,
@@ -81,7 +81,7 @@ class RegisterScreen extends GetView<RegisterController> {
                   );
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 children: [
                   Expanded(
@@ -94,16 +94,16 @@ class RegisterScreen extends GetView<RegisterController> {
                             fillColor: Theme.of(context).colorScheme.onPrimary,
                             filled: true,
                             prefixIcon: controller.emailController.text.isEmpty
-                                ? Icon(Icons.mail)
+                                ? const Icon(Icons.mail)
                                 : null,
-                            border: OutlineInputBorder(
+                            border: const OutlineInputBorder(
                               borderSide: BorderSide.none,
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(10),
                                 bottomLeft: Radius.circular(10),
                               ),
                             ),
-                            focusedBorder: GradientOutlineInputBorder(
+                            focusedBorder: const GradientOutlineInputBorder(
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(10),
                                 bottomLeft: Radius.circular(10),
@@ -122,8 +122,8 @@ class RegisterScreen extends GetView<RegisterController> {
                   ElevatedButton(
                     onPressed: controller.isSendOTPEnabled.value ? controller.sendOTP : null,
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                      shape: RoundedRectangleBorder(
+                      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                      shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                           topRight: Radius.circular(10),
                           bottomRight: Radius.circular(10),
@@ -131,7 +131,7 @@ class RegisterScreen extends GetView<RegisterController> {
                       ),
                     ),
                     child: controller.isSendOTPEnabled.value
-                        ? Text('Send OTP')
+                        ? const Text('Send OTP')
                         : Text('Wait ${controller.timerSeconds.value} seconds'),
                   ),
                 ],
@@ -139,7 +139,7 @@ class RegisterScreen extends GetView<RegisterController> {
 
 
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 children: [
                   Expanded(
@@ -156,15 +156,15 @@ class RegisterScreen extends GetView<RegisterController> {
                                 fillColor: Theme.of(context).colorScheme.onPrimary,
                                 filled: true,
                                 prefixIcon: controller.otpController.text.isEmpty
-                                    ? Icon(Icons.design_services)
+                                    ? const Icon(Icons.design_services)
                                     : null,
                                 suffixIcon: ElevatedButton(
                                   onPressed: () {
                                     controller.validateOTP();
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                                    shape: RoundedRectangleBorder(
+                                    padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                                    shape: const RoundedRectangleBorder(
                                       borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(0),
                                         bottomLeft: Radius.circular(0),
@@ -173,7 +173,7 @@ class RegisterScreen extends GetView<RegisterController> {
                                       ),
                                     ),
                                   ),
-                                  child: Text("Verify OTP"),
+                                  child: const Text("Verify OTP"),
                                 ),
                                 border: OutlineInputBorder(
                                   borderSide: BorderSide.none,
@@ -181,7 +181,7 @@ class RegisterScreen extends GetView<RegisterController> {
                                 ),
                                 focusedBorder: GradientOutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
-                                  gradient: LinearGradient(
+                                  gradient: const LinearGradient(
                                     colors: [ColorCodes.green, ColorCodes.teal],
                                   ),
                                   width: 2,
@@ -195,7 +195,7 @@ class RegisterScreen extends GetView<RegisterController> {
                       ],
                     ),
                   ),
-                  SizedBox(width:2),
+                  const SizedBox(width:2),
                 ],
               ),
 
@@ -203,7 +203,7 @@ class RegisterScreen extends GetView<RegisterController> {
 
 
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               GetBuilder<RegisterController>(
                 builder: (controller) {
                   return TextFormField(
@@ -243,7 +243,7 @@ class RegisterScreen extends GetView<RegisterController> {
                       ),
                       focusedBorder: GradientOutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
-                        gradient: LinearGradient(colors: [ColorCodes.green, ColorCodes.teal]),
+                        gradient: const LinearGradient(colors: [ColorCodes.green, ColorCodes.teal]),
                         width: 2,
                       ),
                       hintText: StringRes.password,
@@ -251,10 +251,10 @@ class RegisterScreen extends GetView<RegisterController> {
                   );
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 children: [
-                  Text(
+                  const Text(
                     "Terms of service",
                     style: TextStyle(
                       color: ColorCodes.teal,
@@ -262,14 +262,14 @@ class RegisterScreen extends GetView<RegisterController> {
                       fontSize: 14,
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   GetBuilder<RegisterController>(
                     builder: (controller) {
                       return GestureDetector(
                         onTap: () => controller.visibilityToggle(),
                         child: Text(
                           controller.visibility.value ? "Hide password" : "Show password",
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: ColorCodes.teal,
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
@@ -280,7 +280,7 @@ class RegisterScreen extends GetView<RegisterController> {
                   ),
                 ],
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               GetBuilder<RegisterController>(
                 builder: (controller) {
                   return getElevatedButtonLarge(

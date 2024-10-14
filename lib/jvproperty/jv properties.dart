@@ -9,6 +9,8 @@ import 'package:spaceships/colorcode.dart';
 
 
 class JVPropertiesForm extends StatefulWidget {
+  const JVPropertiesForm({super.key});
+
   @override
   _JVPropertiesFormState createState() => _JVPropertiesFormState();
 }
@@ -18,7 +20,7 @@ class _JVPropertiesFormState extends State<JVPropertiesForm> {
   Widget build(BuildContext context) {
     return Scaffold( backgroundColor:   Theme.of(context).colorScheme.onPrimary,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60.0),
+        preferredSize: const Size.fromHeight(60.0),
     child: Container(
     decoration: BoxDecoration(
     boxShadow: [
@@ -26,15 +28,15 @@ class _JVPropertiesFormState extends State<JVPropertiesForm> {
     color: Colors.grey.withOpacity(0.6),
     spreadRadius: 12,
     blurRadius: 8,
-    offset: Offset(0, 3), // changes position of shadow
+    offset: const Offset(0, 3), // changes position of shadow
     ),
     ],
     ),
     child: AppBar(
     backgroundColor: ColorUtils.primaryColor(),
-    iconTheme: IconThemeData(color: Colors.white),
+    iconTheme: const IconThemeData(color: Colors.white),
         titleSpacing: 0,
-        title: Text('JV Properties',style: TextStyle(color: Colors.white),),
+        title: const Text('JV Properties',style: TextStyle(color: Colors.white),),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -42,7 +44,7 @@ class _JVPropertiesFormState extends State<JVPropertiesForm> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => FormPage()),
+                  MaterialPageRoute(builder: (context) => const FormPage()),
                 );
               },
               child: Container(
@@ -53,14 +55,14 @@ class _JVPropertiesFormState extends State<JVPropertiesForm> {
                 ),
                 child: Row(
                   children: [
-                    SizedBox(width: 5.0),
+                    const SizedBox(width: 5.0),
                     Icon(Icons.add_circle, color: ColorUtils.primaryColor()),
-                    SizedBox(width: 3.0),
+                    const SizedBox(width: 3.0),
                     Text(
                       'Add',
                       style: TextStyle(fontSize: 16.0, color: ColorUtils.primaryColor()),
                     ),
-                    SizedBox(width: 10.0),
+                    const SizedBox(width: 10.0),
                   ],
                 ),
               ),
@@ -78,7 +80,7 @@ class _JVPropertiesFormState extends State<JVPropertiesForm> {
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (snapshot.hasError) {
@@ -92,7 +94,7 @@ class _JVPropertiesFormState extends State<JVPropertiesForm> {
             padding: const EdgeInsets.only(left: 8.0,right: 8.0,top: 20),
             child: ListView.separated(
               itemCount: documents.length,
-              separatorBuilder: (context, index) => SizedBox(height: 15),
+              separatorBuilder: (context, index) => const SizedBox(height: 15),
               itemBuilder: (context, index) {
                 var data = documents[index].data() as Map<String, dynamic>;
 
@@ -113,7 +115,7 @@ class _JVPropertiesFormState extends State<JVPropertiesForm> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(topLeft: Radius.circular(8.0),
+                            borderRadius: const BorderRadius.only(topLeft: Radius.circular(8.0),
                             topRight: Radius.circular(8.0),),
                             color:  ColorUtils.primaryColor(), // Replace with your primary color
                           ),
@@ -122,21 +124,21 @@ class _JVPropertiesFormState extends State<JVPropertiesForm> {
 mainAxisAlignment: MainAxisAlignment.center,
                             children: [
 
-                              Text('${data['ratioToBuilder']}% Share in',style: TextStyle(fontWeight:FontWeight.bold,fontSize: 20,color: Colors.white),),
-                              Text(' ${data[ 'landSize']} Sq. Ft.',style: TextStyle(fontWeight:FontWeight.bold,fontSize: 20,color: Colors.white),),
+                              Text('${data['ratioToBuilder']}% Share in',style: const TextStyle(fontWeight:FontWeight.bold,fontSize: 20,color: Colors.white),),
+                              Text(' ${data[ 'landSize']} Sq. Ft.',style: const TextStyle(fontWeight:FontWeight.bold,fontSize: 20,color: Colors.white),),
                             ],
                           ),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
                             Container(
                               width: 125,
                               height: MediaQuery.of(context).size.width * 0.25,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(bottomRight: Radius.circular(8.0),
+                                borderRadius: const BorderRadius.only(bottomRight: Radius.circular(8.0),
                                   topRight: Radius.circular(8.0),),
                                 image: DecorationImage(
                                   image: NetworkImage(data['imageUrl'] ?? ''),
@@ -144,10 +146,10 @@ mainAxisAlignment: MainAxisAlignment.center,
                                 ),
                               ),
                               child: data['imageUrl'] == null
-                                  ? Icon(Icons.error, color: Colors.red) // Display an error icon if image fails to load
+                                  ? const Icon(Icons.error, color: Colors.red) // Display an error icon if image fails to load
                                   : null,
                             ),
-                            SizedBox(width: 15),
+                            const SizedBox(width: 15),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,7 +173,7 @@ mainAxisAlignment: MainAxisAlignment.center,
                                   //     ),
                                   //   ],
                                   // ),
-                                  SizedBox(height: 4),
+                                  const SizedBox(height: 4),
 
 
                                   RichText(
@@ -185,7 +187,7 @@ mainAxisAlignment: MainAxisAlignment.center,
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: 3),
+                                  const SizedBox(height: 3),
                                   RichText(
                                     textAlign: TextAlign.center,
                                     text: TextSpan(
@@ -197,7 +199,7 @@ mainAxisAlignment: MainAxisAlignment.center,
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: 3),
+                                  const SizedBox(height: 3),
                                   RichText(
                                     textAlign: TextAlign.center,
                                     text: TextSpan(
@@ -209,7 +211,7 @@ mainAxisAlignment: MainAxisAlignment.center,
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: 3),
+                                  const SizedBox(height: 3),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
@@ -229,7 +231,7 @@ mainAxisAlignment: MainAxisAlignment.center,
                                   ),
 
 
-SizedBox(height: 15,),
+const SizedBox(height: 15,),
                                   // Divider(
                                   //   color: Colors.grey[400],
                                   //   thickness: 2,
@@ -244,7 +246,7 @@ SizedBox(height: 15,),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8.0),
+                            borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(8.0),
                              bottomRight: Radius.circular(8.0),),
                             color: ColorUtils.primaryColor(), // Replace with your primary color
                           ),
@@ -252,7 +254,7 @@ SizedBox(height: 15,),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                            Text('Other Details: ${data['termsAndConditions']}',style: TextStyle(color: Colors.white),),
+                            Text('Other Details: ${data['termsAndConditions']}',style: const TextStyle(color: Colors.white),),
 
                             ],
                           ),
@@ -276,6 +278,8 @@ SizedBox(height: 15,),
 
 
 class FormPage extends StatefulWidget {
+  const FormPage({super.key});
+
   @override
   _FormPageState createState() => _FormPageState();
 }
@@ -294,8 +298,8 @@ class _FormPageState extends State<FormPage> {
 
   // Function to pick an image from gallery
   Future<void> _pickImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       setState(() {
         _imageFile = File(image.path);
@@ -362,7 +366,7 @@ class _FormPageState extends State<FormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60.0),
+        preferredSize: const Size.fromHeight(60.0),
         child: Container(
           decoration: BoxDecoration(
             boxShadow: [
@@ -370,14 +374,14 @@ class _FormPageState extends State<FormPage> {
                 color: Colors.grey.withOpacity(0.6),
                 spreadRadius: 12,
                 blurRadius: 8,
-                offset: Offset(0, 3), // changes position of shadow
+                offset: const Offset(0, 3), // changes position of shadow
               ),
             ],
           ),
           child: AppBar(
               backgroundColor: ColorUtils.primaryColor(), // Replace ColorUtils.primaryColor() with actual color
-            iconTheme: IconThemeData(color: Colors.white),
-            title: Text(
+            iconTheme: const IconThemeData(color: Colors.white),
+            title: const Text(
               'Jv properties form',
               style: TextStyle(color: Colors.white),
             ),
@@ -387,69 +391,69 @@ class _FormPageState extends State<FormPage> {
       body: Stack(
         children: [
           SingleChildScrollView(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 TextField(
                   controller: landSizeController,
-                  decoration: InputDecoration(labelText: 'Land/Site Size'),
+                  decoration: const InputDecoration(labelText: 'Land/Site Size'),
                 ),
                 TextField(
                   controller: approachRoadWidthController,
-                  decoration: InputDecoration(labelText: 'Approach Road Width'),
+                  decoration: const InputDecoration(labelText: 'Approach Road Width'),
                 ),
                 TextField(
                   controller: ratioToLandlordController,
-                  decoration: InputDecoration(labelText: 'Ratio to Landlord'),
+                  decoration: const InputDecoration(labelText: 'Ratio to Landlord'),
                 ),
                 TextField(
                   controller: ratioToBuilderController,
-                  decoration: InputDecoration(labelText: 'Ratio to Builder'),
+                  decoration: const InputDecoration(labelText: 'Ratio to Builder'),
                 ),
                 TextField(
                   controller: goodwillController,
-                  decoration: InputDecoration(labelText: 'Goodwill'),
+                  decoration: const InputDecoration(labelText: 'Goodwill'),
                 ),
                 TextField(
                   controller: refundableAdvanceController,
-                  decoration: InputDecoration(labelText: 'Refundable Advance'),
+                  decoration: const InputDecoration(labelText: 'Refundable Advance'),
                 ),
                 TextField(
                   controller: termsAndConditionsController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Any Other Terms and Conditions',
                   ),
                   maxLines: 5,
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 _imageFile != null
                     ? Image.file(_imageFile!)
                     : ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor:  ColorUtils.primaryColor(),
-                    padding: EdgeInsets.symmetric(vertical: 12.0),
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
                   onPressed: _pickImage,
-                  child: Text(
+                  child: const Text(
                     'Select Image',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: _submitForm,
                   style: ElevatedButton.styleFrom(
                     backgroundColor:  ColorUtils.primaryColor(),
-                    padding: EdgeInsets.symmetric(vertical: 12.0),
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Submit',
                     style: TextStyle(
                       fontSize: 18.0,
@@ -462,7 +466,7 @@ class _FormPageState extends State<FormPage> {
             ),
           ),
           if (_isLoading)
-            Center(
+            const Center(
               child: CircularProgressIndicator(),
             ),
         ],

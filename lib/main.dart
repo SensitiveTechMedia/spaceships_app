@@ -24,11 +24,13 @@ void main() async {
   Get.put(LoginOptionController());
   Get.put(LoginScreenController());
   Get.put(RegisterController());
-  runApp(MyApp());
+  runApp( MyApp());
 }
 
 class MyApp extends StatelessWidget {
   final ThemeController themeController = Get.put(ThemeController());
+
+   MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +47,7 @@ class MyApp extends StatelessWidget {
             ? ThemeMode.dark
             : ThemeMode.light,
         debugShowCheckedModeBanner: false,
-        home: SplashScreenWithDelay(),
+        home: const SplashScreenWithDelay(),
         navigatorKey: Get.key,
       ),
     );
@@ -53,6 +55,8 @@ class MyApp extends StatelessWidget {
 }
 
 class SplashScreenWithDelay extends StatefulWidget {
+  const SplashScreenWithDelay({super.key});
+
   @override
   _SplashScreenWithDelayState createState() => _SplashScreenWithDelayState();
 }
@@ -65,22 +69,24 @@ class _SplashScreenWithDelayState extends State<SplashScreenWithDelay> {
   }
 
   void _startDelay() async {
-    await Future.delayed(Duration(milliseconds: 600));
+    await Future.delayed(const Duration(milliseconds: 600));
     _navigateToNextScreen();
   }
 
   void _navigateToNextScreen() {
-    Get.offAll(AuthCheckerScreen());
+    Get.offAll( AuthCheckerScreen());
   }
 
   @override
   Widget build(BuildContext context) {
-    return SplashScreen();
+    return const SplashScreen();
   }
 }
 
 class AuthCheckerScreen extends StatelessWidget {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+ AuthCheckerScreen({super.key});
 
   Future<User?> checkAuthState() async {
     return _auth.currentUser; // Return the current user from FirebaseAuth
@@ -92,13 +98,13 @@ class AuthCheckerScreen extends StatelessWidget {
       future: checkAuthState(), // Call the function to get the future
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return SplashScreen(); // Show splash screen while checking auth state
+          return const SplashScreen(); // Show splash screen while checking auth state
         } else if (snapshot.hasData && snapshot.data != null) {
           // User is already logged in, navigate to HomeScreen
           return HomeScreen(username: snapshot.data!.displayName ?? '');
         } else {
           // User is not logged in, navigate to LoginOptionScreen
-          return LoginOptionScreen();
+          return const LoginOptionScreen();
         }
       },
     );

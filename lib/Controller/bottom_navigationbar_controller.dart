@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
 import 'package:get_storage/get_storage.dart';
 
 import '../Common/Constants/color_helper.dart';
@@ -23,18 +22,18 @@ class BottomNavigationBarController extends GetxController {
   void onInit() {
     selectedLocation;
 
-    Future.delayed(Duration(seconds: 3)).then(
+    Future.delayed(const Duration(seconds: 3)).then(
       (_) {
         if (box.read("showBottomSheet") == null) {
           Get.bottomSheet(
             ClipRRect(
-                borderRadius: BorderRadius.vertical(
+                borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(40),
                 ),
                 child: Obx(
                   () => Container(
                     height: 400,
-                    color: Get.theme.colorScheme.background,
+                    color: Get.theme.colorScheme.surface,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 15, vertical: 20),
@@ -42,7 +41,7 @@ class BottomNavigationBarController extends GetxController {
                         children: [
                           Row(
                             children: [
-                              Text(
+                              const Text(
                                 "Select Location",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -50,14 +49,14 @@ class BottomNavigationBarController extends GetxController {
                                   color: ColorCodes.white,
                                 ),
                               ),
-                              Spacer(),
+                              const Spacer(),
                               Container(
                                 decoration: BoxDecoration(
                                   color: ColorCodes.teal,
                                   borderRadius: BorderRadius.circular(30),
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
+                                child: const Padding(
+                                  padding: EdgeInsets.symmetric(
                                       horizontal: 25, vertical: 14),
                                   child: Text(
                                     "Edit",
@@ -67,7 +66,7 @@ class BottomNavigationBarController extends GetxController {
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Column(
@@ -75,7 +74,7 @@ class BottomNavigationBarController extends GetxController {
                               2,
                               (index) {
                                 return Container(
-                                  margin: EdgeInsets.symmetric(vertical: 10),
+                                  margin: const EdgeInsets.symmetric(vertical: 10),
                                   decoration: BoxDecoration(
                                       color: selectLocationIndex.value == index
                                           ? ColorCodes.teal
@@ -92,20 +91,20 @@ class BottomNavigationBarController extends GetxController {
                                     onTap: () {
                                       selectLocationIndexToggle(index);
                                     },
-                                    contentPadding: EdgeInsets.symmetric(
+                                    contentPadding: const EdgeInsets.symmetric(
                                         horizontal: 10, vertical: 10),
                                     leading: CircleAvatar(
                                       maxRadius: 25,
                                       backgroundColor:
                                           selectLocationIndex.value == index
                                               ? Colors.white.withOpacity(0.3)
-                                              : Color(0xffECEDF3),
+                                              : const Color(0xffECEDF3),
                                       child: selectLocationIndex.value == index
-                                          ? Icon(
+                                          ? const Icon(
                                               Icons.location_on,
                                               color: ColorCodes.white,
                                             )
-                                          : Icon(
+                                          : const Icon(
                                               Icons.location_on_outlined,
                                               color: ColorCodes.teal,
                                             ),
@@ -116,7 +115,7 @@ class BottomNavigationBarController extends GetxController {
                               },
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           getElevatedButtonLarge(

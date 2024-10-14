@@ -11,8 +11,8 @@ import 'package:spaceships/screen/addview/map.dart';
 import 'package:spaceships/screen/homeview/home.dart';
 class PropertyViewScreen extends StatelessWidget {
   final String uid;
-  Color customTeal = Color(0xFF8F00FF);
-  PropertyViewScreen({required this.uid});
+  Color customTeal = const Color(0xFF8F00FF);
+  PropertyViewScreen({super.key, required this.uid});
 
   void _deleteProperty(BuildContext context, DocumentReference ref) async {
     // Show a confirmation dialog
@@ -20,8 +20,8 @@ class PropertyViewScreen extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirm Deletion'),
-          content: Text('Are you sure you want to delete this property?'),
+          title: const Text('Confirm Deletion'),
+          content: const Text('Are you sure you want to delete this property?'),
           actions: [
             TextButton(
               onPressed: () async {
@@ -29,7 +29,7 @@ class PropertyViewScreen extends StatelessWidget {
                 try {
                   await ref.delete();
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Property deleted successfully!')),
+                    const SnackBar(content: Text('Property deleted successfully!')),
                   );
                   Navigator.pop(context); // Close the dialog
                 } catch (e) {
@@ -39,13 +39,13 @@ class PropertyViewScreen extends StatelessWidget {
                   Navigator.pop(context); // Close the dialog
                 }
               },
-              child: Text('Delete'),
+              child: const Text('Delete'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pop(context); // Close the dialog
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
           ],
         );
@@ -59,7 +59,7 @@ class PropertyViewScreen extends StatelessWidget {
       onWillPop: () async {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomeScreen(username: '')),
+          MaterialPageRoute(builder: (context) => const HomeScreen(username: '')),
         );
         return true;
       },
@@ -67,16 +67,16 @@ class PropertyViewScreen extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: customTeal,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white,),
+            icon: const Icon(Icons.arrow_back, color: Colors.white,),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => HomeScreen(username: '')),
+                MaterialPageRoute(builder: (context) => const HomeScreen(username: '')),
               );
 
             },
           ),
-          title: Text('My Properties',style: TextStyle(color: Colors.white),),
+          title: const Text('My Properties',style: TextStyle(color: Colors.white),),
         ),
         body: StreamBuilder(
           stream: FirebaseFirestore.instance
@@ -85,7 +85,7 @@ class PropertyViewScreen extends StatelessWidget {
               .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }
 
             if (snapshot.hasError) {
@@ -93,7 +93,7 @@ class PropertyViewScreen extends StatelessWidget {
             }
 
             if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-              return Center(child: Text('No properties found.'));
+              return const Center(child: Text('No properties found.'));
             }
 
             // Display properties
@@ -110,7 +110,7 @@ class PropertyViewScreen extends StatelessWidget {
                 List<String> propertyImages = List<String>.from(data['PropertyImages']);
 
                 return Container(
-                  margin: EdgeInsets.all(8.0),
+                  margin: const EdgeInsets.all(8.0),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
                     borderRadius: BorderRadius.circular(8.0),
@@ -147,14 +147,14 @@ class PropertyViewScreen extends StatelessWidget {
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 propertyName,
-                                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                                style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                               ),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(propertyType),
                             ),
-                            SizedBox(height: 8.0),
+                            const SizedBox(height: 8.0),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -171,19 +171,19 @@ class PropertyViewScreen extends StatelessWidget {
                                     );
 
     },
-                                  child: Text('Edit'),
+                                  child: const Text('Edit'),
                                 ),
-                                SizedBox(width: 8.0),
+                                const SizedBox(width: 8.0),
                                 TextButton(
                                   onPressed: () {
                                     _deleteProperty(context, document.reference); // Pass context and reference
                                   },
-                                  child: Text(
+                                  child: const Text(
                                     'Delete',
                                     style: TextStyle(color: Colors.red),
                                   ),
                                 ),
-                                SizedBox(width: 8.0),
+                                const SizedBox(width: 8.0),
                               ],
                             ),
                           ],
@@ -202,27 +202,25 @@ class PropertyViewScreen extends StatelessWidget {
 class EditProperty extends StatefulWidget {
   final DocumentSnapshot? propertySnapshot;
 
-  EditProperty({Key? key, this.propertySnapshot}) : super(key: key);
+  const EditProperty({super.key, this.propertySnapshot});
   @override
   _HomeState createState() => _HomeState();
 }
 class _HomeState extends State<EditProperty> with TickerProviderStateMixin {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
-  Color customTeal = Color(0xFF071A4B);
+  Color customTeal = const Color(0xFF071A4B);
   List<String> cate = ["Buy", "Rent", "Lease"];
   String? category;
   int _selectedIndex = 0;
   void _navigateToCategory(String category) {
-    if (context != null) {
-      Navigator.push(
-        context!,
-        MaterialPageRoute(
-          builder: (context) => CategoryScreen(category: category,   propertySnapshot: widget.propertySnapshot,),
-        ),
-      );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CategoryScreen(category: category,   propertySnapshot: widget.propertySnapshot,),
+      ),
+    );
     }
-  }
   @override
   void initState() {
     super.initState();
@@ -238,12 +236,12 @@ class _HomeState extends State<EditProperty> with TickerProviderStateMixin {
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edit Property"),
+        title: const Text("Edit Property"),
       ),
       backgroundColor: Colors.white,
       body: Center(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -255,7 +253,7 @@ class _HomeState extends State<EditProperty> with TickerProviderStateMixin {
                   color: customTeal,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -291,14 +289,14 @@ class CategoryScreen extends StatefulWidget {
   final String category;
   final DocumentSnapshot? propertySnapshot;
 
-  CategoryScreen({required this.category, this.propertySnapshot });
+  const CategoryScreen({super.key, required this.category, this.propertySnapshot });
 
   @override
   _CategoryScreenState createState() => _CategoryScreenState();
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
-  Color customTeal = Color(0xFF071A4B);
+  Color customTeal = const Color(0xFF071A4B);
   int _selectedSubcategoryIndex = -1;
   String _selectedPropertyType = "";
   int bhkValue = 1;
@@ -377,7 +375,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
         backgroundColor: Colors.white,
         body: Center(
           child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -389,8 +387,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   color: customTeal,
                 ),
               ),
-              SizedBox(height: 10),
-              Container(
+              const SizedBox(height: 10),
+              SizedBox(
                 height: 350,
                 child: ListView.builder(
                   scrollDirection: Axis.vertical,
@@ -407,8 +405,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         });
                       },
                       child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        padding: EdgeInsets.all(20),
+                        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           color: isSelected ? customTeal : Colors.white,
                           borderRadius: BorderRadius.circular(8),
@@ -422,7 +420,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 color: isSelected ? Colors.white : customTeal,
                               ),
                             if (subcategories[index]["icon"] != null)
-                              SizedBox(width: 10),
+                              const SizedBox(width: 10),
                             Flexible(
                               child: Text(
                                 subcategories[index]["name"],
@@ -439,7 +437,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   },
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               if (_selectedSubcategoryIndex != -1 &&
           subcategories[_selectedSubcategoryIndex]["name"] == "Flat") // Show text field only when "Flat" is selected
           Column(
@@ -453,7 +451,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 color: customTeal,
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Row(
               children: [
                 IconButton(
@@ -498,7 +496,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
             color: customTeal,
           ),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Wrap(
           spacing: 10,
           runSpacing: 10,
@@ -514,7 +512,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   });
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                   decoration: BoxDecoration(
                     color: isSelected ? customTeal : Colors.white,
                     borderRadius: BorderRadius.circular(8),
@@ -534,7 +532,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
         ),
       ],
     ),
-    SizedBox(height: 20),
+    const SizedBox(height: 20),
     Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
@@ -556,7 +554,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
     borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
     ),
     ),
-    child: Row(
+    child: const Row(
     mainAxisSize: MainAxisSize.min,
     children: [
     Icon(Icons.arrow_back, color: Colors.white), // Replace with your desired back icon
@@ -610,7 +608,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
             borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
           ),
         ),
-        child: Row(
+        child: const Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
@@ -647,7 +645,7 @@ class CategoryItem extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
   final Color customTeal;
-  CategoryItem({
+  const CategoryItem({super.key, 
     required this.title,
     required this.icon,
     required this.isSelected,
@@ -659,7 +657,7 @@ class CategoryItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Padding(
-        padding: EdgeInsets.all(5.0),
+        padding: const EdgeInsets.all(5.0),
         child: Container(
           width: 100,
           height: 80,
@@ -671,7 +669,7 @@ class CategoryItem extends StatelessWidget {
               width: 1,
             ),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -679,7 +677,7 @@ class CategoryItem extends StatelessWidget {
                 icon,
                 color: isSelected ? Colors.white : customTeal,
               ),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               Text(
                 title,
                 style: TextStyle(
@@ -699,7 +697,7 @@ class PropertyDetailsScreen extends StatefulWidget {
   final String subcategory;
   final String propertyType;
 
-  PropertyDetailsScreen({
+  const PropertyDetailsScreen({super.key, 
     required this.category,
     required this.subcategory,
     required this.propertyType,
@@ -713,7 +711,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
   TextEditingController descriptionController = TextEditingController();
   TextEditingController furnishingTypeController = TextEditingController();
   TextEditingController totalAreaController = TextEditingController();
-  Color customTeal = Color(0xFF071A4B);
+  Color customTeal = const Color(0xFF071A4B);
   String paymentType = "One-Time";
   String possessionType = "Under Construction";
   String areaType = 'Sq.Ft'; // Initial value
@@ -750,7 +748,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Property Details'),
+        title: const Text('Property Details'),
       ),
       backgroundColor: Colors.white,
       body: Padding(
@@ -759,7 +757,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'I am a :',
                 style: TextStyle(
                   fontSize: 18,
@@ -767,18 +765,18 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                   color: Colors.blue,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
                 controller: propertyOwnerController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Ex.Property Owner, Middle Agent/broker, etc.',
                   hintText: 'Ex.Property Owner, Middle Agent/broker, etc.',
                   hintStyle: TextStyle(fontSize: 14),
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 'Property Title :',
                 style: TextStyle(
                   fontSize: 18,
@@ -786,17 +784,17 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                   color: Colors.blue,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
                 controller: propertyTitleController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: "Property Title",
                   hintText: 'Enter property title',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 'Description :',
                 style: TextStyle(
                   fontSize: 18,
@@ -804,18 +802,18 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                   color: Colors.blue,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
                 controller: descriptionController,
                 maxLines: 4,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: "Enter property description",
                   hintText: 'Enter property description',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 'Payment Types :',
                 style: TextStyle(
                   fontSize: 18,
@@ -823,7 +821,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                   color: Colors.blue,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Column(
                 children: [
                   for (int i = 0; i < paymentRows.length; i++)
@@ -833,7 +831,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: [
-                            Container(
+                            SizedBox(
                               width: 150, // Adjust width as needed
                               child: DropdownButtonFormField<String>(
                                 value: paymentRows[i].selectedCategory,
@@ -848,15 +846,15 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                                     child: Text(category),
                                   );
                                 }).toList(),
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   hintText: 'Category',
                                   hintStyle: TextStyle(fontSize: 14),
                                   border: OutlineInputBorder(),
                                 ),
                               ),
                             ),
-                            SizedBox(width: 10),
-                            Container(
+                            const SizedBox(width: 10),
+                            SizedBox(
                               width: 150, // Adjust width as needed
                               child: DropdownButtonFormField<String>(
                                 value: paymentRows[i].selectedType,
@@ -871,29 +869,29 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                                     child: Text(type),
                                   );
                                 }).toList(),
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   hintText: 'Type',
                                   hintStyle: TextStyle(fontSize: 14),
                                   border: OutlineInputBorder(),
                                 ),
                               ),
                             ),
-                            SizedBox(width: 10),
-                            Container(
+                            const SizedBox(width: 10),
+                            SizedBox(
                               width: 100, // Adjust width as needed
                               child: TextField(
                                 controller: paymentRows[i].amountController,
                                 keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   hintText: 'Amount',
                                   hintStyle: TextStyle(fontSize: 14),
                                   border: OutlineInputBorder(),
                                 ),
                               ),
                             ),
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             IconButton(
-                              icon: Icon(Icons.delete),
+                              icon: const Icon(Icons.delete),
                               onPressed: () {
                                 removePaymentRow(i);
                               },
@@ -903,13 +901,13 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                       ),
                     ),
                   IconButton(
-                    icon: Icon(Icons.add),
+                    icon: const Icon(Icons.add),
                     onPressed: addPaymentRow,
                   ),
                 ],
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 'Years old* :',
                 style: TextStyle(
                   fontSize: 18,
@@ -917,11 +915,11 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                   color: Colors.blue,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Row(
                 children: [
                   IconButton(
-                    icon: Icon(Icons.remove),
+                    icon: const Icon(Icons.remove),
                     onPressed: () {
                       setState(() {
                         if (yearsOld > 0) {
@@ -932,12 +930,12 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                   ),
                   Text(
                     '$yearsOld',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.add),
+                    icon: const Icon(Icons.add),
                     onPressed: () {
                       setState(() {
                         yearsOld++;
@@ -946,8 +944,8 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 'Property Facing* :',
                 style: TextStyle(
                   fontSize: 18,
@@ -955,7 +953,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                   color: Colors.blue,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Wrap(
                 children: propertyFacings.map((facing) {
                   bool isSelected = propertyFacing.contains(facing);
@@ -990,8 +988,8 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                       });
                     },
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                      margin: EdgeInsets.only(right: 10, bottom: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                      margin: const EdgeInsets.only(right: 10, bottom: 10),
                       decoration: BoxDecoration(
                         color: isSelected ? customTeal : Colors.transparent,
                         borderRadius: BorderRadius.circular(15),
@@ -1000,7 +998,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                       child: Column(
                         children: [
                           Icon(iconData, color: isSelected ? Colors.white : customTeal),
-                          SizedBox(height: 4),
+                          const SizedBox(height: 4),
                           Text(
                             facing,
                             style: TextStyle(
@@ -1015,8 +1013,8 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                 }).toList(),
               ),
 
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 'Possession Type* :',
                 style: TextStyle(
                   fontSize: 18,
@@ -1024,7 +1022,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                   color: Colors.blue,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               DropdownButtonFormField<String>(
                 value: possessionType,
                 onChanged: (value) {
@@ -1039,8 +1037,8 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                   );
                 }).toList(),
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 'Furnishing Type :',
                 style: TextStyle(
                   fontSize: 18,
@@ -1048,7 +1046,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                   color: Colors.blue,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Wrap(
                 spacing: 10,
                 children: furnishingTypes.map((type) {
@@ -1063,8 +1061,8 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                   );
                 }).toList(),
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 'Total Area :',
                 style: TextStyle(
                   fontSize: 18,
@@ -1072,20 +1070,20 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                   color: Colors.blue,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Row(
                 children: [
                   Expanded(
                     child: TextField(keyboardType: TextInputType.number,
                       controller: totalAreaController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: "Enter total Area",
                         hintText: 'Enter Total Area',
                         border: OutlineInputBorder(),
                       ),
                     ),
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: DropdownButtonFormField<String>(
                       value: areaType,
@@ -1104,7 +1102,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -1126,7 +1124,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                             borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
                           ),
                         ),
-                        child: Row(
+                        child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.arrow_back, color: Colors.white), // Replace with your desired back icon
@@ -1179,7 +1177,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                             borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
                           ),
                         ),
-                        child: Row(
+                        child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
@@ -1240,7 +1238,7 @@ class AddressPage extends StatefulWidget {
   final List<String> propertyFacing;
   final List<PaymentRow> paymentRows;
 
-  AddressPage({
+  const AddressPage({super.key, 
     required this.category,
     required this.subcategory,
     required this.propertyType,
@@ -1274,19 +1272,19 @@ class _AddressPageState extends State<AddressPage> {
   List<String> floorTypes = ['Independent Floor', 'Shared Floor', 'Duplex Property'];
   String? _locationAddress;
   LatLng? _selectedLocation;
-  Color customTeal = Color(0xFF071A4B);
+  Color customTeal = const Color(0xFF071A4B);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Address Details'),
+        title: const Text('Address Details'),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Floor Number:',
                 style: TextStyle(
                   fontSize: 18,
@@ -1294,17 +1292,17 @@ class _AddressPageState extends State<AddressPage> {
                   color: Colors.blue,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
                 keyboardType: TextInputType.number,
                 controller: floorNumberController,
-                decoration: InputDecoration(labelText: "Enter floor number",
+                decoration: const InputDecoration(labelText: "Enter floor number",
                   hintText: 'Enter floor number',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 'Floor Type*:',
                 style: TextStyle(
                   fontSize: 18,
@@ -1312,7 +1310,7 @@ class _AddressPageState extends State<AddressPage> {
                   color: Colors.blue,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: floorTypes.map((type) {
@@ -1332,8 +1330,8 @@ class _AddressPageState extends State<AddressPage> {
                   );
                 }).toList(),
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 'Location*:',
                 style: TextStyle(
                   fontSize: 18,
@@ -1341,43 +1339,43 @@ class _AddressPageState extends State<AddressPage> {
                   color: Colors.blue,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(keyboardType: TextInputType.number,
                 controller: doorNoController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Enter door number',
                   hintText: 'Enter door number',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
                 controller: addressLineController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Enter address line',
                   hintText: 'Enter address line',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
                 controller: areaController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Enter area',
                   hintText: 'Enter area',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
                 controller: landmarkController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Enter landmark',
                   hintText: 'Enter landmark',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20), // Adjust the border radius as needed
@@ -1391,7 +1389,7 @@ class _AddressPageState extends State<AddressPage> {
                       final Map<String, dynamic>? selectedLocationData = await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => MapScreen(),
+                          builder: (context) => const MapScreen(),
                         ),
                       );
                       if (selectedLocationData != null) {
@@ -1412,7 +1410,7 @@ class _AddressPageState extends State<AddressPage> {
                         borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
                       ),
                     ),
-                    child: Row(
+                    child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
@@ -1425,13 +1423,13 @@ class _AddressPageState extends State<AddressPage> {
                   ),
                 ),
               ),if (_locationAddress != null) ...[
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
                   ' Address: $_locationAddress',
-                  style: TextStyle(fontSize: 16, color: Colors.green),
+                  style: const TextStyle(fontSize: 16, color: Colors.green),
                 ),
               ],
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -1453,7 +1451,7 @@ class _AddressPageState extends State<AddressPage> {
                             borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
                           ),
                         ),
-                        child: Row(
+                        child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.arrow_back, color: Colors.white), // Replace with your desired back icon
@@ -1518,7 +1516,7 @@ class _AddressPageState extends State<AddressPage> {
                             borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
                           ),
                         ),
-                        child: Row(
+                        child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
@@ -1567,7 +1565,7 @@ class AmentiesScreen extends StatefulWidget {
   final List<String> floorTypes;
   final String? locationAddress; // Accept the selected address
   final String? selectedLocation;
-  AmentiesScreen({
+  const AmentiesScreen({super.key, 
     required this.category,
     required this.subcategory,
     required this.propertyType, required this.floorNumberController, required this.floorType, required this.doorNoController, required this.addressLineController, required this.areaController,  required this.landmarkController, required this.latitudeController, required this.longitudeController, required this.floorTypes, required this.propertyOwnerController, required this.propertyTitleController, required this.descriptionController, required this.yearsOld, required this.furnishingTypeController, required this.totalAreaController, required this.paymentType, required this.possessionType, required this.areaType, required this.propertyFacing, required this.paymentRows,  this.locationAddress, this.selectedLocation,
@@ -1584,7 +1582,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
   int carParkingCount = 0;
   int bikeParkingCount = 0;
   int nearbyDistance = 0; // Initialize nearby distance
-  Color customTeal = Color(0xFF071A4B);
+  Color customTeal = const Color(0xFF071A4B);
   List<String> amenities = [];
   List<Map<String, dynamic>> nearbyPlaces = [];
   List<String> parkingTypes = ['Covered Parking', 'Open Parking'];
@@ -1665,7 +1663,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Property Details'),
+        title: const Text('Property Details'),
       ),
       backgroundColor: Colors.white,
       body: Padding(
@@ -1674,7 +1672,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Amenities :',
                 style: TextStyle(
                   fontSize: 18,
@@ -1682,7 +1680,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                   color: Colors.blue,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Wrap(
                 spacing: 8.0,
                 children: amenities.map((amenity) {
@@ -1696,7 +1694,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
               ),
               TextField(
                 controller: amenitiesController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: "Enter Amenties",
                   hintText: '(e.g., Swimming Pool,Gym,Garden)',
                   hintStyle: TextStyle(fontSize: 14),
@@ -1708,8 +1706,8 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                   }
                 },
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 'Nearby :',
                 style: TextStyle(
                   fontSize: 18,
@@ -1717,7 +1715,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                   color: Colors.blue,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Column(
                 children: nearbyPlaces.asMap().entries.map((entry) {
                   int index = entry.key;
@@ -1727,12 +1725,12 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                       Expanded(
                         child: Text(place['place']),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       Expanded(
                         child: Text('${place['distance']} km'), // Display distance with 'km' suffix
                       ),
                       IconButton(
-                        icon: Icon(Icons.delete),
+                        icon: const Icon(Icons.delete),
                         onPressed: () {
                           removeNearbyPlace(index);
                         },
@@ -1746,7 +1744,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                   Expanded(
                     child: TextField(
                       controller: nearbyPlaceController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'e.g., School,',
                         hintText: 'e.g., School, Hospital',
                         hintStyle: TextStyle(fontSize: 11),
@@ -1754,29 +1752,29 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Row(
                     children: [
                       IconButton(
-                        icon: Icon(Icons.remove),
+                        icon: const Icon(Icons.remove),
                         onPressed: decrementNearbyDistance,
                       ),
                       Text('$nearbyDistance km'), // Display current nearby distance
                       IconButton(
-                        icon: Icon(Icons.add),
+                        icon: const Icon(Icons.add),
                         onPressed: incrementNearbyDistance,
                       ),
                     ],
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   IconButton(
-                    icon: Icon(Icons.add),
+                    icon: const Icon(Icons.add),
                     onPressed: addNearbyPlace,
                   ),
                 ],
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 'Parking :',
                 style: TextStyle(
                   fontSize: 18,
@@ -1795,8 +1793,8 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                       });
                     },
                   ),
-                  Text('Included'),
-                  SizedBox(width: 20),
+                  const Text('Included'),
+                  const SizedBox(width: 20),
                   Radio(
                     value: false,
                     groupValue: parkingIncluded,
@@ -1806,15 +1804,15 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                       });
                     },
                   ),
-                  Text('Not Included'),
+                  const Text('Not Included'),
                 ],
               ),
               if (parkingIncluded)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 20),
-                    Text(
+                    const SizedBox(height: 20),
+                    const Text(
                       'Parking Type :',
                       style: TextStyle(
                         fontSize: 18,
@@ -1836,8 +1834,8 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                         );
                       }).toList(),
                     ),
-                    SizedBox(height: 20),
-                    Text(
+                    const SizedBox(height: 20),
+                    const Text(
                       'No of Car Parking :',
                       style: TextStyle(
                         fontSize: 18,
@@ -1848,21 +1846,21 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                     Row(
                       children: [
                         IconButton(
-                          icon: Icon(Icons.remove),
+                          icon: const Icon(Icons.remove),
                           onPressed: removeCarParking,
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Text('$carParkingCount'),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         IconButton(
-                          icon: Icon(Icons.add),
+                          icon: const Icon(Icons.add),
                           onPressed: addCarParking,
                         ),
 
                       ],
                     ),
-                    SizedBox(height: 20),
-                    Text(
+                    const SizedBox(height: 20),
+                    const Text(
                       'No of Bike Parking :',
                       style: TextStyle(
                         fontSize: 18,
@@ -1873,15 +1871,15 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                     Row(
                       children: [
                         IconButton(
-                          icon: Icon(Icons.remove),
+                          icon: const Icon(Icons.remove),
                           onPressed: removeBikeParking,
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Text('$bikeParkingCount'),
 
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         IconButton(
-                          icon: Icon(Icons.add),
+                          icon: const Icon(Icons.add),
                           onPressed: addBikeParking,
                         ),
 
@@ -1889,7 +1887,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                     ),
                   ],
                 ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -1911,7 +1909,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                             borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
                           ),
                         ),
-                        child: Row(
+                        child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.arrow_back, color: Colors.white), // Replace with your desired back icon
@@ -1983,7 +1981,7 @@ class _AmentiesScreenState extends State<AmentiesScreen> {
                             borderRadius: BorderRadius.circular(15), // Adjust the border radius as needed
                           ),
                         ),
-                        child: Row(
+                        child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
@@ -2039,7 +2037,7 @@ class PropertyMediaScreen extends StatefulWidget {
   final int carParkingCount;
   final int bikeParkingCount;
 
-  PropertyMediaScreen({
+  const PropertyMediaScreen({super.key, 
     required this.category,
     required this.subcategory,
     required this.propertyType,
@@ -2081,7 +2079,7 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
   List<String> uploadedVideos = [];
   File? selectedVideoFile;
   final ImagePicker _picker = ImagePicker();
-  Color customTeal = Color(0xFF071A4B);
+  Color customTeal = const Color(0xFF071A4B);
   bool isUploadingVideo = false; // Track video uploading state
   bool isSubmitting = false; // Track property submission state
   void removePhoto(int index) {
@@ -2258,7 +2256,7 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
     print('Building PropertyMediaScreen with ${propertyImages.length} images');
     return Scaffold(
       appBar: AppBar(
-        title: Text('Property Media Upload'),
+        title: const Text('Property Media Upload'),
       ),
       backgroundColor: Colors.white,
       body: Padding(
@@ -2278,20 +2276,20 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: _pickImage,
-                    child: Text(
-                      'Add Property Images',
-                      style: TextStyle(color: Colors.white),
-                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: customTeal,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),
+                    child: const Text(
+                      'Add Property Images',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               // Display selected images
               if (propertyImages.isNotEmpty) ...[
                 Wrap(
@@ -2314,7 +2312,7 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
                             },
                             child: Container(
                               color: Colors.red,
-                              child: Icon(Icons.clear, color: Colors.white),
+                              child: const Icon(Icons.clear, color: Colors.white),
                             ),
                           ),
                         ),
@@ -2323,7 +2321,7 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
                   }).toList(),
                 ),
               ],
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               // Button to pick video
               Container(
                 decoration: BoxDecoration(
@@ -2335,25 +2333,25 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: isUploadingVideo ? null : _pickVideo,
-                    child: isUploadingVideo
-                        ? CircularProgressIndicator() // Show loading indicator
-                        : Text(
-                      'Upload Video',
-                      style: TextStyle(color: Colors.white),
-                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: customTeal,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),
+                    child: isUploadingVideo
+                        ? const CircularProgressIndicator() // Show loading indicator
+                        : const Text(
+                      'Upload Video',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               // Display uploaded videos
               if (uploadedVideos.isNotEmpty) ...[
-                Text(
+                const Text(
                   'Uploaded Videos:',
                   style: TextStyle(
                     fontSize: 18,
@@ -2361,7 +2359,7 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
                     color: Colors.blue,
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Wrap(
                   spacing: 8.0,
                   children: uploadedVideos.asMap().entries.map((entry) {
@@ -2386,7 +2384,7 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
                             },
                             child: Container(
                               color: Colors.red,
-                              child: Icon(Icons.clear, color: Colors.white),
+                              child: const Icon(Icons.clear, color: Colors.white),
                             ),
                           ),
                         ),
@@ -2395,7 +2393,7 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
                   }).toList(),
                 ),
               ],
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               // Buttons to navigate back or submit property
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -2413,7 +2411,7 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
                           Navigator.of(context).pop();
                         },
 
-                        child: Row(
+                        child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.arrow_back, color: Colors.white),
@@ -2435,8 +2433,8 @@ class _PropertyMediaScreenState extends State<PropertyMediaScreen> {
                         onPressed: isSubmitting ? null : _submitProperty,
 
                         child: isSubmitting
-                            ? CircularProgressIndicator() // Show loading indicator
-                            : Row(
+                            ? const CircularProgressIndicator() // Show loading indicator
+                            : const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(

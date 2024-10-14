@@ -7,13 +7,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:share/share.dart';
+
 import 'package:spaceships/colorcode.dart';
 import 'package:spaceships/screen/addview/add%20property.dart';
 import 'package:spaceships/screen/filter.dart';
 import 'package:spaceships/screen/search%20screen.dart';
-import 'package:uni_links/uni_links.dart';
-import 'package:video_player/video_player.dart';
+
+
 
 import '../homeview/propertyview.dart';
 
@@ -21,12 +21,12 @@ class AllPage extends StatefulWidget {
   final int selecteddIndex;
   final int selecteIndex;
 
-  AllPage({required this.selecteIndex,required this.selecteddIndex,});
+  const AllPage({super.key, required this.selecteIndex,required this.selecteddIndex,});
   @override
   _AllPageState createState() => _AllPageState();
 }
 class _AllPageState extends State<AllPage> {
-  Color customTeal = Color(0xFF8F00FF);
+  Color customTeal = const Color(0xFF8F00FF);
   int _selecteIndex = 0;
   int _selecteddIndex = 0;
   final List<String> category = ["All","Buy", "Rent", "Lease", ];
@@ -60,7 +60,7 @@ class _AllPageState extends State<AllPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60.0),
+        preferredSize: const Size.fromHeight(60.0),
         child: Container(
           decoration: BoxDecoration(
             boxShadow: [
@@ -68,22 +68,22 @@ class _AllPageState extends State<AllPage> {
                 color: Colors.grey.withOpacity(0.6),
                 spreadRadius: 12,
                 blurRadius: 8,
-                offset: Offset(0, 3), // changes position of shadow
+                offset: const Offset(0, 3), // changes position of shadow
               ),
             ],
           ),
           child: AppBar(
             backgroundColor: ColorUtils.primaryColor(), // Example app bar background color
-            title: Text(
+            title: const Text(
               "All Properties",
               style: TextStyle(color: Colors.white),
             ),
-            iconTheme: IconThemeData(color: Colors.white),
+            iconTheme: const IconThemeData(color: Colors.white),
             actions: [
               Padding(
-                padding: EdgeInsets.only(right: 10.0), // Adjust the value as needed
+                padding: const EdgeInsets.only(right: 10.0), // Adjust the value as needed
                 child: Padding(
-                  padding: EdgeInsets.all(0.0), // Adjust the margin size as needed
+                  padding: const EdgeInsets.all(0.0), // Adjust the margin size as needed
                   child: CircleAvatar(
                     radius: 18,
                     backgroundColor: Colors.white,
@@ -92,7 +92,7 @@ class _AllPageState extends State<AllPage> {
                       onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => AddPropert()
+                        MaterialPageRoute(builder: (context) => const AddPropert()
 
                         ),
                       );
@@ -102,9 +102,9 @@ class _AllPageState extends State<AllPage> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(right: 10.0), // Adjust the value as needed
+                padding: const EdgeInsets.only(right: 10.0), // Adjust the value as needed
                 child: Padding(
-                  padding: EdgeInsets.all(0.0), // Adjust the margin size as needed
+                  padding: const EdgeInsets.all(0.0), // Adjust the margin size as needed
                   child: CircleAvatar(
                     radius: 18,
                     backgroundColor: Colors.white,
@@ -113,7 +113,7 @@ class _AllPageState extends State<AllPage> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => SearchScreen()),
+                          MaterialPageRoute(builder: (context) => const SearchScreen()),
                         );
 
                       },
@@ -122,9 +122,9 @@ class _AllPageState extends State<AllPage> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(right: 10.0), // Adjust the value as needed
+                padding: const EdgeInsets.only(right: 10.0), // Adjust the value as needed
                 child: Padding(
-                  padding: EdgeInsets.all(0.0), // Adjust the margin size as needed
+                  padding: const EdgeInsets.all(0.0), // Adjust the margin size as needed
                   child: CircleAvatar(
                     radius: 18,
                     backgroundColor: Colors.white,
@@ -151,12 +151,12 @@ class _AllPageState extends State<AllPage> {
 
       body: Column(
         children: [
-          SizedBox(height: 20,),
+          const SizedBox(height: 20,),
 
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Padding(
-              padding: EdgeInsets.all(5.0),
+              padding: const EdgeInsets.all(5.0),
               child: Row(
                 children: List.generate(category.length, (index) {
                   bool isSelected = index == _selecteddIndex;
@@ -169,7 +169,7 @@ class _AllPageState extends State<AllPage> {
                     child: Container(
                       width: 80,
                       height: 40,
-                      margin: EdgeInsets.symmetric(horizontal: 4),
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
                       decoration: BoxDecoration(
                         color: isSelected ? customTeal : Colors.white,
                         borderRadius: BorderRadius.circular(5),
@@ -178,12 +178,12 @@ class _AllPageState extends State<AllPage> {
                           width: 1,
                         ),
                       ),
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
 
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                           Text(
                             category[index],
                             style: TextStyle(
@@ -199,12 +199,12 @@ class _AllPageState extends State<AllPage> {
               ),
             ),
           ),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           // Your category filter row
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Padding(
-              padding: EdgeInsets.all(5.0),
+              padding: const EdgeInsets.all(5.0),
               child: Row(
                 children: List.generate(cate.length, (index) {
                   bool isSelected = index == _selecteIndex;
@@ -217,7 +217,7 @@ class _AllPageState extends State<AllPage> {
                     child: Container(
                       width: 100,
                       height: 80,
-                      margin: EdgeInsets.symmetric(horizontal: 5),
+                      margin: const EdgeInsets.symmetric(horizontal: 5),
                       decoration: BoxDecoration(
                         color: isSelected ? customTeal : Colors.white,
                         borderRadius: BorderRadius.circular(5),
@@ -226,7 +226,7 @@ class _AllPageState extends State<AllPage> {
                           width: 1,
                         ),
                       ),
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -244,7 +244,7 @@ class _AllPageState extends State<AllPage> {
                             : Icons.villa,
                             color: isSelected ? Colors.white : customTeal,
                           ),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                           Text(
                             cate[index],
                             style: TextStyle(
@@ -291,7 +291,7 @@ class _AllPageState extends State<AllPage> {
                   ),);
                 }
                 if (snapshot.data!.docs.isEmpty) {
-                  return Center(child: Text('No properties found'));
+                  return const Center(child: Text('No properties found'));
                 }
 
                 return ListView.builder(
@@ -301,7 +301,7 @@ class _AllPageState extends State<AllPage> {
                     var wishlistItem = doc.data() as Map<String, dynamic>;
 
                     return ListTile(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
                       onTap: () {
                         // print(wishlistItem);
                         Navigator.push(
@@ -356,12 +356,12 @@ class _AllPageState extends State<AllPage> {
                       title: Container(
                         height: 150,
                         decoration: BoxDecoration(
-                          color: Color.fromRGBO(160, 161, 164, 1000),
+                          color: const Color.fromRGBO(160, 161, 164, 1000),
                           borderRadius: BorderRadius.circular(30.0),
                         ),
                         child: Row(
                           children: [
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
                             Stack(
                               children: [
                                 Container(
@@ -372,7 +372,7 @@ class _AllPageState extends State<AllPage> {
                                     color: Colors.grey,
                                   ),
                                   child: wishlistItem['PropertyImages'] == null || wishlistItem['PropertyImages'].isEmpty
-                                      ? Center(child: Icon(Icons.image, size: 50))
+                                      ? const Center(child: Icon(Icons.image, size: 50))
                                       : Stack(
                                     fit: StackFit.expand,
                                     children: [
@@ -394,7 +394,7 @@ class _AllPageState extends State<AllPage> {
                                             }
                                           },
                                           errorBuilder: (context, error, stackTrace) {
-                                            return Center(child: Icon(Icons.error));
+                                            return const Center(child: Icon(Icons.error));
                                           },
                                         ),
                                       ),
@@ -436,7 +436,7 @@ class _AllPageState extends State<AllPage> {
                                     child: Text(
                                       wishlistItem['subcategory'] ??
                                           'cat',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 14,
                                       ),
@@ -445,13 +445,13 @@ class _AllPageState extends State<AllPage> {
                                 ),
                               ],
                             ),
-                            SizedBox(width: 15.0),
+                            const SizedBox(width: 15.0),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment:
                                 CrossAxisAlignment.start,
                                 children: [
-                                  SizedBox(height: 20),
+                                  const SizedBox(height: 20),
                                   FittedBox(
                                     fit: BoxFit.scaleDown,
                                     child: Text(
@@ -464,7 +464,7 @@ class _AllPageState extends State<AllPage> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: 4.0),
+                                  const SizedBox(height: 4.0),
                                   Row(
                                     children: [
                                       Icon(
@@ -485,7 +485,7 @@ class _AllPageState extends State<AllPage> {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 20.0),
+                                  const SizedBox(height: 20.0),
 
                                 ],
                               ),
@@ -549,7 +549,7 @@ class Vieage extends StatefulWidget {
   final String propertyId;
   final List<dynamic> imageUrl;
 
-  Vieage({
+  const Vieage({super.key, 
     required this.videoUrl,
     required this.landmark,
     required this.latitude,
@@ -594,7 +594,7 @@ class Vieage extends StatefulWidget {
 }
 
 class _VieageState extends State<Vieage> {
-  late VideoPlayerController _controller;
+  // late VideoPlayerController _controller;
   late Future<List<Map<String, dynamic>>> paymentRowsFuture;
   late Future<List<Map<String, dynamic>>> nearbyplaces;
 
@@ -602,7 +602,7 @@ class _VieageState extends State<Vieage> {
   User? user = FirebaseAuth.instance.currentUser; // Get the current user
 
   GoogleMapController? _mapController;
-  int _currentIndex = 0;
+  final int _currentIndex = 0;
   List<String> amenities = [];
   List<String> propertyFacing = [];
   List<String> propertyImages = [];
@@ -629,15 +629,15 @@ class _VieageState extends State<Vieage> {
           _currentImageIndex = _pageController.page!.round();
         });
       });
-    if (widget.videoUrl.isNotEmpty) {
-      print('Video URL: ${widget.videoUrl[0]}');
-      _controller = VideoPlayerController.network(widget.videoUrl[0])
-        ..initialize().then((_) {
-          setState(() {}); // Update UI after initialization
-        });
-    } else {
-      print('No video URL available.');
-    }
+    // if (widget.videoUrl.isNotEmpty) {
+    //   print('Video URL: ${widget.videoUrl[0]}');
+    //   _controller = VideoPlayerController.network(widget.videoUrl[0])
+    //     ..initialize().then((_) {
+    //       setState(() {}); // Update UI after initialization
+    //     });
+    // } else {
+    //   print('No video URL available.');
+    // }
     _checkIfInWishlist();
     fetchLocation();
 
@@ -677,7 +677,7 @@ class _VieageState extends State<Vieage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
       builder: (context) => Padding(
@@ -694,14 +694,14 @@ class _VieageState extends State<Vieage> {
               Align(
                 alignment: Alignment.topRight,
                 child: IconButton(
-                  icon: Icon(Icons.close),
+                  icon: const Icon(Icons.close),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
               ),
-              Text('Enter Given Details', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-              SizedBox(height: 15),
+              const Text('Enter Given Details', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 15),
               TextField(
                 controller: nameController,
                 decoration: InputDecoration(
@@ -709,7 +709,7 @@ class _VieageState extends State<Vieage> {
                   labelText: 'Name',
                 ),
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               TextField(
                 controller: mobileController,
                 decoration: InputDecoration(
@@ -718,7 +718,7 @@ class _VieageState extends State<Vieage> {
                 ),
                 keyboardType: TextInputType.phone,
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -733,27 +733,27 @@ class _VieageState extends State<Vieage> {
                         } catch (e) {
                           print('Error submitting details: $e');
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                            const SnackBar(
                               content: Text('Error submitting details'),
                             ),
                           );
                         }
                       },
                       style: ButtonStyle(
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                         ),
-                        backgroundColor: MaterialStateProperty.all<Color>(  ColorUtils.primaryColor(),),
-                        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                        backgroundColor: WidgetStateProperty.all<Color>(  ColorUtils.primaryColor(),),
+                        foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
                       ),
-                      child: Text('Submit', style: TextStyle(fontSize: 20)),
+                      child: const Text('Submit', style: TextStyle(fontSize: 20)),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
             ],
           ),
         ),
@@ -762,22 +762,7 @@ class _VieageState extends State<Vieage> {
   }
   Future<void> _initUniLinks() async {
 
-    _sub ??= uriLinkStream.listen((Uri? uri) {
-      _handleDeepLink(uri);
-    }, onError: (err) {
-      print('Failed to get latest link: $err');
-    });
 
-    // Handle the initial uri when the application starts
-    Uri? initialUri;
-    try {
-      initialUri = await getInitialUri();
-    } catch (e) {
-      print('Error getting initial uri: $e');
-    }
-    if (initialUri != null) {
-      _handleDeepLink(initialUri);
-    }
   }
   void _handleDeepLink(Uri? uri) {
 
@@ -928,26 +913,21 @@ class _VieageState extends State<Vieage> {
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Interest details updated successfully.'),
           ),
         );
       }
     } catch (e) {
       print('Error updating user details: $e');
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Error updating user details'),
       ));
     }
   }
   Future<void> _launchWhatsApp() async {
-    String message = "Checkout this property: ${widget.category}\nAddress: ${widget.addressLine}\nArea: ${widget.area}\n${PropertyDeepLink.generateDeepLink(widget.propertyId)}";
-    try {
-      await Share.share(message);
-      print('Sharing via WhatsApp: $message');
-    } catch (e) {
-      print('Error sharing: $e');
-    }
+
+
   }
   Future<void> _checkIfInWishlist() async {
     if (user != null) {
@@ -1048,7 +1028,7 @@ class _VieageState extends State<Vieage> {
         backgroundColor: Colors.transparent,
         leadingWidth: 70,
         leading: Padding(
-          padding: EdgeInsets.only(left: 17.0), // Adjust the left padding as needed
+          padding: const EdgeInsets.only(left: 17.0), // Adjust the left padding as needed
           child: GestureDetector(
             onTap: () {
               Navigator.pop(context);
@@ -1062,11 +1042,11 @@ class _VieageState extends State<Vieage> {
                       color: Colors.black.withOpacity(0.2), // Adjust the shadow color and opacity
                       spreadRadius: 2,
                       blurRadius: 6,
-                      offset: Offset(0, 3), // Change offset to your preference
+                      offset: const Offset(0, 3), // Change offset to your preference
                     ),
                   ],
                 ),
-                child: CircleAvatar(
+                child: const CircleAvatar(
                   radius: 23,
                   backgroundColor: Colors.white,
                   child: Icon(
@@ -1097,7 +1077,7 @@ class _VieageState extends State<Vieage> {
               ),
             ),
           ),
-          SizedBox(width: 25,),
+          const SizedBox(width: 25,),
         ],
       ),
       body: Padding(
@@ -1108,18 +1088,18 @@ class _VieageState extends State<Vieage> {
               Stack(
                 children: [
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Container(
                       height: 500,
                       width: double.infinity,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(35.0),
                           topRight: Radius.circular(35.0),
                         ),
                       ),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.only(
+                        borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(35.0),
                           topRight: Radius.circular(35.0),
                         ),
@@ -1144,7 +1124,7 @@ class _VieageState extends State<Vieage> {
                                   errorBuilder: (context, error, stackTrace) {
                                     return Container(
                                       color: Colors.grey,
-                                      child: Center(
+                                      child: const Center(
                                         child: Text(
                                           'Failed to load image',
                                           style: TextStyle(color: Colors.white),
@@ -1169,11 +1149,11 @@ class _VieageState extends State<Vieage> {
                     top: 40,
                     left: 80,
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
 
                       child: Text(
-                        "${widget.propertyType}",
-                        style: TextStyle(
+                        widget.propertyType,
+                        style: const TextStyle(
                           fontSize: 24,fontWeight: FontWeight.bold,
                           color: Colors.black, // Text color
                         ),
@@ -1184,14 +1164,14 @@ class _VieageState extends State<Vieage> {
                     top: 10,
                     left: 100,
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       decoration: BoxDecoration(
                         color: ColorUtils.primaryColor(),
                         borderRadius: BorderRadius.circular(20.0), // Border radius
                       ),
                       child: Text(
-                        "${widget.category == 'Sell' ? 'Buy' : 'Rent'}", // Conditionally change text here
-                        style: TextStyle(
+                        widget.category == 'Sell' ? 'Buy' : 'Rent', // Conditionally change text here
+                        style: const TextStyle(
                           fontSize: 16,
                           color: Colors.white, // Text color
                         ),
@@ -1202,14 +1182,14 @@ class _VieageState extends State<Vieage> {
                     bottom: 40,
                     left: 60,
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       decoration: BoxDecoration(
                         color: ColorUtils.primaryColor(),
                         borderRadius: BorderRadius.circular(20.0), // Border radius
                       ),
                       child: Text(
-                        "${widget.subcategory}", // Conditionally change text here
-                        style: TextStyle(
+                        widget.subcategory, // Conditionally change text here
+                        style: const TextStyle(
                           fontSize: 16,
                           color: Colors.white, // Text color
                         ),
@@ -1221,7 +1201,7 @@ class _VieageState extends State<Vieage> {
                     left: 10,
                     child: Text(
                       '${_currentImageIndex + 1} / ${widget.imageUrl.length}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -1231,7 +1211,7 @@ class _VieageState extends State<Vieage> {
                 ],
               ),
 
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Row(
               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -1266,7 +1246,7 @@ class _VieageState extends State<Vieage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Icon(
                   Icons.location_on,
                   color: ColorUtils.primaryColor(),
@@ -1274,7 +1254,7 @@ class _VieageState extends State<Vieage> {
                 ),
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsets.only(left: 5),
+                    padding: const EdgeInsets.only(left: 5),
                     child: Text(
                       widget.addressLine,
                       style: TextStyle(
@@ -1286,7 +1266,7 @@ class _VieageState extends State<Vieage> {
                     ),
                   ),
                 ),
-                SizedBox(width: 30,),
+                const SizedBox(width: 30,),
                 // Container(
                 //   padding: EdgeInsets.symmetric(horizontal: 20),
                 //   alignment: Alignment.centerRight,
@@ -1304,11 +1284,11 @@ class _VieageState extends State<Vieage> {
 
               ],
             ),
-            SizedBox(height:1),
-            Padding(
+            const SizedBox(height:1),
+            const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8),
               child: Center(
-                child: Container(
+                child: SizedBox(
                   width: double.infinity,
                   child: Divider(
                     height: 15,
@@ -1317,7 +1297,7 @@ class _VieageState extends State<Vieage> {
                 ),
               ),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -1326,9 +1306,9 @@ class _VieageState extends State<Vieage> {
                       widget.subcategory != 'Commercial Space' &&
                       widget.subcategory != 'Hostel/PG/Service Apartment') ...[
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         decoration: BoxDecoration(
                           color: Colors.grey.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(20.0),
@@ -1340,12 +1320,12 @@ class _VieageState extends State<Vieage> {
                               'assets/images/balcony.svg', // Path to balcony SVG asset
                               width: 24,
                               height: 24,
-                              color: Color.fromRGBO(139, 200, 62, 1.0),
+                              color: const Color.fromRGBO(139, 200, 62, 1.0),
                             ),
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
                             Text(
                               "${widget.balcony} Balcony",
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 16,
                                 color: Colors.black,
                               ),
@@ -1355,9 +1335,9 @@ class _VieageState extends State<Vieage> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         decoration: BoxDecoration(
                           color: Colors.grey.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(20.0),
@@ -1369,12 +1349,12 @@ class _VieageState extends State<Vieage> {
                               'assets/images/BathRoom.svg', // Path to bathroom SVG asset
                               width: 24,
                               height: 24,
-                              color: Color.fromRGBO(139, 200, 62, 1.0),
+                              color: const Color.fromRGBO(139, 200, 62, 1.0),
                             ),
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
                             Text(
                               "${widget.bathroom} Bathroom",
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 16,
                                 color: Colors.black,
                               ),
@@ -1395,7 +1375,7 @@ class _VieageState extends State<Vieage> {
                   color: ColorUtils.primaryColor(),),),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             if (_currentPosition != null)
               Padding(
                 padding: const EdgeInsets.only(left: 10.0, right: 10.0),
@@ -1421,7 +1401,7 @@ class _VieageState extends State<Vieage> {
                       },
                       markers: {
                         Marker(
-                          markerId: MarkerId('property_location'),
+                          markerId: const MarkerId('property_location'),
                           position: LatLng(
                             double.tryParse(widget.latitude) ?? 0.0,
                             double.tryParse(widget.longitude) ?? 0.0,
@@ -1448,12 +1428,12 @@ class _VieageState extends State<Vieage> {
                   // Displaying fetched amenities
 
                   Padding(
-                    padding: EdgeInsets.only(left: 10),
+                    padding: const EdgeInsets.only(left: 10),
                     child: Wrap(
                       spacing: 10, // Adjust as needed for spacing between containers
                       children: List.generate(amenities.length, (index) {
                         return Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                           decoration: BoxDecoration(
                             color: ColorUtils.primaryColor(),
                             borderRadius: BorderRadius.circular(10.0),
@@ -1461,7 +1441,7 @@ class _VieageState extends State<Vieage> {
                           child: Center(
                             child: Text(
                               widget.amenities[index],
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 16,
                                 color: Colors.white,
                               ),
@@ -1591,7 +1571,7 @@ class _VieageState extends State<Vieage> {
                           ),
                           DataCell(
                             Text(
-                              "${widget.furnishingType}",
+                              widget.furnishingType,
                               style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
                             ),
                           ),
@@ -1611,7 +1591,7 @@ class _VieageState extends State<Vieage> {
                           ),
                           DataCell(
                             Text(
-                              "${widget.superbuildup}",
+                              widget.superbuildup,
                               style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
                             ),
                           ),
@@ -1629,7 +1609,7 @@ class _VieageState extends State<Vieage> {
                           ),
                           DataCell(
                             Text(
-                              "${widget.roadController}",
+                              widget.roadController,
                               style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
                             ),
                           ),
@@ -1687,7 +1667,7 @@ class _VieageState extends State<Vieage> {
                               child: Row(
                                 children: propertyFacing.map((facing) {
                                   return Padding(
-                                    padding: EdgeInsets.all(10.0),
+                                    padding: const EdgeInsets.all(10.0),
                                     child: Container(
 
 
@@ -1721,7 +1701,7 @@ class _VieageState extends State<Vieage> {
                           ),
                           DataCell(
                             Text(
-                              "${widget.parkingType}",
+                              widget.parkingType,
                               style: TextStyle(fontSize: 16,  color: ColorUtils.primaryColor(),),
                             ),
                           ),
@@ -1897,21 +1877,21 @@ class _VieageState extends State<Vieage> {
               ),
             ),
             if (widget.videoUrl.isNotEmpty)
-              Column(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: AspectRatio(
-                      aspectRatio: 16 / 9,
-                      child: VideoPlayer(_controller),
-                    ),
-                  ),
-                  VideoPlayerControls(controller: _controller),
-                ],
-              ),
+              // Column(
+              //   children: [
+              //     Container(
+              //       decoration: BoxDecoration(
+              //         border: Border.all(color: Colors.grey),
+              //         borderRadius: BorderRadius.circular(10.0),
+              //       ),
+              //       child: AspectRatio(
+              //         aspectRatio: 16 / 9,
+              //         child: VideoPlayer(_controller),
+              //       ),
+              //     ),
+              //     VideoPlayerControls(controller: _controller),
+              //   ],
+              // ),
             // Column(
             //   children: widget.nearbyPlaces.map((place) {
             //     return ListTile(
@@ -1938,7 +1918,7 @@ class _VieageState extends State<Vieage> {
 
                 return ListView.builder(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: nearbyplace.length,
                   itemBuilder: (context, index) {
                     final place = nearbyplace[index];
@@ -1969,7 +1949,7 @@ class _VieageState extends State<Vieage> {
 
                 return ListView.builder(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: paymentRows.length,
                   itemBuilder: (context, index) {
                     final payment = paymentRows[index];
@@ -1982,7 +1962,7 @@ class _VieageState extends State<Vieage> {
               },
             ),
 
-            SizedBox(height: 50,),
+            const SizedBox(height: 50,),
 
 
 
@@ -2009,13 +1989,13 @@ class _VieageState extends State<Vieage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                margin: EdgeInsets.only(right: 8.0),
-                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                margin: const EdgeInsets.only(right: 8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                 decoration: BoxDecoration(
                   color: Colors.grey[800],
                   borderRadius: BorderRadius.circular(5.0),
                 ),
-                child: Text('know more', style: TextStyle(color: Colors.white)),
+                child: const Text('know more', style: TextStyle(color: Colors.white)),
               ),
               FloatingActionButton(backgroundColor: ColorUtils.primaryColor(),
                 heroTag: 'know more',
@@ -2034,18 +2014,18 @@ class _VieageState extends State<Vieage> {
               ),
             ],
           ),
-          SizedBox(height: 8.0),
+          const SizedBox(height: 8.0),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                margin: EdgeInsets.only(right: 8.0),
-                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                margin: const EdgeInsets.only(right: 8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                 decoration: BoxDecoration(
                   color: Colors.grey[800],
                   borderRadius: BorderRadius.circular(5.0),
                 ),
-                child: Text('chat support', style: TextStyle(color: Colors.white)),
+                child: const Text('chat support', style: TextStyle(color: Colors.white)),
               ),
               FloatingActionButton(backgroundColor: ColorUtils.primaryColor(),
                 heroTag: 'chat support',
@@ -2064,18 +2044,18 @@ class _VieageState extends State<Vieage> {
               ),
             ],
           ),
-          SizedBox(height: 8.0),
+          const SizedBox(height: 8.0),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                margin: EdgeInsets.only(right: 8.0),
-                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                margin: const EdgeInsets.only(right: 8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                 decoration: BoxDecoration(
                   color: Colors.grey[800],
                   borderRadius: BorderRadius.circular(5.0),
                 ),
-                child: Text('share', style: TextStyle(color: Colors.white)),
+                child: const Text('share', style: TextStyle(color: Colors.white)),
               ),
               FloatingActionButton(backgroundColor: ColorUtils.primaryColor(),
                 heroTag: 'share',

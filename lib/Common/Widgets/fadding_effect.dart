@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 class FadingEffect extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    Rect rect = Rect.fromPoints(Offset(0, 0), Offset(size.width, size.height));
-    LinearGradient lg = LinearGradient(
+    Rect rect = Rect.fromPoints(const Offset(0, 0), Offset(size.width, size.height));
+    LinearGradient lg = const LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [

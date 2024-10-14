@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:spaceships/colorcode.dart';
 
 class leasetab extends StatefulWidget {
+  const leasetab({super.key});
+
   @override
   _leasetabState createState() => _leasetabState();
 }
 class _leasetabState extends State<leasetab> with TickerProviderStateMixin {
-  Color customTeal = Color(0xFF071A4B);
+  Color customTeal = const Color(0xFF071A4B);
   late TabController _tabController;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -62,7 +64,7 @@ class _leasetabState extends State<leasetab> with TickerProviderStateMixin {
                         ),
                         labelColor:   ColorUtils.primaryColor(),
                         unselectedLabelColor: Colors.grey,
-                        tabs: [
+                        tabs: const [
                           Tab(text: 'leaseout'),
                           Tab(text: 'Pending'),
                         ],
@@ -89,7 +91,7 @@ class _leasetabState extends State<leasetab> with TickerProviderStateMixin {
 
 
   Widget _buildleaseoutScreen() {
-    return SingleChildScrollView(
+    return const SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -108,7 +110,7 @@ class _leasetabState extends State<leasetab> with TickerProviderStateMixin {
   }
 
   Widget _buildPendingScreen() {
-    return SingleChildScrollView(
+    return const SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -127,8 +129,8 @@ class _leasetabState extends State<leasetab> with TickerProviderStateMixin {
   }
   AppBar _buildAppBar() {
     return AppBar(
-      title: Text("Lease tab"),
-      actions: [
+      title: const Text("Lease tab"),
+      actions: const [
 
       ],
     );

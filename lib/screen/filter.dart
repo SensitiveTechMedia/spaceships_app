@@ -1,24 +1,14 @@
 import 'dart:async';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:share/share.dart';
 import 'package:spaceships/colorcode.dart';
 import 'package:spaceships/screen/wishlistfilter/whislist%20screen.dart';
-import 'package:uni_links/uni_links.dart';
-import 'package:video_player/video_player.dart';
 
-import 'homeview/propertyview.dart'; // If using Firestore
 
 class Screen extends StatefulWidget {
   final Function(Map<String, dynamic> filters) onApplyFilters;
 
-  const Screen({Key? key, required this.onApplyFilters}) : super(key: key);
+  const Screen({super.key, required this.onApplyFilters});
 
   @override
   _FilterScreenState createState() => _FilterScreenState();
@@ -83,7 +73,7 @@ class _FilterScreenState extends State<Screen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60.0),
+        preferredSize: const Size.fromHeight(60.0),
         child: Container(
           decoration: BoxDecoration(
             boxShadow: [
@@ -91,16 +81,16 @@ class _FilterScreenState extends State<Screen> {
                 color: Colors.grey.withOpacity(0.6),
                 spreadRadius: 12,
                 blurRadius: 8,
-                offset: Offset(0, 3), // changes position of shadow
+                offset: const Offset(0, 3), // changes position of shadow
               ),
             ],
           ),
           child: AppBar(
             backgroundColor: ColorUtils.primaryColor(),
-            iconTheme: IconThemeData(color: Colors.white),
+            iconTheme: const IconThemeData(color: Colors.white),
             titleSpacing: 0,
-            title: Text('Filter Page',style: TextStyle(color: Colors.white),),
-            actions: [
+            title: const Text('Filter Page',style: TextStyle(color: Colors.white),),
+            actions: const [
             ],
           ),
         ),
@@ -114,7 +104,7 @@ class _FilterScreenState extends State<Screen> {
             width: MediaQuery.of(context).size.width * 0.4,
             child: Column(
               children: [
-                SizedBox(height: 30,),
+                const SizedBox(height: 30,),
                 GestureDetector(
                   onTap: () {
                     setState(() {
@@ -124,16 +114,16 @@ class _FilterScreenState extends State<Screen> {
                     });
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 40.0),
+                    padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 40.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12.0),
                       border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
                       color: selectedOption == 'Category' ? Colors.purple.withOpacity(0.5) : Colors.transparent,
                     ),
-                    child: Text('Category', style: TextStyle(fontSize: 14)),
+                    child: const Text('Category', style: TextStyle(fontSize: 14)),
                   ),
                 ),
-                VerticalDivider(thickness: 5),
+                const VerticalDivider(thickness: 5),
                 GestureDetector(
                   onTap: () {
                     setState(() {
@@ -142,16 +132,16 @@ class _FilterScreenState extends State<Screen> {
                     });
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                    padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12.0),
                       border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
                       color: selectedOption == 'Subcategory' ? Colors.purple.withOpacity(0.5) : Colors.transparent,
                     ),
-                    child: Center(child: Text('Subcategory', style: TextStyle(fontSize: 15))),
+                    child: const Center(child: Text('Subcategory', style: TextStyle(fontSize: 15))),
                   ),
                 ),
-                VerticalDivider(thickness: 5),
+                const VerticalDivider(thickness: 5),
                 GestureDetector(
                   onTap: () {
                     setState(() {
@@ -159,16 +149,16 @@ class _FilterScreenState extends State<Screen> {
                     });
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                    padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12.0),
                       border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
                       color: selectedOption == 'PropertyType' ? Colors.purple.withOpacity(0.5) : Colors.transparent,
                     ),
-                    child: Center(child: Text('Property Type', style: TextStyle(fontSize: 14))),
+                    child: const Center(child: Text('Property Type', style: TextStyle(fontSize: 14))),
                   ),
                 ),
-                VerticalDivider(thickness: 5),
+                const VerticalDivider(thickness: 5),
                 GestureDetector(
                   onTap: () {
                     setState(() {
@@ -177,16 +167,16 @@ class _FilterScreenState extends State<Screen> {
                     });
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                    padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12.0),
                       border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
                       color: selectedOption == 'Furnishedstatus' ? Colors.purple.withOpacity(0.5) : Colors.transparent,
                     ),
-                    child: Center(child: Text('Furnished status', style: TextStyle(fontSize: 14))),
+                    child: const Center(child: Text('Furnished status', style: TextStyle(fontSize: 14))),
                   ),
                 ),
-                VerticalDivider(thickness: 5),
+                const VerticalDivider(thickness: 5),
                 GestureDetector(
                   onTap: () {
                     setState(() {
@@ -195,16 +185,16 @@ class _FilterScreenState extends State<Screen> {
                     });
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                    padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12.0),
                       border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
                       color: selectedOption == 'Direction' ? Colors.purple.withOpacity(0.5) : Colors.transparent,
                     ),
-                    child: Center(child: Text('Direction', style: TextStyle(fontSize: 14))),
+                    child: const Center(child: Text('Direction', style: TextStyle(fontSize: 14))),
                   ),
                 ),
-                VerticalDivider(thickness: 5),
+                const VerticalDivider(thickness: 5),
                 GestureDetector(
                   onTap: () {
                     setState(() {
@@ -213,29 +203,29 @@ class _FilterScreenState extends State<Screen> {
                     });
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                    padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12.0),
                       border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
                       color: selectedOption == 'Parking' ? Colors.purple.withOpacity(0.5) : Colors.transparent,
                     ),
-                    child: Center(child: Text('Parking', style: TextStyle(fontSize: 14))),
+                    child: const Center(child: Text('Parking', style: TextStyle(fontSize: 14))),
                   ),
                 ),
-                VerticalDivider(thickness: 5),
-                Expanded(child: SizedBox()),
+                const VerticalDivider(thickness: 5),
+                const Expanded(child: SizedBox()),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     ElevatedButton(
                       onPressed: _applyFilters,
-                      child: Text('Apply Filters', style: TextStyle(color: Colors.white)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: ColorUtils.primaryColor(),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5), // Border radius of 5
                         ),
                       ),
+                      child: const Text('Apply Filters', style: TextStyle(color: Colors.white)),
                     ),
                   ],
                 ),
@@ -243,7 +233,7 @@ class _FilterScreenState extends State<Screen> {
             ),
           ),
 
-          VerticalDivider(thickness: 1),
+          const VerticalDivider(thickness: 1),
           // Right side with white background
 
           Expanded(
@@ -257,13 +247,13 @@ class _FilterScreenState extends State<Screen> {
                 ),
                 ElevatedButton(
                   onPressed: _clearFilters,
-                  child: Text('Clear Filters', style: TextStyle(color: Colors.white)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5), // Border radius of 5
                     ),
                   ),
+                  child: const Text('Clear Filters', style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),
@@ -288,7 +278,7 @@ class _FilterScreenState extends State<Screen> {
     } else if (selectedOption == 'Parking') {
       return _buildParkingSection();
     } else {
-      return Center(child: Text('Select the required'));
+      return const Center(child: Text('Select the required'));
     }
   }
 
@@ -296,7 +286,7 @@ class _FilterScreenState extends State<Screen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SizedBox(height: 30,),
+        const SizedBox(height: 30,),
         GestureDetector(
           onTap: () {
             setState(() {
@@ -310,13 +300,13 @@ class _FilterScreenState extends State<Screen> {
           child: Row(
             children: [
               Icon(buySelected ? Icons.check_box : Icons.check_box_outline_blank),
-              SizedBox(width: 8),
-              Text('Buy', style: TextStyle(fontSize: 12)),
+              const SizedBox(width: 8),
+              const Text('Buy', style: TextStyle(fontSize: 12)),
             ],
           ),
         ),
         Divider(height: 10, thickness: 1, color: Colors.grey.shade300),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         GestureDetector(
           onTap: () {
             setState(() {
@@ -330,14 +320,14 @@ class _FilterScreenState extends State<Screen> {
           child: Row(
             children: [
               Icon(rentSelected ? Icons.check_box : Icons.check_box_outline_blank),
-              SizedBox(width: 8),
-              Text('Rent', style: TextStyle(fontSize: 12)),
+              const SizedBox(width: 8),
+              const Text('Rent', style: TextStyle(fontSize: 12)),
             ],
           ),
         ),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         Divider(height: 10, thickness: 1, color: Colors.grey.shade300),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         GestureDetector(
           onTap: () {
             setState(() {
@@ -351,12 +341,12 @@ class _FilterScreenState extends State<Screen> {
           child: Row(
             children: [
               Icon(leaseSelected ? Icons.check_box : Icons.check_box_outline_blank),
-              SizedBox(width: 8),
-              Text('Lease', style: TextStyle(fontSize: 12)),
+              const SizedBox(width: 8),
+              const Text('Lease', style: TextStyle(fontSize: 12)),
             ],
           ),
         ),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         Divider(height: 10, thickness: 1, color: Colors.grey.shade300),
       ],
     );
@@ -366,7 +356,7 @@ class _FilterScreenState extends State<Screen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SizedBox(height: 30), // Add space at the top
+        const SizedBox(height: 30), // Add space at the top
         ...subcategories.map((subcategory) {
           return Column(
             children: [
@@ -383,15 +373,15 @@ class _FilterScreenState extends State<Screen> {
                           ? Icons.check_box
                           : Icons.check_box_outline_blank,
                     ),
-                    SizedBox(width: 8),
-                    Text(subcategory, style: TextStyle(fontSize: 12)),
+                    const SizedBox(width: 8),
+                    Text(subcategory, style: const TextStyle(fontSize: 12)),
                   ],
                 ),
               ),
               Divider(height: 20, thickness: 1, color: Colors.grey.shade300),
             ],
           );
-        }).toList(),
+        }),
       ],
     );
   }
@@ -402,7 +392,7 @@ class _FilterScreenState extends State<Screen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SizedBox(height: 30), // Add space at the top
+        const SizedBox(height: 30), // Add space at the top
         ...propertyTypes.map((propertyType) {
           return Column(
             children: [
@@ -419,15 +409,15 @@ class _FilterScreenState extends State<Screen> {
                           ? Icons.check_box
                           : Icons.check_box_outline_blank,
                     ),
-                    SizedBox(width: 8),
-                    Text(propertyType, style: TextStyle(fontSize: 12)),
+                    const SizedBox(width: 8),
+                    Text(propertyType, style: const TextStyle(fontSize: 12)),
                   ],
                 ),
               ),
               Divider(height: 20, thickness: 1, color: Colors.grey.shade300),
             ],
           );
-        }).toList(),
+        }),
       ],
     );
   }
@@ -437,12 +427,12 @@ class _FilterScreenState extends State<Screen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SizedBox(height: 30,),
+        const SizedBox(height: 30,),
         _buildFurnishedStatusOption('Furnished'),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         Divider(height: 10, thickness: 1, color: Colors.grey.shade300),
         _buildFurnishedStatusOption('Unfurnished'),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         Divider(height: 10, thickness: 1, color: Colors.grey.shade300),
         _buildFurnishedStatusOption('Semi-furnished'),
       ],
@@ -463,8 +453,8 @@ class _FilterScreenState extends State<Screen> {
       child: Row(
         children: [
           Icon(furnishedStatusSelected.contains(status) ? Icons.check_box : Icons.check_box_outline_blank),
-          SizedBox(width: 8),
-          Text(status, style: TextStyle(fontSize: 12)),
+          const SizedBox(width: 8),
+          Text(status, style: const TextStyle(fontSize: 12)),
         ],
       ),
     );
@@ -476,7 +466,7 @@ class _FilterScreenState extends State<Screen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SizedBox(height: 30), // Add space at the top
+        const SizedBox(height: 30), // Add space at the top
         ...directions.map((direction) {
           return Column(
             children: [
@@ -493,15 +483,15 @@ class _FilterScreenState extends State<Screen> {
                           ? Icons.check_box
                           : Icons.check_box_outline_blank,
                     ),
-                    SizedBox(width: 8),
-                    Text(direction, style: TextStyle(fontSize: 12)),
+                    const SizedBox(width: 8),
+                    Text(direction, style: const TextStyle(fontSize: 12)),
                   ],
                 ),
               ),
               Divider(height: 20, thickness: 1, color: Colors.grey.shade300),
             ],
           );
-        }).toList(),
+        }),
       ],
     );
   }
@@ -511,7 +501,7 @@ class _FilterScreenState extends State<Screen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SizedBox(height: 30), // Add space at the top
+        const SizedBox(height: 30), // Add space at the top
         ...parkingOptions.map((option) {
           return Column(
             children: [
@@ -532,15 +522,15 @@ class _FilterScreenState extends State<Screen> {
                           ? Icons.check_box
                           : Icons.check_box_outline_blank,
                     ),
-                    SizedBox(width: 8),
-                    Text(option, style: TextStyle(fontSize: 12)),
+                    const SizedBox(width: 8),
+                    Text(option, style: const TextStyle(fontSize: 12)),
                   ],
                 ),
               ),
               Divider(height: 20, thickness: 1, color: Colors.grey.shade300),
             ],
           );
-        }).toList(),
+        }),
       ],
     );
   }
@@ -549,7 +539,7 @@ class _FilterScreenState extends State<Screen> {
 
 class FilteredResultsScreen extends StatelessWidget {
   final Map<String, dynamic> filters;
-  const FilteredResultsScreen({Key? key, required this.filters}) : super(key: key);
+  const FilteredResultsScreen({super.key, required this.filters});
   Future<List<Map<String, dynamic>>> fetchFilteredData(Map<String, dynamic> filters) async {
 
 
@@ -599,7 +589,7 @@ class FilteredResultsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60.0),
+        preferredSize: const Size.fromHeight(60.0),
         child: Container(
           decoration: BoxDecoration(
             boxShadow: [
@@ -607,16 +597,16 @@ class FilteredResultsScreen extends StatelessWidget {
                 color: Colors.grey.withOpacity(0.6),
                 spreadRadius: 12,
                 blurRadius: 8,
-                offset: Offset(0, 3), // changes position of shadow
+                offset: const Offset(0, 3), // changes position of shadow
               ),
             ],
           ),
           child: AppBar(
             backgroundColor: ColorUtils.primaryColor(),
-            iconTheme: IconThemeData(color: Colors.white),
+            iconTheme: const IconThemeData(color: Colors.white),
             titleSpacing: 0,
-            title: Text('Filter Properties',style: TextStyle(color: Colors.white),),
-            actions: [
+            title: const Text('Filter Properties',style: TextStyle(color: Colors.white),),
+            actions: const [
             ],
           ),
         ),
@@ -625,7 +615,7 @@ class FilteredResultsScreen extends StatelessWidget {
         future: fetchFilteredData(filters),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (snapshot.hasError) {
@@ -635,7 +625,7 @@ class FilteredResultsScreen extends StatelessWidget {
           final filteredData = snapshot.data ?? [];
 
           if (filteredData.isEmpty) {
-            return Center(child: Text('No properties found.'));
+            return const Center(child: Text('No properties found.'));
           }
 
           return ListView.builder(
@@ -646,7 +636,7 @@ class FilteredResultsScreen extends StatelessWidget {
               String propertyId = 'property$index';
               return ListTile(
 
-                contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
                 onTap: () {
                   // Inside the ListTile's onTap
 
@@ -662,12 +652,12 @@ class FilteredResultsScreen extends StatelessWidget {
                 title: Container(
                   height: 150,
                   decoration: BoxDecoration(
-                    color: Color.fromRGBO(160, 161, 164, 1000),
+                    color: const Color.fromRGBO(160, 161, 164, 1000),
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                   child: Row(
                     children: [
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Stack(
                         children: [
                           Container(
@@ -684,7 +674,7 @@ class FilteredResultsScreen extends StatelessWidget {
                                   : null,
                             ),
                             child: property['PropertyImages'] == null || property['PropertyImages']!.isEmpty
-                                ? Icon(Icons.image, size: 50)
+                                ? const Icon(Icons.image, size: 50)
                                 : null,
                           ),
                           Positioned(
@@ -695,24 +685,24 @@ class FilteredResultsScreen extends StatelessWidget {
                               height: 20,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(5),
-                                color: Color.fromRGBO(143, 0, 255, 0.55),
+                                color: const Color.fromRGBO(143, 0, 255, 0.55),
                               ),
                               child: Center(
                                 child: Text(
                                   property['propertyType'],
-                                  style: TextStyle(color: Colors.white, fontSize: 14),
+                                  style: const TextStyle(color: Colors.white, fontSize: 14),
                                 ),
                               ),
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(width: 15.0),
+                      const SizedBox(width: 15.0),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Text(
@@ -724,7 +714,7 @@ class FilteredResultsScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 4.0),
+                            const SizedBox(height: 4.0),
                             Row(
                               children: [
                                 Icon(
@@ -746,7 +736,7 @@ class FilteredResultsScreen extends StatelessWidget {
                               ],
                             ),
 
-                            SizedBox(height: 20.0),
+                            const SizedBox(height: 20.0),
                           ],
                         ),
                       ),

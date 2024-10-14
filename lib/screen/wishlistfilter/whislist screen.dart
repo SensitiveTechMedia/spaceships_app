@@ -8,19 +8,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:share/share.dart';
+
 import 'package:spaceships/colorcode.dart';
-import 'package:spaceships/screen/a.dart';
-import 'package:spaceships/screen/filter.dart';
+
 import 'package:spaceships/screen/homeview/home.dart';
 import 'package:spaceships/screen/profileedit/profile%20page.dart';
 import 'package:spaceships/screen/search%20screen.dart';
 import 'package:spaceships/screen/wishlistfilter/tune.dart';
-import 'package:uni_links/uni_links.dart';
-import 'package:video_player/video_player.dart';
+
+
 import '../homeview/propertyview.dart';
 
 class WishlistScreen extends StatefulWidget {
+  const WishlistScreen({super.key});
+
   @override
   _WishlistScreenState createState() => _WishlistScreenState();
 }
@@ -29,7 +30,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
   User? user = FirebaseAuth.instance.currentUser;
   late Query<Map<String, dynamic>> wishlistQuery;
   int _selectedIndex = 2;
-  Color customTeal = Color(0xFF8F00FF);
+  Color customTeal = const Color(0xFF8F00FF);
 
   @override
   void initState() {
@@ -46,13 +47,13 @@ class _WishlistScreenState extends State<WishlistScreen> {
   void _navigateToSearchScreen(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SearchScreen()),
+      MaterialPageRoute(builder: (context) => const SearchScreen()),
     );
   }
   void _navigateToWishlistScreen(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => WishlistScreen()),
+      MaterialPageRoute(builder: (context) => const WishlistScreen()),
     );
   }
   void navigateToProfileScreen (BuildContext context) {
@@ -66,7 +67,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
   void _navigateToHomeScreen(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => HomeScreen(username: '')),
+      MaterialPageRoute(builder: (context) => const HomeScreen(username: '')),
     );
   }
 
@@ -75,19 +76,19 @@ class _WishlistScreenState extends State<WishlistScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white,),
+          icon: const Icon(Icons.arrow_back, color: Colors.white,),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         backgroundColor: customTeal,
-        title: Text(
+        title: const Text(
           'My Wishlist',
           style: TextStyle(color: Colors.white),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.tune, color: Colors.white,),
+            icon: const Icon(Icons.tune, color: Colors.white,),
             onPressed: () {
               Navigator.push(
                 context,
@@ -104,7 +105,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
         stream: wishlistQuery.snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Center(child: Text('Something went wrong'));
+            return const Center(child: Text('Something went wrong'));
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -115,7 +116,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
           }
 
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('No properties in wishlist'));
+            return const Center(child: Text('No properties in wishlist'));
           }
 
           return ListView.builder(
@@ -130,8 +131,8 @@ class _WishlistScreenState extends State<WishlistScreen> {
                 background: Container(
                   color: Colors.red,
                   alignment: Alignment.centerLeft,
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Icon(Icons.delete, color: Colors.white),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: const Icon(Icons.delete, color: Colors.white),
                 ),
                 confirmDismiss: (direction) async {
                   // You can implement a confirmation dialog here if needed
@@ -143,7 +144,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                   FirebaseFirestore.instance.collection('wishlist').doc(doc.id).delete();
                 },
                 child: ListTile(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -159,12 +160,12 @@ class _WishlistScreenState extends State<WishlistScreen> {
                   title: Container(
                     height: 150,
                     decoration: BoxDecoration(
-                      color: Color.fromRGBO(160, 161, 164, 1000),
+                      color: const Color.fromRGBO(160, 161, 164, 1000),
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                     child: Row(
                       children: [
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Stack(
                           children: [
                             Container(
@@ -187,7 +188,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                   null ||
                                   wishlistItem['imageUrl']
                                       .isEmpty
-                                  ? Icon(Icons.image, size: 50)
+                                  ? const Icon(Icons.image, size: 50)
                                   : null,
                             ),
                             // Positioned(
@@ -225,7 +226,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                 child: Text(
                                   wishlistItem['subcategory'] ??
                                       'cat',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 14,
                                   ),
@@ -234,13 +235,13 @@ class _WishlistScreenState extends State<WishlistScreen> {
                             ),
                           ],
                         ),
-                        SizedBox(width: 15.0),
+                        const SizedBox(width: 15.0),
                         Expanded(
                           child: Column(
                             crossAxisAlignment:
                             CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: 20),
+                              const SizedBox(height: 20),
                               FittedBox(
                                 fit: BoxFit.scaleDown,
                                 child: Text(
@@ -253,7 +254,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 4.0),
+                              const SizedBox(height: 4.0),
                               Row(
                                 children: [
                                   Icon(
@@ -274,7 +275,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 20.0),
+                              const SizedBox(height: 20.0),
 
                             ],
                           ),
@@ -288,12 +289,12 @@ class _WishlistScreenState extends State<WishlistScreen> {
           );
         },
       )
-          : Center(child: Text('Please log in to view your wishlist')),
+          : const Center(child: Text('Please log in to view your wishlist')),
       bottomNavigationBar: Container(
-        color: Color.fromRGBO(143, 0, 255, 1.0),
+        color: const Color.fromRGBO(143, 0, 255, 1.0),
         height: 55,
         child: FlashyTabBar(
-          backgroundColor: Color.fromRGBO(143, 0, 255, 1.0).withOpacity(0),
+          backgroundColor: const Color.fromRGBO(143, 0, 255, 1.0).withOpacity(0),
           selectedIndex: _selectedIndex,
           showElevation: true,
           onItemSelected: (index) {
@@ -333,7 +334,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                 color: Colors.white,
               ),
               // inactiveColor: Colors.white,
-              title: Text(""),
+              title: const Text(""),
               activeColor: Colors.white,
 
             ),
@@ -345,7 +346,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                 color: Colors.white,
               ),
               inactiveColor: Colors.white,
-              title: Text(""),
+              title: const Text(""),
 
             ),
             FlashyTabBarItem(
@@ -357,7 +358,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                 color: Colors.white,
               ),
               inactiveColor: Colors.white,
-              title: Text(""),
+              title: const Text(""),
 
             ),
             FlashyTabBarItem(
@@ -370,7 +371,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
               ),
               inactiveColor: Colors.white,
 
-              title: Text(""),
+              title: const Text(""),
 
             ),
           ],
@@ -382,8 +383,8 @@ class _WishlistScreenState extends State<WishlistScreen> {
 
 class Whislits extends StatefulWidget {
   final String propertyId;
-  Color customTeal = Color(0xFF8F00FF);
-  Whislits({
+  Color customTeal = const Color(0xFF8F00FF);
+  Whislits({super.key, 
     required this.propertyId,
   });
   @override
@@ -393,13 +394,13 @@ class _WhislitsState extends State<Whislits> {
   late Future<Map<String, dynamic>> propertyDataFuture;
   PageController _pageController = PageController();
   int _currentImageIndex = 0;
-  late VideoPlayerController _controller;
+  // late VideoPlayerController _controller;
   late Future<List<Map<String, dynamic>>> paymentRowsFuture;
   late Future<List<Map<String, dynamic>>> nearbyplaces;
   StreamSubscription? _sub;
   User? user = FirebaseAuth.instance.currentUser; // Get the current user
   GoogleMapController? _mapController;
-  int _currentIndex = 0;
+  final int _currentIndex = 0;
   List<String> amenities = [];
   List<String> propertyFacing = [];
   List<String> propertyImages = [];
@@ -435,13 +436,7 @@ class _WhislitsState extends State<Whislits> {
     super.dispose();
   }
   Future<void> _launchWhatsApp() async {
-    String message = "Checkout this property: $category, \nAddress: $subcategory ,\n${PropertyDeepLink.generateDeepLink(widget.propertyId)}${PropertyDeepLink.generateDeepLink(widget.propertyId)}";
-    try {
-      await Share.share(message);
-      print('Sharing via WhatsApp: $message');
-    } catch (e) {
-      print('Error sharing: $e');
-    }
+
   }
   Future<List<Map<String, dynamic>>> nearbyplace() async {
     DocumentSnapshot doc = await FirebaseFirestore.instance.collection('propert').doc(widget.propertyId).get();
@@ -462,7 +457,7 @@ class _WhislitsState extends State<Whislits> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
       builder: (context) => Padding(
@@ -479,14 +474,14 @@ class _WhislitsState extends State<Whislits> {
               Align(
                 alignment: Alignment.topRight,
                 child: IconButton(
-                  icon: Icon(Icons.close),
+                  icon: const Icon(Icons.close),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
               ),
-              Text('Enter Given Details', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-              SizedBox(height: 15),
+              const Text('Enter Given Details', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 15),
               TextField(
                 controller: nameController,
                 decoration: InputDecoration(
@@ -494,7 +489,7 @@ class _WhislitsState extends State<Whislits> {
                   labelText: 'Name',
                 ),
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               TextField(
                 controller: mobileController,
                 decoration: InputDecoration(
@@ -503,7 +498,7 @@ class _WhislitsState extends State<Whislits> {
                 ),
                 keyboardType: TextInputType.phone,
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -518,27 +513,27 @@ class _WhislitsState extends State<Whislits> {
                         } catch (e) {
                           print('Error submitting details: $e');
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                            const SnackBar(
                               content: Text('Error submitting details'),
                             ),
                           );
                         }
                       },
                       style: ButtonStyle(
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                         ),
-                        backgroundColor: MaterialStateProperty.all<Color>(  ColorUtils.primaryColor(),),
-                        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                        backgroundColor: WidgetStateProperty.all<Color>(  ColorUtils.primaryColor(),),
+                        foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
                       ),
-                      child: Text('Submit', style: TextStyle(fontSize: 20)),
+                      child: const Text('Submit', style: TextStyle(fontSize: 20)),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
             ],
           ),
         ),
@@ -547,22 +542,7 @@ class _WhislitsState extends State<Whislits> {
   }
   Future<void> _initUniLinks() async {
 
-    _sub ??= uriLinkStream.listen((Uri? uri) {
-      _handleDeepLink(uri);
-    }, onError: (err) {
-      print('Failed to get latest link: $err');
-    });
 
-    // Handle the initial uri when the application starts
-    Uri? initialUri;
-    try {
-      initialUri = await getInitialUri();
-    } catch (e) {
-      print('Error getting initial uri: $e');
-    }
-    if (initialUri != null) {
-      _handleDeepLink(initialUri);
-    }
   }
   void _handleDeepLink(Uri? uri) {
 
@@ -711,14 +691,14 @@ class _WhislitsState extends State<Whislits> {
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Interest details updated successfully.'),
           ),
         );
       }
     } catch (e) {
       print('Error updating user details: $e');
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Error updating user details'),
       ));
     }
@@ -856,7 +836,7 @@ class _WhislitsState extends State<Whislits> {
         backgroundColor: Colors.transparent,
         leadingWidth: 70,
         leading: Padding(
-          padding: EdgeInsets.only(left: 17.0), // Adjust the left padding as needed
+          padding: const EdgeInsets.only(left: 17.0), // Adjust the left padding as needed
           child: GestureDetector(
             onTap: () {
               Navigator.pop(context);
@@ -870,11 +850,11 @@ class _WhislitsState extends State<Whislits> {
                       color: Colors.black.withOpacity(0.2), // Adjust the shadow color and opacity
                       spreadRadius: 2,
                       blurRadius: 6,
-                      offset: Offset(0, 3), // Change offset to your preference
+                      offset: const Offset(0, 3), // Change offset to your preference
                     ),
                   ],
                 ),
-                child: CircleAvatar(
+                child: const CircleAvatar(
                   radius: 23,
                   backgroundColor: Colors.white,
                   child: Icon(
@@ -905,18 +885,18 @@ class _WhislitsState extends State<Whislits> {
               ),
             ),
           ),
-          SizedBox(width: 25,),
+          const SizedBox(width: 25,),
         ],
       ),
       body: FutureBuilder<Map<String, dynamic>>(
         future: propertyDataFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No property data found.'));
+            return const Center(child: Text('No property data found.'));
           } else {
             Map<String, dynamic> propertyData = snapshot.data!;
             return Padding(
@@ -929,18 +909,18 @@ class _WhislitsState extends State<Whislits> {
                         Stack(
                           children: [
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
                               child: Container(
                                 height: 500,
                                 width: double.infinity,
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(35.0),
                                     topRight: Radius.circular(35.0),
                                   ),
                                 ),
                                 child: ClipRRect(
-                                  borderRadius: BorderRadius.only(
+                                  borderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(35.0),
                                     topRight: Radius.circular(35.0),
                                   ),
@@ -963,7 +943,7 @@ class _WhislitsState extends State<Whislits> {
                                         errorBuilder: (context, error, stackTrace) {
                                           return Container(
                                             color: Colors.grey,
-                                            child: Center(
+                                            child: const Center(
                                               child: Text(
                                                 'Failed to load image',
                                                 style: TextStyle(color: Colors.white),
@@ -986,10 +966,10 @@ class _WhislitsState extends State<Whislits> {
                               top: 40,
                               left: 80,
                               child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                                 child: Text(
                                   " ${propertyData['category']}",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black, // Text color
@@ -1001,14 +981,14 @@ class _WhislitsState extends State<Whislits> {
                               top: 10,
                               left: 100,
                               child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                                 decoration: BoxDecoration(
                                   color: ColorUtils.primaryColor(),
                                   borderRadius: BorderRadius.circular(20.0), // Border radius
                                 ),
                                 child: Text(
                                   " ${propertyData['subcategory']}", // Conditionally change text here
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 16,
                                     color: Colors.white, // Text color
                                   ),
@@ -1019,14 +999,14 @@ class _WhislitsState extends State<Whislits> {
                               bottom: 40,
                               left: 60,
                               child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                                 decoration: BoxDecoration(
                                   color: ColorUtils.primaryColor(),
                                   borderRadius: BorderRadius.circular(20.0), // Border radius
                                 ),
                                 child: Text(
                                   " ${propertyData['propertyType']}", // Conditionally change text here
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 16,
                                     color: Colors.white, // Text color
                                   ),
@@ -1038,7 +1018,7 @@ class _WhislitsState extends State<Whislits> {
                               left: 10,
                               child: Text(
                                 '${_currentImageIndex + 1} / ${propertyData['PropertyImages'].length}',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -1082,7 +1062,7 @@ class _WhislitsState extends State<Whislits> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           Icon(
                             Icons.location_on,
                             color: ColorUtils.primaryColor(),
@@ -1090,7 +1070,7 @@ class _WhislitsState extends State<Whislits> {
                           ),
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsets.only(left: 5),
+                              padding: const EdgeInsets.only(left: 5),
                               child: Text(
                                 " ${propertyData['addressLine']}",
                                 style: TextStyle(
@@ -1102,7 +1082,7 @@ class _WhislitsState extends State<Whislits> {
                               ),
                             ),
                           ),
-                          SizedBox(width: 30,),
+                          const SizedBox(width: 30,),
                           // Container(
                           //   padding: EdgeInsets.symmetric(horizontal: 20),
                           //   alignment: Alignment.centerRight,
@@ -1120,11 +1100,11 @@ class _WhislitsState extends State<Whislits> {
 
                         ],
                       ),
-                      SizedBox(height:1),
-                      Padding(
+                      const SizedBox(height:1),
+                      const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         child: Center(
-                          child: Container(
+                          child: SizedBox(
                             width: double.infinity,
                             child: Divider(
                               height: 15,
@@ -1133,7 +1113,7 @@ class _WhislitsState extends State<Whislits> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
           if (shouldDisplayBalconyAndBathroom()) ...[
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
@@ -1142,9 +1122,9 @@ class _WhislitsState extends State<Whislits> {
 
 
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                padding: const EdgeInsets.symmetric(horizontal: 10),
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                                   decoration: BoxDecoration(
                                     color: Colors.grey.withOpacity(0.2),
                                     borderRadius: BorderRadius.circular(20.0),
@@ -1156,12 +1136,12 @@ class _WhislitsState extends State<Whislits> {
                                         'assets/images/balcony.svg', // Path to balcony SVG asset
                                         width: 24,
                                         height: 24,
-                                        color: Color.fromRGBO(139, 200, 62, 1.0),
+                                        color: const Color.fromRGBO(139, 200, 62, 1.0),
                                       ),
-                                      SizedBox(width: 8),
+                                      const SizedBox(width: 8),
                                       Text(
                                         " ${propertyData['balcony'] } balcony",
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 16,
                                           color: Colors.black,
                                         ),
@@ -1171,9 +1151,9 @@ class _WhislitsState extends State<Whislits> {
                                 ),
                               ),
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              padding: const EdgeInsets.symmetric(horizontal: 10),
                               child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                                 decoration: BoxDecoration(
                                   color: Colors.grey.withOpacity(0.2),
                                   borderRadius: BorderRadius.circular(20.0),
@@ -1185,12 +1165,12 @@ class _WhislitsState extends State<Whislits> {
                                       'assets/images/BathRoom.svg', // Path to bathroom SVG asset
                                       width: 24,
                                       height: 24,
-                                      color: Color.fromRGBO(139, 200, 62, 1.0),
+                                      color: const Color.fromRGBO(139, 200, 62, 1.0),
                                     ),
-                                    SizedBox(width: 8),
+                                    const SizedBox(width: 8),
                                     Text(
                                       " ${propertyData['bathroom']} bathroom",
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 16,
                                         color: Colors.black,
                                       ),
@@ -1204,7 +1184,7 @@ class _WhislitsState extends State<Whislits> {
                         ),
                       ),
                       ],
-                      SizedBox(height:10),
+                      const SizedBox(height:10),
                       if (_currentPosition != null)
                         Padding(
                           padding: const EdgeInsets.only(left: 10.0, right: 10.0),
@@ -1230,7 +1210,7 @@ class _WhislitsState extends State<Whislits> {
                                 },
                                 markers: {
                                   Marker(
-                                    markerId: MarkerId('property_location'),
+                                    markerId: const MarkerId('property_location'),
                                     position: LatLng(
                                       double.tryParse(propertyData['latitude'] ?? '0.0') ?? 0.0,
                                       double.tryParse(propertyData['longitude'] ?? '0.0') ?? 0.0,
@@ -1255,12 +1235,12 @@ class _WhislitsState extends State<Whislits> {
                           children: [
                             // Displaying fetched amenities
                             Padding(
-                              padding: EdgeInsets.only(left: 10),
+                              padding: const EdgeInsets.only(left: 10),
                               child: Wrap(
                                 spacing: 10, // Adjust as needed for spacing between containers
                                 children: List.generate(amenities.length, (index) {
                                   return Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                                     decoration: BoxDecoration(
                                       color: ColorUtils.primaryColor(),
                                       borderRadius: BorderRadius.circular(10.0),
@@ -1268,7 +1248,7 @@ class _WhislitsState extends State<Whislits> {
                                     child: Center(
                                       child: Text(
                                         amenities[index], // Display each amenity here
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 16,
                                           color: Colors.white,
                                         ),
@@ -1499,7 +1479,7 @@ class _WhislitsState extends State<Whislits> {
                                       child: Row(
                                         children: propertyFacing.map((facing) {
                                           return Padding(
-                                            padding: EdgeInsets.all(10.0),
+                                            padding: const EdgeInsets.all(10.0),
                                             child: Container(
 
 
@@ -1704,19 +1684,19 @@ class _WhislitsState extends State<Whislits> {
                         ),
                       ),
 
-                      Text("Nearby Places:"),
+                      const Text("Nearby Places:"),
                       ...propertyData['nearbyPlaces'].map<Widget>((place) {
                         return Text("${place['place']} (${place['distance']} km)");
                       }).toList(),
-                      Text("Payment Rows:"),
+                      const Text("Payment Rows:"),
                       ...propertyData['paymentRows'].map<Widget>((payment) {
                         return Text("${payment['category']}: ${payment['amount']} (${payment['type']})");
                       }).toList(),
 
 
-                      ...propertyData['videos'].map<Widget>((video) {
-                        return VideoPlayerWidget(videoUrl: video);
-                      }).toList(),
+                      // ...propertyData['videos'].map<Widget>((video) {
+                      //   return VideoPlayerWidget(videoUrl: video);
+                      // }).toList(),
 
 
                     ],
@@ -1743,13 +1723,13 @@ class _WhislitsState extends State<Whislits> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
-                        margin: EdgeInsets.only(right: 8.0),
-                        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                        margin: const EdgeInsets.only(right: 8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                         decoration: BoxDecoration(
                           color: Colors.grey[800],
                           borderRadius: BorderRadius.circular(5.0),
                         ),
-                        child: Text('know more', style: TextStyle(color: Colors.white)),
+                        child: const Text('know more', style: TextStyle(color: Colors.white)),
                       ),
                       FloatingActionButton(backgroundColor: widget.customTeal,
                         heroTag: 'know more',
@@ -1768,18 +1748,18 @@ class _WhislitsState extends State<Whislits> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
-                        margin: EdgeInsets.only(right: 8.0),
-                        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                        margin: const EdgeInsets.only(right: 8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                         decoration: BoxDecoration(
                           color: Colors.grey[800],
                           borderRadius: BorderRadius.circular(5.0),
                         ),
-                        child: Text('chat support', style: TextStyle(color: Colors.white)),
+                        child: const Text('chat support', style: TextStyle(color: Colors.white)),
                       ),
                       FloatingActionButton(backgroundColor: widget.customTeal,
                         heroTag: 'chat support',
@@ -1798,18 +1778,18 @@ class _WhislitsState extends State<Whislits> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
-                        margin: EdgeInsets.only(right: 8.0),
-                        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                        margin: const EdgeInsets.only(right: 8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                         decoration: BoxDecoration(
                           color: Colors.grey[800],
                           borderRadius: BorderRadius.circular(5.0),
                         ),
-                        child: Text('share', style: TextStyle(color: Colors.white)),
+                        child: const Text('share', style: TextStyle(color: Colors.white)),
                       ),
                       FloatingActionButton(backgroundColor: widget.customTeal,
                         heroTag: 'share',
@@ -1861,65 +1841,65 @@ class _WhislitsState extends State<Whislits> {
 
 
 
-class VideoPlayerWidget extends StatefulWidget {
-  final String videoUrl;
-
-  VideoPlayerWidget({required this.videoUrl});
-
-  @override
-  _VideoPlayerWidgetState createState() => _VideoPlayerWidgetState();
-}
-
-class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
-  late VideoPlayerController _controller;
-  bool _isPlaying = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = VideoPlayerController.network(widget.videoUrl)
-      ..initialize().then((_) {
-        setState(() {});
-      });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _togglePlayback() {
-    setState(() {
-      if (_isPlaying) {
-        _controller.pause();
-      } else {
-        _controller.play();
-      }
-      _isPlaying = !_isPlaying;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        _controller.value.isInitialized
-            ? AspectRatio(
-          aspectRatio: _controller.value.aspectRatio,
-          child: VideoPlayer(_controller),
-        )
-            : Center(child: CircularProgressIndicator()),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            IconButton(
-              icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
-              onPressed: _togglePlayback,
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
+// class VideoPlayerWidget extends StatefulWidget {
+//   final String videoUrl;
+//
+//   const VideoPlayerWidget({super.key, required this.videoUrl});
+//
+//   @override
+//   _VideoPlayerWidgetState createState() => _VideoPlayerWidgetState();
+// }
+//
+// class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
+//   late VideoPlayerController _controller;
+//   bool _isPlaying = false;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     // _controller = VideoPlayerController.network(widget.videoUrl)
+//     //   ..initialize().then((_) {
+//     //     setState(() {});
+//     //   });
+//   }
+//
+//   @override
+//   void dispose() {
+//     _controller.dispose();
+//     super.dispose();
+//   }
+//
+//   void _togglePlayback() {
+//     setState(() {
+//       if (_isPlaying) {
+//         _controller.pause();
+//       } else {
+//         _controller.play();
+//       }
+//       _isPlaying = !_isPlaying;
+//     });
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       children: <Widget>[
+//         _controller.value.isInitialized
+//             ? AspectRatio(
+//           aspectRatio: _controller.value.aspectRatio,
+//           child: VideoPlayer(_controller),
+//         )
+//             : const Center(child: CircularProgressIndicator()),
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: <Widget>[
+//             IconButton(
+//               icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
+//               onPressed: _togglePlayback,
+//             ),
+//           ],
+//         ),
+//       ],
+//     );
+//   }
+// }

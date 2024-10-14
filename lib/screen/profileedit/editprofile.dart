@@ -9,6 +9,8 @@ import 'package:spaceships/Common/Widgets/app_bar.dart';
 import 'package:spaceships/colorcode.dart';
 import '../../Common/Constants/color_helper.dart';
 class EditProfileScreen extends StatefulWidget {
+  const EditProfileScreen({super.key});
+
   @override
   _EditProfileScreenState createState() => _EditProfileScreenState();
 }
@@ -31,9 +33,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<void> getUser() async {
     try {
-      User? _user = FirebaseAuth.instance.currentUser;
-      if (_user != null) {
-        DocumentSnapshot userData = await FirebaseFirestore.instance.collection('users').doc(_user.uid).get();
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        DocumentSnapshot userData = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
         if (userData.exists) {
           setState(() {
             _userName = userData['name'];
@@ -80,7 +82,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           });
 
           // Show SnackBar message
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text("Profile picture updated successfully"),
           ));
         }
@@ -126,7 +128,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     child: _userImage.isEmpty
                         ? Text(
                       _userName.isNotEmpty ? _userName[0].toUpperCase() : 'hi',
-                      style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
                     )
                         : null,
                   ),
@@ -139,13 +141,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       },
                       child: CircleAvatar(
                         maxRadius: 17,
-                        backgroundColor: Theme.of(context).colorScheme.background,
+                        backgroundColor: Theme.of(context).colorScheme.surface,
                         child: CircleAvatar(
                           maxRadius: 15,
                           child: Icon(
                             Icons.edit_rounded,
                             size: 17,
-                            color: Theme.of(context).colorScheme.background,
+                            color: Theme.of(context).colorScheme.surface,
                           ),
                         ),
                       ),
@@ -174,7 +176,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 focusedBorder: GradientOutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     colors: [ColorCodes.green, ColorCodes.teal],
                   ),
                   width: 2,
@@ -208,7 +210,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 focusedBorder: GradientOutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     colors: [ColorCodes.green, ColorCodes.teal],
                   ),
                   width: 2,
@@ -236,7 +238,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 focusedBorder: GradientOutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     colors: [ColorCodes.green, ColorCodes.teal],
                   ),
                   width: 2,
@@ -245,7 +247,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
 
-         SizedBox(height: 80,),
+         const SizedBox(height: 80,),
             Center(
               child: SizedBox(
                 width: 200, // Set your desired width
@@ -264,25 +266,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           // Update the 'createdAt' field with the current timestamp
                           'createdAt': FieldValue.serverTimestamp(),
                         });
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Profile updated successfully"),
                         ));
                       } catch (e) {
                         print("Error updating profile: $e");
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Failed to update profile"),
                         ));
                       }
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text("User not logged in"),
                       ));
                     }
                   },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(   ColorUtils.primaryColor(),), // Set button color
+                    backgroundColor: WidgetStateProperty.all<Color>(   ColorUtils.primaryColor(),), // Set button color
                   ),
-                  child: Text("Save",style: TextStyle(color: Colors.white),),
+                  child: const Text("Save",style: TextStyle(color: Colors.white),),
                 ),
               ),
             ),

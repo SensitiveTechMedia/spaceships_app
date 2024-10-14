@@ -143,22 +143,24 @@ class PropertyModel {
 }
 
 class SearchScreen extends StatefulWidget {
+  const SearchScreen({super.key});
+
   @override
   _SearchScreenState createState() => _SearchScreenState();
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   List<PropertyModel> actualProperties = [];
   List<PropertyModel> filteredProperties = [];
-  Color customTeal = Color(0xFF8F00FF);
-  FocusNode _searchFocusNode = FocusNode();
+  Color customTeal = const Color(0xFF8F00FF);
+  final FocusNode _searchFocusNode = FocusNode();
   int _selectedIndex = 1;
   @override
   void initState() {
     super.initState();
     _fetchProperties();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       // Delay setting focus until after the widget has been built
       FocusScope.of(context).requestFocus(_searchFocusNode);
     });
@@ -193,14 +195,14 @@ class _SearchScreenState extends State<SearchScreen> {
     // Navigate to WishlistScreen
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => WishlistScreen()),
+      MaterialPageRoute(builder: (context) => const WishlistScreen()),
     );
   }
   void _navigateToSearchScreen(BuildContext context) {
     // Navigate to WishlistScreen
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SearchScreen()),
+      MaterialPageRoute(builder: (context) => const SearchScreen()),
     );
   }
   void navigateToProfileScreen (BuildContext context) {
@@ -214,7 +216,7 @@ class _SearchScreenState extends State<SearchScreen> {
     // Navigate to HomeScreen
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => HomeScreen(username: '')),
+      MaterialPageRoute(builder: (context) => const HomeScreen(username: '')),
     );
   }
   void _clearSearch() {
@@ -228,7 +230,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60.0),
+        preferredSize: const Size.fromHeight(60.0),
         child: Container(
           decoration: BoxDecoration(
             boxShadow: [
@@ -236,19 +238,19 @@ class _SearchScreenState extends State<SearchScreen> {
                 color: Colors.grey.withOpacity(0.6),
                 spreadRadius: 12,
                 blurRadius: 8,
-                offset: Offset(0, 3), // changes position of shadow
+                offset: const Offset(0, 3), // changes position of shadow
               ),
             ],
           ),
           child: AppBar(
             backgroundColor: ColorUtils.primaryColor(),
-            iconTheme: IconThemeData(color: Colors.white),
-            title: Text("Search Property",style: TextStyle(color: Colors.white),),
+            iconTheme: const IconThemeData(color: Colors.white),
+            title: const Text("Search Property",style: TextStyle(color: Colors.white),),
 
 
             actions: [
               IconButton(
-                icon: Icon(Icons.tune, color: Colors.white,),
+                icon: const Icon(Icons.tune, color: Colors.white,),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -269,7 +271,7 @@ class _SearchScreenState extends State<SearchScreen> {
           child: Column(
 
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [ SizedBox(height: 20,),
+            children: [ const SizedBox(height: 20,),
               TextFormField(
                 focusNode: _searchFocusNode,
                 controller: _searchController,
@@ -281,33 +283,33 @@ class _SearchScreenState extends State<SearchScreen> {
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  prefixIcon: Icon(Icons.search),
+                  prefixIcon: const Icon(Icons.search),
                   suffixIcon: _searchController.text.isNotEmpty
                       ? IconButton(
-                    icon: Icon(Icons.clear),
+                    icon: const Icon(Icons.clear),
                     onPressed: _clearSearch,
                   )
                       : null,
                   hintText: 'Search Property',
                 ),
               ),
-              SizedBox(height: 10.0),
+              const SizedBox(height: 10.0),
           Expanded(
             child: ListView.builder(
               itemCount: filteredProperties.length,
               itemBuilder: (context, index) {
                 PropertyModel property = filteredProperties[index];
                 return ListTile(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
                   title: Container(
                     height: 150,
                     decoration: BoxDecoration(
-                      color: Color.fromRGBO(160, 161, 164, 1000),
+                      color: const Color.fromRGBO(160, 161, 164, 1000),
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                     child: Row(
                       children: [
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Stack(
                           children: [
                             Container(
@@ -318,7 +320,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 color: Colors.grey,
                               ),
                               child: property.propertyImages.isEmpty
-                                  ? Center(child: Icon(Icons.image, size: 50))
+                                  ? const Center(child: Icon(Icons.image, size: 50))
                                   : Stack(
                                 fit: StackFit.expand,
                                 children: [
@@ -340,7 +342,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                         }
                                       },
                                       errorBuilder: (context, error, stackTrace) {
-                                        return Center(child: Icon(Icons.error));
+                                        return const Center(child: Icon(Icons.error));
                                       },
                                     ),
                                   ),
@@ -356,24 +358,24 @@ class _SearchScreenState extends State<SearchScreen> {
                                 height: 20,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5),
-                                  color: Color.fromRGBO(143, 0, 255, 0.55),
+                                  color: const Color.fromRGBO(143, 0, 255, 0.55),
                                 ),
                                 child: Center(
                                   child: Text(
                                     property.propertyType,
-                                    style: TextStyle(color: Colors.white, fontSize: 14),
+                                    style: const TextStyle(color: Colors.white, fontSize: 14),
                                   ),
                                 ),
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(width: 15.0),
+                        const SizedBox(width: 15.0),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: 20),
+                              const SizedBox(height: 20),
                               FittedBox(
                                 fit: BoxFit.scaleDown,
                                 child: Text(
@@ -385,7 +387,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 4.0),
+                              const SizedBox(height: 4.0),
                               Row(
                                 children: [
                                   Icon(
@@ -405,7 +407,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 20.0),
+                              const SizedBox(height: 20.0),
 
                             ],
                           ),
@@ -428,10 +430,10 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       ),
       bottomNavigationBar: Container(
-        color: Color.fromRGBO(143, 0, 255, 1.0),
+        color: const Color.fromRGBO(143, 0, 255, 1.0),
         height: 55,
         child: FlashyTabBar(
-          backgroundColor: Color.fromRGBO(143, 0, 255, 1.0).withOpacity(0),
+          backgroundColor: const Color.fromRGBO(143, 0, 255, 1.0).withOpacity(0),
           selectedIndex: _selectedIndex,
           showElevation: true,
           onItemSelected: (index) {
@@ -472,7 +474,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 color: Colors.white,
               ),
               // inactiveColor: Colors.white,
-              title: Text(""),
+              title: const Text(""),
               activeColor: Colors.white,
 
             ),
@@ -484,7 +486,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 color: Colors.white,
               ),
               inactiveColor: Colors.white,
-              title: Text(""),
+              title: const Text(""),
 
             ),
             FlashyTabBarItem(
@@ -496,7 +498,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 color: Colors.white,
               ),
               inactiveColor: Colors.white,
-              title: Text(""),
+              title: const Text(""),
 
             ),
             FlashyTabBarItem(
@@ -509,7 +511,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               inactiveColor: Colors.white,
 
-              title: Text(""),
+              title: const Text(""),
 
             ),
           ],

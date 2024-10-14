@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 
 class ColorUtils {
   static Color primaryColor() {
-    return Color.fromRGBO(143, 0, 255, 1.0); // RGB: (143, 0, 255), alpha: 1.0 (fully opaque)
+    return const Color.fromRGBO(143, 0, 255, 1.0); // RGB: (143, 0, 255), alpha: 1.0 (fully opaque)
   }
   static Color rolor() {
     int r = 236;
@@ -22,7 +22,7 @@ class ColorUtils {
 }
 class ColorPalette {
   static Color sColor() {
-    return Color.fromRGBO(143, 0, 255, 1.0); // RGB: (143, 0, 255), alpha: 1.0 (fully opaque)
+    return const Color.fromRGBO(143, 0, 255, 1.0); // RGB: (143, 0, 255), alpha: 1.0 (fully opaque)
   }
   static Color rolor() {
     int r = 236;

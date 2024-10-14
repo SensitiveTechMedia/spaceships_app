@@ -2,14 +2,11 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:spaceships/colorcode.dart';
-import 'package:spaceships/jvproperty/Agents%20Corner.dart';
 import 'package:spaceships/jvproperty/addpropertyjvproperties.dart';
 import 'package:spaceships/jvproperty/jv%20properties.dart';
 import 'package:spaceships/jvproperty/propertyinventory.dart';
@@ -27,12 +24,12 @@ import 'package:spaceships/screen/wishlistfilter/whislist%20screen.dart';
 import 'propertyview.dart';
 class HomeScreen extends StatefulWidget {
   final String username;
-  HomeScreen({Key? key, required this.username}) : super(key: key);
+  const HomeScreen({super.key, required this.username});
   @override
   _TestScreenState createState() => _TestScreenState();
 }
 class _TestScreenState extends State<HomeScreen> with TickerProviderStateMixin {
-  Color customTeal = Color(0xFF8F00FF);
+  Color customTeal = const Color(0xFF8F00FF);
   late TabController _tabController;
   User? user = FirebaseAuth.instance.currentUser;
   List<String> cat = ["Flat", "Villa", "Plot", "Commercial Space"];
@@ -72,7 +69,7 @@ class _TestScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   String areaType = "";
 bool featuredStatus = false;
   int _selecteIndex = 0;
-  int _selecteddIndex = 0;
+  final int _selecteddIndex = 0;
   int _seletedIndex = 0;
   String floorNumber = "";
   String balcony = "";
@@ -204,7 +201,7 @@ bool featuredStatus = false;
     return banners;
   }
   void _startAutoScroll() {
-    _timer = Timer.periodic(Duration(seconds: 3), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
       if (_pageController.hasClients) {
         int nextPage = _pageController.page?.toInt() ?? _pageController.initialPage;
         if (nextPage == (_pageController.positions.first.maxScrollExtent / MediaQuery.of(context).size.width).round()) {
@@ -212,18 +209,19 @@ bool featuredStatus = false;
           _pageController.jumpToPage(nextPage);
         } else {
           _pageController.nextPage(
-            duration: Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 300),
             curve: Curves.easeIn,
           );
         }
       }
     });
   }
+
   void _navigateToSearchScreen(BuildContext context) {
 
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SearchScreen(
+      MaterialPageRoute(builder: (context) => const SearchScreen(
 
 
       ),),);
@@ -232,18 +230,16 @@ bool featuredStatus = false;
   Future<void> fetchUserDetails() async {
     try {
       _user = FirebaseAuth.instance.currentUser!;
-      if (_user != null) {
-        final userData = await FirebaseFirestore.instance.collection('users').doc(_user.uid).get();
-        if (userData.exists) {
-          setState(() {
-            _userName = userData['name'];
-            _usermobile = userData['number'];
-            _userEmail = userData['email'];
-            _userImage = userData['profile_picture'];
-          });
-        }
+      final userData = await FirebaseFirestore.instance.collection('users').doc(_user.uid).get();
+      if (userData.exists) {
+        setState(() {
+          _userName = userData['name'];
+          _usermobile = userData['number'];
+          _userEmail = userData['email'];
+          _userImage = userData['profile_picture'];
+        });
       }
-    } catch (e) {
+        } catch (e) {
       print("Error fetching user data: $e");
     }
   }
@@ -266,7 +262,7 @@ bool featuredStatus = false;
     // Navigate to WishlistScreen
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => WishlistScreen()),
+      MaterialPageRoute(builder: (context) => const WishlistScreen()),
     );
   }
   void navigateToProfileScreen (BuildContext context) {
@@ -328,7 +324,7 @@ bool featuredStatus = false;
       List<String> parkingType = [];
       List<int> carParkingCount = [];
       List<int> bikeParkingCount = [];
-      querySnapshot.docs.forEach((doc) {
+      for (var doc in querySnapshot.docs) {
         List<dynamic>? imageUrls = doc['PropertyImages'];
         List<dynamic>? videoUrls = doc['videos'];
 
@@ -400,7 +396,7 @@ bool featuredStatus = false;
         }
 
 
-      });
+      }
 
       setState(() {
         filteredcategory = category;
@@ -453,28 +449,26 @@ bool featuredStatus = false;
     }
   }
   void _navigateToSellCategory() {
-    if (context != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => JvAddProperty(),
-        ),
-      );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const JvAddProperty(),
+      ),
+    );
     }
-  }
   void _showLogoutBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
         return Container(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           height: 200,
           child: Column(
 
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text('Are you sure you want to logout?', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              SizedBox(height: 20),
+              const Text('Are you sure you want to logout?', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
@@ -482,7 +476,7 @@ bool featuredStatus = false;
                     decoration: BoxDecoration(
                       color: ColorUtils.primaryColor(),
                       borderRadius: BorderRadius.circular(5),
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           color: Colors.black26,
                           offset: Offset(0, 2),
@@ -498,19 +492,19 @@ bool featuredStatus = false;
                       onPressed: () {
                         _signOut().then((value) => Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (context) => LoginOptionScreen()),
+                          MaterialPageRoute(builder: (context) => const LoginOptionScreen()),
                               (route) => false,
                         ));
                       },
-                      child: Text('Logout'),
+                      child: const Text('Logout'),
                     ),
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Container(
                     decoration: BoxDecoration(
                       color: ColorUtils.primaryColor(),
                       borderRadius: BorderRadius.circular(5),
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           color: Colors.black26,
                           offset: Offset(0, 2),
@@ -526,13 +520,13 @@ bool featuredStatus = false;
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: Text('Cancel'),
+                      child: const Text('Cancel'),
                     ),
                   ),
                 ],
               ),
-              Divider(thickness: 0.5),
-              Row(
+              const Divider(thickness: 0.5),
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Column(
@@ -569,7 +563,7 @@ bool featuredStatus = false;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
       builder: (context) => StatefulBuilder(
@@ -588,14 +582,14 @@ bool featuredStatus = false;
                   Align(
                     alignment: Alignment.topRight,
                     child: IconButton(
-                      icon: Icon(Icons.close),
+                      icon: const Icon(Icons.close),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
                     ),
                   ),
-                  Text('Enter Given Details for $title', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 15),
+                  Text('Enter Given Details for $title', style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 15),
                   DropdownButtonFormField<String>(
                     value: selectedPropertyType,
                     decoration: InputDecoration(
@@ -614,7 +608,7 @@ bool featuredStatus = false;
                       });
                     },
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   TextField(
                     controller: nameController,
                     decoration: InputDecoration(
@@ -622,7 +616,7 @@ bool featuredStatus = false;
                       labelText: 'Name',
                     ),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   TextField(
                     controller: mobileController,
                     decoration: InputDecoration(
@@ -631,7 +625,7 @@ bool featuredStatus = false;
                     ),
                     keyboardType: TextInputType.phone,
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   TextField(
                     controller: commentController,
                     decoration: InputDecoration(
@@ -640,7 +634,7 @@ bool featuredStatus = false;
                     ),
                     maxLines: 3,
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   _isLoading
                       ? Container(     child: LoadingAnimationWidget.stretchedDots(
                     color: ColorUtils.primaryColor(),
@@ -687,27 +681,27 @@ bool featuredStatus = false;
                                 _isLoading = false; // Stop loading on error
                               });
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
+                                const SnackBar(
                                   content: Text('Error submitting details'),
                                 ),
                               );
                             }
                           },
                           style: ButtonStyle(
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                             ),
-                            backgroundColor: MaterialStateProperty.all<Color>(ColorUtils.primaryColor()),
-                            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                            backgroundColor: WidgetStateProperty.all<Color>(ColorUtils.primaryColor()),
+                            foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
                           ),
-                          child: Text('Submit', style: TextStyle(fontSize: 20)),
+                          child: const Text('Submit', style: TextStyle(fontSize: 20)),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                 ],
               ),
             ),
@@ -743,7 +737,7 @@ bool featuredStatus = false;
 
   Future<bool> onWillPop() {
     DateTime now = DateTime.now();
-    if (currentBackPressTime == null || now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
+    if (currentBackPressTime == null || now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
       currentBackPressTime = now;
       Fluttertoast.showToast(msg: "Double Tap to Exit");
       return Future.value(false);
@@ -768,7 +762,7 @@ bool featuredStatus = false;
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     Padding(
                       padding: const EdgeInsets.only(left: 10.0, right: 10),
                       child: Container(
@@ -789,17 +783,17 @@ bool featuredStatus = false;
                                     borderRadius: BorderRadius.circular(5),
                                   ),
                                 ),
-                                child: Text('Sell',style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
+                                child: const Text('Sell',style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
       
                               ),
                             ),
-                            SizedBox(width: 5), // Adjust the width between buttons
+                            const SizedBox(width: 5), // Adjust the width between buttons
                             Expanded(
                               child: ElevatedButton(
                                 onPressed: () {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 0,selecteddIndex: 1,)),
+                                    MaterialPageRoute(builder: (context) => const AllPage(selecteIndex: 0,selecteddIndex: 1,)),
                                   );
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -808,16 +802,16 @@ bool featuredStatus = false;
                                     borderRadius: BorderRadius.circular(5),
                                   ),
                                 ),
-                                child: Text('Buy',style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
+                                child: const Text('Buy',style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
                               ),
                             ),
-                            SizedBox(width: 5), // Adjust the width between buttons
+                            const SizedBox(width: 5), // Adjust the width between buttons
                             Expanded(
                               child: ElevatedButton(
                                 onPressed: () {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 0,selecteddIndex: 2,)),
+                                    MaterialPageRoute(builder: (context) => const AllPage(selecteIndex: 0,selecteddIndex: 2,)),
                                   );
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -826,16 +820,16 @@ bool featuredStatus = false;
                                     borderRadius: BorderRadius.circular(5),
                                   ),
                                 ),
-                                child: Text('Rent',style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
+                                child: const Text('Rent',style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
                               ),
                             ),
-                            SizedBox(width: 5), // Adjust the width between buttons
+                            const SizedBox(width: 5), // Adjust the width between buttons
                             Expanded(
                               child: ElevatedButton(
                                 onPressed: () {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 0, selecteddIndex: 3,)),
+                                    MaterialPageRoute(builder: (context) => const AllPage(selecteIndex: 0, selecteddIndex: 3,)),
                                   );
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -844,21 +838,21 @@ bool featuredStatus = false;
                                     borderRadius: BorderRadius.circular(5),
                                   ),
                                 ),
-                                child: Text('Lease',style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
+                                child: const Text('Lease',style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
                               ),
                             ),
                           ],
                         ),
                       ),
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10.0), // Adjust horizontal padding as needed
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0), // Adjust horizontal padding as needed
                       child: GestureDetector(
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => SearchScreen()),
+                            MaterialPageRoute(builder: (context) => const SearchScreen()),
                           );
                         },
                         child: TextFormField(
@@ -866,7 +860,7 @@ bool featuredStatus = false;
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => SearchScreen()),
+                              MaterialPageRoute(builder: (context) => const SearchScreen()),
                             );
                           },
                           decoration: InputDecoration(
@@ -881,7 +875,7 @@ bool featuredStatus = false;
                               onTap: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => SearchScreen()),
+                                  MaterialPageRoute(builder: (context) => const SearchScreen()),
                                 );
                               },
                               child: Icon(Icons.search, color: ColorUtils.primaryColor()),
@@ -910,15 +904,15 @@ bool featuredStatus = false;
                                 ],
                               ),
                             ),
-                            constraints: BoxConstraints(maxHeight: 80, maxWidth: double.infinity), // Ensure it takes full width
-                            contentPadding: EdgeInsets.only(top: 10),
+                            constraints: const BoxConstraints(maxHeight: 80, maxWidth: double.infinity), // Ensure it takes full width
+                            contentPadding: const EdgeInsets.only(top: 10),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(color: Colors.blue),
+                              borderSide: const BorderSide(color: Colors.blue),
                               // borderSide: BorderSide.none,
                             ),
                             hintText: 'Search House, Apartment, etc',
-                            hintStyle: TextStyle(
+                            hintStyle: const TextStyle(
                               fontWeight: FontWeight.w300,
                               fontSize: 14,
                               color: Colors.black,
@@ -941,7 +935,7 @@ bool featuredStatus = false;
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -958,43 +952,43 @@ bool featuredStatus = false;
                               case 0:
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 1,selecteddIndex: 0,)),
+                                  MaterialPageRoute(builder: (context) => const AllPage(selecteIndex: 1,selecteddIndex: 0,)),
                                 );
                                 break;
                               case 1:
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 2,selecteddIndex: 0,)),
+                                  MaterialPageRoute(builder: (context) => const AllPage(selecteIndex: 2,selecteddIndex: 0,)),
                                 );
                                 break;
                               case 2:
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 3,selecteddIndex: 0,)),
+                                  MaterialPageRoute(builder: (context) => const AllPage(selecteIndex: 3,selecteddIndex: 0,)),
                                 );
                                 break;
                               case 3:
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 4,selecteddIndex: 0,)),
+                                  MaterialPageRoute(builder: (context) => const AllPage(selecteIndex: 4,selecteddIndex: 0,)),
                                 );
                                 break;
                               case 4:
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 5,selecteddIndex: 0,)),
+                                  MaterialPageRoute(builder: (context) => const AllPage(selecteIndex: 5,selecteddIndex: 0,)),
                                 );
                                 break;
                               case 5:
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 6,selecteddIndex: 0,)),
+                                  MaterialPageRoute(builder: (context) => const AllPage(selecteIndex: 6,selecteddIndex: 0,)),
                                 );
                                 break;
                               case 6:
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => AllPage(selecteIndex: 7,selecteddIndex: 0,)),
+                                  MaterialPageRoute(builder: (context) => const AllPage(selecteIndex: 7,selecteddIndex: 0,)),
                                 );
                                 break;
       
@@ -1003,7 +997,7 @@ bool featuredStatus = false;
                             }
                           },
                           child: Padding(
-                            padding: EdgeInsets.all(3.0),
+                            padding: const EdgeInsets.all(3.0),
                             child: Container(
                               width: 100, // Fixed width
                               height: 80, // Fixed height
@@ -1017,7 +1011,7 @@ bool featuredStatus = false;
                                   width: 1, // Adjust border width as needed
                                 ),
                               ),
-                              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -1033,7 +1027,7 @@ bool featuredStatus = false;
                                         : Icons.villa,
                                     color: isSelected ? customTeal : customTeal,
                                   ),
-                                  SizedBox(height: 5), // Added space between icon and text
+                                  const SizedBox(height: 5), // Added space between icon and text
                                   Text(
                                     cate[index],
                                     style: TextStyle(
@@ -1066,13 +1060,13 @@ bool featuredStatus = false;
                 }
       
                 if (snapshot.hasError) {
-                  return Center(child: Text('Error fetching data'));
+                  return const Center(child: Text('Error fetching data'));
                 }
       
                 final banners = snapshot.data;
       
                 if (banners == null || banners.isEmpty) {
-                  return Center(child: Text('No banners available'));
+                  return const Center(child: Text('No banners available'));
                 }
       
                 return Padding(
@@ -1088,7 +1082,7 @@ bool featuredStatus = false;
                           color: Colors.grey.withOpacity(0.5),
                           spreadRadius: 2,
                           blurRadius: 5,
-                          offset: Offset(0, 3),
+                          offset: const Offset(0, 3),
                         ),
                       ],
                     ),
@@ -1138,7 +1132,7 @@ bool featuredStatus = false;
             ),
       
       
-      SizedBox(
+      const SizedBox(
         height: 10,
       ),
                 Container(height: 15,
@@ -1150,15 +1144,15 @@ bool featuredStatus = false;
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Row(
                       children: [
-                        Text(
+                        const Text(
                           'Property Services',
                           style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
                         ),
-                        Spacer(), // Adds space between "Property Services" and "View All"
+                        const Spacer(), // Adds space between "Property Services" and "View All"
                         GestureDetector(
                           onTap: () {
                             // Navigate to the next page here
-                            Navigator.push(context, MaterialPageRoute(builder: (context) =>Propertyservices()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) =>const Propertyservices()));
                           },
                           child: Row(
                             children: [
@@ -1182,7 +1176,7 @@ bool featuredStatus = false;
                 Container(height: 10,
             color: Theme.of(context).colorScheme.onPrimary,
           ),
-          SizedBox(height: 1,),
+          const SizedBox(height: 1,),
           Container(
            color: Theme.of(context).colorScheme.onPrimary,
             child: Padding(
@@ -1196,7 +1190,7 @@ bool featuredStatus = false;
                         onTap: () {
                       _showModalBottomSheet(topic["text"]);
                     },
-                    child: Container(
+                    child: SizedBox(
                       width: 100, // Adjust the width as needed
                       child: Column(
                         children: <Widget>[
@@ -1215,13 +1209,13 @@ bool featuredStatus = false;
                               ),
                             ),
                           ),
-                          SizedBox(height: 4), // Adjust vertical spacing as needed
+                          const SizedBox(height: 4), // Adjust vertical spacing as needed
                           Text(
                             topic["text"],
                             maxLines: isSingleLine ? 1 : 4, // Show single line if text is short, otherwise allow 2 lines
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis, // Use ellipsis if text overflows
-                            style: TextStyle(fontSize: 13,  height: 1.3,),
+                            style: const TextStyle(fontSize: 13,  height: 1.3,),
                           ),
                         ],
                       ),
@@ -1238,13 +1232,13 @@ bool featuredStatus = false;
                 ),
       
       
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         'Featured Properties',
                         style: TextStyle(   color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
                       ),
@@ -1253,7 +1247,7 @@ bool featuredStatus = false;
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => Featured()),
+                            MaterialPageRoute(builder: (context) => const Featured()),
                           );
                         },
                         child: Padding(
@@ -1271,8 +1265,8 @@ bool featuredStatus = false;
                     ],
                   ),
                 ),
-                SizedBox(height:5),
-                Container(
+                const SizedBox(height:5),
+                SizedBox(
                   height: 150, // Adjust height according to your content
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
@@ -1283,7 +1277,7 @@ bool featuredStatus = false;
                   ),
                 ),
       
-                SizedBox(height: 25),
+                const SizedBox(height: 25),
       
       
       
@@ -1299,7 +1293,7 @@ bool featuredStatus = false;
                             color: Colors.black.withOpacity(0.1), // Shadow color with opacity
                             spreadRadius: 1, // How far the shadow spreads
                             // Softening effect
-                            offset: Offset(0, 0), // Horizontal and vertical offsets
+                            offset: const Offset(0, 0), // Horizontal and vertical offsets
                           ),
                         ],
                         border: Border.all(
@@ -1322,9 +1316,9 @@ bool featuredStatus = false;
                                   height: 40,
                                   decoration: BoxDecoration(
                                     color: ColorUtils.primaryColor(),
-                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0),topRight: Radius.circular(10.0),),
+                                    borderRadius: const BorderRadius.only(topLeft: Radius.circular(10.0),topRight: Radius.circular(10.0),),
                                   ),
-                                  child: Row(
+                                  child: const Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
@@ -1342,53 +1336,53 @@ bool featuredStatus = false;
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Row(
                                   children: [
-                                    SizedBox(width: 14),
+                                    const SizedBox(width: 14),
                                     SvgPicture.asset("assets/images/tick.svg"),
-                                    SizedBox(width: 4),
-                                    Text("Publish your property for FREE"),
+                                    const SizedBox(width: 4),
+                                    const Text("Publish your property for FREE"),
                                   ],
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Row(
                                   children: [
-                                    SizedBox(width: 14),
+                                    const SizedBox(width: 14),
                                     SvgPicture.asset("assets/images/tick.svg"),
-                                    SizedBox(width: 4),
-                                    Text("Get Verified Tenant / Buyers"),
+                                    const SizedBox(width: 4),
+                                    const Text("Get Verified Tenant / Buyers"),
                                   ],
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Row(
                                   children: [
-                                    SizedBox(width: 14),
+                                    const SizedBox(width: 14),
                                     SvgPicture.asset("assets/images/tick.svg"),
-                                    SizedBox(width: 4),
-                                    Text("Showcase your property Instantly to public"),
+                                    const SizedBox(width: 4),
+                                    const Text("Showcase your property Instantly to public"),
                                   ],
                                 ),
-                                SizedBox(height: 5),
+                                const SizedBox(height: 5),
                                 Row(
                                   children: [
-                                    Spacer(), // Pushes the button to the right
+                                    const Spacer(), // Pushes the button to the right
                                     ElevatedButton(
                                       onPressed: () {
                                         Navigator.push(
                                           context,
-                                          MaterialPageRoute(builder: (context) => AddPropert()),
+                                          MaterialPageRoute(builder: (context) => const AddPropert()),
                                         );
                                       },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.white,
-                                        shape: RoundedRectangleBorder(
+                                        shape: const RoundedRectangleBorder(
                                           borderRadius: BorderRadius.only(
                                             topLeft: Radius.circular(0.0),
                                             bottomRight: Radius.circular(10),
                                           ),
                                         ),
-                                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                                         shadowColor: Colors.white, // Add shadow color
                                         elevation: 0, // Adjust elevation as needed
                                       ),
@@ -1398,7 +1392,7 @@ bool featuredStatus = false;
                                             Icons.add_circle,
                                             color: ColorUtils.primaryColor(),
                                           ),
-                                          SizedBox(width: 10),
+                                          const SizedBox(width: 10),
                                           Text(
                                             "Post your property",
                                             style: TextStyle(
@@ -1421,7 +1415,7 @@ bool featuredStatus = false;
                   ),
                 ),
       
-                SizedBox(height: 0),
+                const SizedBox(height: 0),
               ],
             ),
       
@@ -1431,10 +1425,10 @@ bool featuredStatus = false;
           ),
         ),
         bottomNavigationBar: Container(
-          color: Color.fromRGBO(143, 0, 255, 1.0),
+          color: const Color.fromRGBO(143, 0, 255, 1.0),
           height: 55,
           child: FlashyTabBar(
-            backgroundColor: Color.fromRGBO(143, 0, 255, 1.0).withOpacity(0),
+            backgroundColor: const Color.fromRGBO(143, 0, 255, 1.0).withOpacity(0),
             selectedIndex: _seletedIndex,
             showElevation: true,
             onItemSelected: (index) {
@@ -1469,7 +1463,7 @@ bool featuredStatus = false;
                   color: Colors.white,
                 ),
                 // inactiveColor: Colors.white,
-                title: Text(""),
+                title: const Text(""),
                 activeColor: Colors.white,
       
               ),
@@ -1481,7 +1475,7 @@ bool featuredStatus = false;
                   color: Colors.white,
                 ),
                 inactiveColor: Colors.white,
-                title: Text(""),
+                title: const Text(""),
       
               ),
               FlashyTabBarItem(
@@ -1493,7 +1487,7 @@ bool featuredStatus = false;
                   color: Colors.white,
                 ),
                 inactiveColor: Colors.white,
-                title: Text(""),
+                title: const Text(""),
       
               ),
               FlashyTabBarItem(
@@ -1506,7 +1500,7 @@ bool featuredStatus = false;
                 ),
                 inactiveColor: Colors.white,
       
-                title: Text(""),
+                title: const Text(""),
       
               ),
             ],
@@ -1524,7 +1518,7 @@ bool featuredStatus = false;
 
     // Check if index is out of range for featured properties
     if (index >= featuredIndices.length) {
-      return Container(
+      return const SizedBox(
         height: 100,
         child: Center(
           child: Text(' '),
@@ -1630,9 +1624,9 @@ bool featuredStatus = false;
         );
       },
       child: Container(
-        padding: EdgeInsets.only(left: 10, right: 0),
+        padding: const EdgeInsets.only(left: 10, right: 0),
         width: 280,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(35.0),
             topRight: Radius.circular(35.0),
@@ -1649,7 +1643,7 @@ bool featuredStatus = false;
                   image: NetworkImage(imageUrl),
                   fit: BoxFit.cover,
                 ),
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(35.0),
                   topRight: Radius.circular(35.0),
                   bottomLeft: Radius.circular(1),
@@ -1661,7 +1655,7 @@ bool featuredStatus = false;
             Container(
               decoration: BoxDecoration(
                 color: Colors.black.withOpacity(0.45),
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(35.0),
                   topRight: Radius.circular(35.0),
                   bottomLeft: Radius.circular(1),
@@ -1674,8 +1668,8 @@ bool featuredStatus = false;
               left: 0,
               right: 0,
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 2, horizontal: 10),
-                decoration: BoxDecoration(
+                padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+                decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(0),
                     bottomRight: Radius.circular(15),
@@ -1683,7 +1677,7 @@ bool featuredStatus = false;
                 ),
                 child: Text(
                   area,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.w300,
@@ -1698,8 +1692,8 @@ bool featuredStatus = false;
               left: 0,
               right: 0,
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 2, horizontal: 10),
-                decoration: BoxDecoration(
+                padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+                decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(0),
                     bottomRight: Radius.circular(15),
@@ -1709,7 +1703,7 @@ bool featuredStatus = false;
                   children: [
                     Text(
                       category == 'Sell' ? 'buy' : category,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -1717,10 +1711,10 @@ bool featuredStatus = false;
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(width: 3,),
+                    const SizedBox(width: 3,),
                     Text(
                       propertyType,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -1751,7 +1745,7 @@ bool featuredStatus = false;
             Positioned(
               bottom: 0,
               left: 190,
-              child: Container(
+              child: SizedBox(
                 height: 50,
                 width: 90,
                 child: Center(
@@ -1774,7 +1768,7 @@ bool featuredStatus = false;
   AppBar _buildAppBar() {
     return AppBar(
       leading: IconButton(
-        icon: Icon(Icons.menu),
+        icon: const Icon(Icons.menu),
         onPressed: () {
           _scaffoldKey.currentState?.openDrawer();
           _animationController.forward();
@@ -1783,13 +1777,13 @@ bool featuredStatus = false;
       actions: [
         GestureDetector(
         onTap: () {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationScreen( )));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationScreen( )));
     },
 
 
     child: CircleAvatar(
     maxRadius: 25,
-    backgroundColor: Theme.of(context).colorScheme.background,
+    backgroundColor: Theme.of(context).colorScheme.surface,
     child: Stack(
     children: [
     Icon(
@@ -1801,7 +1795,7 @@ bool featuredStatus = false;
     top: 2,
     child: CircleAvatar(
     maxRadius: 5,
-    backgroundColor: Theme.of(context).colorScheme.background,
+    backgroundColor: Theme.of(context).colorScheme.surface,
     child: CircleAvatar(
     maxRadius: 3,
     backgroundColor:    ColorUtils.primaryColor(),
@@ -1814,7 +1808,7 @@ bool featuredStatus = false;
 
     ),
 
-    SizedBox(width: 8,),
+    const SizedBox(width: 8,),
 
         // SizedBox(width: 8,),
       ],
@@ -1830,19 +1824,19 @@ bool featuredStatus = false;
             Container(
               color: ColorUtils.primaryColor(),
               height: 66,
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(width: 16),
-                  Expanded(
+                  const SizedBox(width: 16),
+                  const Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.close, color: Colors.white),
+                    icon: const Icon(Icons.close, color: Colors.white),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
@@ -1853,7 +1847,7 @@ bool featuredStatus = false;
             Container(
               color: ColorUtils.primaryColor(),
               height: 76,
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -1863,11 +1857,11 @@ bool featuredStatus = false;
                     child: _userImage.isEmpty
                         ? Text(
                       _userName.isNotEmpty ? _userName[0].toUpperCase() : 'S',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     )
                         : null,
                   ),
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1875,11 +1869,11 @@ bool featuredStatus = false;
                       children: [
                         Text(
                           _userName,
-                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24),
+                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24),
                         ),
                         Text(
                           _usermobile,
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                         ),
                       ],
                     ),
@@ -1900,19 +1894,19 @@ bool featuredStatus = false;
             _buildDrawerItem(Icons.inventory, 'My Properties', () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PropertyInventory()),
+                MaterialPageRoute(builder: (context) => const PropertyInventory()),
               );
             }, isBold: true),
             _buildDrawerItem(Icons.design_services, 'JV Properties', () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => JVPropertiesForm()),
+                MaterialPageRoute(builder: (context) => const JVPropertiesForm()),
               );
             }, isBold: true),
             _buildDrawerItem(Icons.real_estate_agent_outlined, 'Property Services', () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Propertyservices()),
+                MaterialPageRoute(builder: (context) => const Propertyservices()),
               );
             }, isBold: true),
             // _buildDrawerItem(Icons.support_agent_outlined, 'Agents Corner', () {
@@ -1955,10 +1949,10 @@ bool featuredStatus = false;
             _buildDrawerItem(Icons.logout, 'Logout',isBold: true, () {
               _showLogoutBottomSheet(context);
             }),
-            SizedBox(height: 280,),
+            const SizedBox(height: 280,),
             Container(
               color: ColorUtils.primaryColor(),
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 11),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -1966,7 +1960,7 @@ bool featuredStatus = false;
                     onTap: () {
                       // Navigate to Privacy Policy screen
                     },
-                    child: Text(
+                    child: const Text(
                       'Privacy Policy',
                       style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),
                     ),
@@ -1975,7 +1969,7 @@ bool featuredStatus = false;
                     onTap: () {
                       // Navigate to Terms & Service screen
                     },
-                    child: Text(
+                    child: const Text(
                       'Terms & Services',
                       style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),
                     ),
@@ -2018,7 +2012,7 @@ bool featuredStatus = false;
 class ImageLoader extends StatefulWidget {
   final String imageUrl;
 
-  ImageLoader({required this.imageUrl});
+  const ImageLoader({super.key, required this.imageUrl});
 
   @override
   _ImageLoaderState createState() => _ImageLoaderState();
@@ -2030,7 +2024,7 @@ class _ImageLoaderState extends State<ImageLoader> {
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
-      duration: Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 600),
       child: _loaded
           ? Image.network(
         widget.imageUrl,
@@ -2062,6 +2056,7 @@ class _ImageLoaderState extends State<ImageLoader> {
         },
       )
           : Container(
+        key: const ValueKey('placeholder'),
         child: Container(
             child: LoadingAnimationWidget.inkDrop(
               color: ColorUtils.primaryColor(),
@@ -2069,7 +2064,6 @@ class _ImageLoaderState extends State<ImageLoader> {
             ),
 
         ),
-        key: ValueKey('placeholder'),
       ),
     );
   }

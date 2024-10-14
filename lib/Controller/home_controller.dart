@@ -20,15 +20,15 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
 
     colorAnimationController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 1), // Adjust duration as needed
+      duration: const Duration(seconds: 1), // Adjust duration as needed
     );
 
     textAnimationController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 1), // Adjust duration as needed
+      duration: const Duration(seconds: 1), // Adjust duration as needed
     );
 
-    transTween = Tween(begin: Offset(-10, 40), end: Offset(-10, 0))
+    transTween = Tween(begin: const Offset(-10, 40), end: const Offset(-10, 0))
         .animate(textAnimationController!);
   }
 
