@@ -33,7 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    getUser();
+    // getUser();
   }
   void _navigateToSearchScreen(BuildContext context) {
     // Navigate to SearchScreen
@@ -65,30 +65,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
       MaterialPageRoute(builder: (context) => ProfileScreen(email: FirebaseAuth.instance.currentUser?.email ?? '')),
     );
   }
-  Future<void> getUser() async {
-    try {
-      _user = FirebaseAuth.instance.currentUser;
-      if (_user != null) {
-        final userData = await FirebaseFirestore.instance.collection('users').doc(_user!.uid).get();
-        if (userData.exists) {
-          setState(() {
-            _userName = userData['name'];
-            _userEmail = userData['email'];
-            _userImage = userData['profile_picture'];
-
-            // Add a print statement to check the _userImage variable
-            print("Profile picture URL: $_userImage");
-          });
-        } else {
-          print("User data not found");
-        }
-      } else {
-        print("User not logged in");
-      }
-    } catch (e) {
-      print("Error fetching user data: $e");
-    }
-  }
+  // Future<void> getUser() async {
+  //   try {
+  //     _user = FirebaseAuth.instance.currentUser;
+  //     if (_user != null) {
+  //       final userData = await FirebaseFirestore.instance.collection('users').doc(_user!.uid).get();
+  //       if (userData.exists) {
+  //         setState(() {
+  //           _userName = userData['name'];
+  //           _userEmail = userData['email'];
+  //           _userImage = userData['profile_picture'];
+  //
+  //           // Add a print statement to check the _userImage variable
+  //           print("Profile picture URL: $_userImage");
+  //         });
+  //       } else {
+  //         print("User data not found");
+  //       }
+  //     } else {
+  //       print("User not logged in");
+  //     }
+  //   } catch (e) {
+  //     print("Error fetching user data: $e");
+  //   }
+  // }
 
 
 
@@ -155,7 +155,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
-      body: DefaultTabController(
+      body:StreamBuilder<DocumentSnapshot>(
+    stream: FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .snapshots(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Center(child: CircularProgressIndicator());
+      }
+
+      if (!snapshot.hasData || !snapshot.data!.exists) {
+        return Center(child: Text("User not found"));
+      }
+
+      final userData = snapshot.data!;
+      _userName = userData['name'] ?? '';
+      _userEmail = userData['email'] ?? '';
+      _userImage = userData['profile_picture'] ?? '';
+      return DefaultTabController(
         length: 3,
         child: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -174,18 +192,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       Stack(
                         children: [
-                          CircleAvatar(backgroundColor: ColorUtils.primaryColor(),
+                          CircleAvatar(
+                            backgroundColor: ColorUtils.primaryColor(),
                             maxRadius: 56,
                             backgroundImage: NetworkImage(_userImage),
                             // Use a default image if the user's profile picture is not available
                             child: _userImage.isEmpty
                                 ? Text(
-                              _userName.isNotEmpty ? _userName[0].toUpperCase() : 'hi',
-                              style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                              _userName.isNotEmpty
+                                  ? _userName[0].toUpperCase()
+                                  : 'hi',
+                              style: const TextStyle(
+                                  fontSize: 40, fontWeight: FontWeight.bold),
                             )
                                 : null,
                           ),
-
 
 
                           Positioned(
@@ -195,19 +216,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               onTap: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => const EditProfileScreen()),
+                                  MaterialPageRoute(builder: (
+                                      context) => const EditProfileScreen()),
                                 );
-
                               },
                               child: CircleAvatar(
                                 maxRadius: 17,
-                                backgroundColor: Theme.of(context).colorScheme.surface,
-                                child: CircleAvatar(backgroundColor: ColorUtils.primaryColor(),
+                                backgroundColor: Theme
+                                    .of(context)
+                                    .colorScheme
+                                    .surface,
+                                child: CircleAvatar(
+                                  backgroundColor: ColorUtils.primaryColor(),
                                   maxRadius: 15,
                                   child: Icon(
                                     Icons.edit_rounded,
                                     size: 17,
-                                    color: Theme.of(context).colorScheme.surface,
+                                    color: Theme
+                                        .of(context)
+                                        .colorScheme
+                                        .surface,
                                   ),
                                 ),
                               ),
@@ -224,13 +252,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
-                          color: Theme.of(context).colorScheme.primary,
+                          color: Theme
+                              .of(context)
+                              .colorScheme
+                              .primary,
                         ),
                       ),
                       Text(
                         _userEmail,
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
+                          color: Theme
+                              .of(context)
+                              .colorScheme
+                              .primary,
                         ),
                       ),
 
@@ -245,7 +279,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             width: width * 0.25,
                             decoration: BoxDecoration(
                               border: Border.all(
-                                color:  ColorUtils.primaryColor(),
+                                color: ColorUtils.primaryColor(),
                               ),
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -258,7 +292,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
-                                      color:  ColorUtils.primaryColor(),
+                                      color: ColorUtils.primaryColor(),
                                     ),
                                   ),
                                   Text(
@@ -266,7 +300,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.w300,
                                       fontSize: 12,
-                                      color:  ColorUtils.primaryColor(),
+                                      color: ColorUtils.primaryColor(),
                                     ),
                                   ),
                                 ],
@@ -277,7 +311,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             width: width * 0.25,
                             decoration: BoxDecoration(
                               border: Border.all(
-                                color:  ColorUtils.primaryColor(),
+                                color: ColorUtils.primaryColor(),
                               ),
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -290,7 +324,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
-                                      color:  ColorUtils.primaryColor(),
+                                      color: ColorUtils.primaryColor(),
                                     ),
                                   ),
                                   Text(
@@ -298,7 +332,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.w300,
                                       fontSize: 12,
-                                      color:  ColorUtils.primaryColor(),
+                                      color: ColorUtils.primaryColor(),
                                     ),
                                   ),
                                 ],
@@ -313,7 +347,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               width: width * 0.25,
                               decoration: BoxDecoration(
                                 border: Border.all(
-                                  color:  ColorUtils.primaryColor(),
+                                  color: ColorUtils.primaryColor(),
                                 ),
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -327,14 +361,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16,
-                                        color:  ColorUtils.primaryColor(),
+                                        color: ColorUtils.primaryColor(),
                                       ),
                                     ),
                                     Text(
                                       "Reviews",
                                       style: TextStyle(
                                         fontWeight: FontWeight.w300,
-                                        fontSize: 12, color:  ColorUtils.primaryColor(),
+                                        fontSize: 12,
+                                        color: ColorUtils.primaryColor(),
                                       ),
                                     ),
                                   ],
@@ -356,7 +391,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     width: width * 0.95,
                     height: height * 0.08,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.onPrimary,
+                      color: Theme
+                          .of(context)
+                          .colorScheme
+                          .onPrimary,
                       borderRadius: BorderRadius.circular(40),
                     ),
                     child: Padding(
@@ -364,20 +402,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           vertical: 9, horizontal: 15),
                       child: TabBar(
                         overlayColor: WidgetStateProperty.all<Color>(
-                           ColorUtils.primaryColor(),
+                          ColorUtils.primaryColor(),
                         ),
                         indicator: ShapeDecoration(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(40),
                           ),
-                          color: Theme.of(context).colorScheme.surface,
+                          color: Theme
+                              .of(context)
+                              .colorScheme
+                              .surface,
                         ),
                         indicatorWeight: 0,
                         indicatorSize: TabBarIndicatorSize.tab,
                         dividerHeight: 0,
                         indicatorColor: Colors.white,
-                        labelColor:  ColorUtils.primaryColor(),
-                        unselectedLabelColor: Theme.of(context)
+                        labelColor: ColorUtils.primaryColor(),
+                        unselectedLabelColor: Theme
+                            .of(context)
                             .colorScheme
                             .primary
                             .withOpacity(0.3),
@@ -398,12 +440,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
 
         ),
-      ),
-      bottomNavigationBar: Container(
+      );
+      bottomNavigationBar:
+      Container(
         color: const Color.fromRGBO(143, 0, 255, 1.0),
         height: 55,
         child: FlashyTabBar(
-          backgroundColor: const Color.fromRGBO(143, 0, 255, 1.0).withOpacity(0),
+          backgroundColor: const Color.fromRGBO(143, 0, 255, 1.0).withOpacity(
+              0),
           selectedIndex: _selectedIndex,
           showElevation: true,
           onItemSelected: (index) {
@@ -427,7 +471,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     _navigateToWishlistScreen(context);
                     break;
                   case 3:
-                    // navigateToProfileScreen(context);
+                  // navigateToProfileScreen(context);
                     break;
                   default:
                     break;
@@ -485,8 +529,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ],
         ),
-      ),
+      );
+    }
 
-    ),);
+    ),
+
+    ),
+      );
   }
 }

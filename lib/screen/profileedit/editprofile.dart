@@ -77,8 +77,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
             'profile_picture': downloadUrl,
           });
+
+          // Update the local state to reflect the new image
           setState(() {
             _image = imageFile;
+            _userImage = downloadUrl; // Update the image URL so that CircleAvatar gets updated
           });
 
           // Show SnackBar message
@@ -269,6 +272,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             'name': nameController.text,
                             'number': numberController.text,
                             'email': emailController.text,
+
                             // Update the 'createdAt' field with the current timestamp
                             'createdAt': FieldValue.serverTimestamp(),
                           });

@@ -144,6 +144,8 @@ class RegisterController extends GetxController {
         'email': emailController.text,
         'createdAt': FieldValue.serverTimestamp(),
         'uid': uid,
+        'profile_picture':'',
+        'number': '',
       });
 
       Navigator.pushReplacement(
