@@ -144,7 +144,7 @@ class RegisterController extends GetxController {
         'email': emailController.text,
         'createdAt': FieldValue.serverTimestamp(),
         'uid': uid,
-        'profile_picture':'',
+        'avatarUrl':'',
         'number': '',
       });
 

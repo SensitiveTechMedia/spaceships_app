@@ -1818,7 +1818,7 @@ class UserService {
         return UserProfile(
           uid: uid,
           name: userDoc['name'],
-          avatarUrl: userDoc['profile_picture'],
+          avatarUrl: userDoc['avatarUrl'],
         );
       } else {
         return null;

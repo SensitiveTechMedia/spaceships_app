@@ -1,0 +1,2 @@
+C:/Users/jeyaram/Documents/GitHub/spaceships_app/android/app/.cxx/Debug/o6i6f187/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/jeyaram/Documents/GitHub/spaceships_app/android/app/.cxx/Debug/o6i6f187/x86_64/CMakeFiles/rebuild_cache.dir

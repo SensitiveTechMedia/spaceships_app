@@ -40,8 +40,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           setState(() {
             _userName = userData['name'];
             _userEmail = userData['email'];
-            _userImage = userData['profile_picture'];
-            _usermobile = userData['number'];
+            _userImage = userData['avatarUrl'];
+            _usermobile = userData['phoneNumber'];
 
           });
           nameController.text = _userName;
@@ -66,7 +66,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       try {
         // Upload image to Firebase Storage
         String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-        Reference storageReference = FirebaseStorage.instance.ref().child('profile_pictures/$fileName');
+        Reference storageReference = FirebaseStorage.instance.ref().child('avatarUrl/$fileName');
         UploadTask uploadTask = storageReference.putFile(imageFile);
         TaskSnapshot storageSnapshot = await uploadTask.whenComplete(() => null);
         String downloadUrl = await storageSnapshot.ref.getDownloadURL();
@@ -75,7 +75,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         User? user = FirebaseAuth.instance.currentUser;
         if (user != null) {
           await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
-            'profile_picture': downloadUrl,
+            'avatarUrl': downloadUrl,
           });
 
           // Update the local state to reflect the new image

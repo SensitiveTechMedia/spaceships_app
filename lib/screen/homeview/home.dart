@@ -177,7 +177,7 @@ bool featuredStatus = false;
         if (userDoc.exists) {
           setState(() {
             userName = userDoc['name'];
-            userMobileNumber = userDoc['number'];
+            userMobileNumber = userDoc['phoneNumber'];
             nameController.text = userName ?? '';
             mobileController.text = userMobileNumber ?? '';
           });
@@ -236,9 +236,9 @@ bool featuredStatus = false;
       if (userData.exists) {
         setState(() {
           _userName = userData['name'];
-          _usermobile = userData['number'];
+          _usermobile = userData['phoneNumber'];
           _userEmail = userData['email'];
-          _userImage = userData['profile_picture'];
+          _userImage = userData['avatarUrl'];
         });
       }
         } catch (e) {
@@ -1230,25 +1230,27 @@ bool featuredStatus = false;
                         style: TextStyle(   color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
                       ),
       
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const Featured()),
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 84.0),
-                          child: Text(
-                            "View All ",
-                            style: TextStyle(   color: ColorUtils.primaryColor(),),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const Featured()),
+                              );
+                            },
+                            child: Text(
+                              "View All ",
+                              style: TextStyle(   color: ColorUtils.primaryColor(),),
+                            ),
                           ),
-                        ),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 2.0),
+                            child: Icon(Icons.arrow_forward_ios,      color: ColorUtils.primaryColor(),size: 15,),
+                          ),
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 2.0),
-                        child: Icon(Icons.arrow_forward_ios,      color: ColorUtils.primaryColor(),size: 15,),
-                      ),
+
                     ],
                   ),
                 ),
@@ -1848,7 +1850,7 @@ bool featuredStatus = false;
                       children: [
                         Text(
                           _userName,
-                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24),
+                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
                         ),
                         Text(
                           _usermobile,

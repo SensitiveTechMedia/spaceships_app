@@ -172,7 +172,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final userData = snapshot.data!;
       _userName = userData['name'] ?? '';
       _userEmail = userData['email'] ?? '';
-      _userImage = userData['profile_picture'] ?? '';
+      _userImage = userData['avatarUrl'] ?? '';
       return DefaultTabController(
         length: 3,
         child: NestedScrollView(
