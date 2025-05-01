@@ -1,0 +1,2 @@
+D:/apersonal/spaceships_app/android/app/.cxx/RelWithDebInfo/56i4x5u2/arm64-v8a/CMakeFiles/edit_cache.dir
+D:/apersonal/spaceships_app/android/app/.cxx/RelWithDebInfo/56i4x5u2/arm64-v8a/CMakeFiles/rebuild_cache.dir
