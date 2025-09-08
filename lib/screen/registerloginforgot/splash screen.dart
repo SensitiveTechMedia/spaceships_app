@@ -55,10 +55,10 @@ class _SplashScreenState extends State<SplashScreen> {
                   clipBehavior: Clip.none,
                   children: [
                     SizedBox(
-                      height: 200,
+                      // height: 200,
                       child: Image.asset(
-                        "assets/images/OnBoardingSplash.png",
-                        height: 100,
+                        "assets/tsplash.png",
+                        // height: 100,
                       ),
                     ),
                     const Positioned(

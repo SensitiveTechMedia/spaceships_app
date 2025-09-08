@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:spaceships/colorcode.dart';
 import 'package:spaceships/screen/homeview/home.dart';
@@ -25,7 +26,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final ThemeController themeController = Get.put(ThemeController());
   User? _user;
-
+  DateTime? currentBackPressTime;
   String _userName = '';
   String _userEmail = '';
   String _userImage = '';
@@ -37,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
   void _navigateToSearchScreen(BuildContext context) {
     // Navigate to SearchScreen
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const SearchScreen()),
     );
@@ -45,7 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _navigateToHomeScreen(BuildContext context) {
     // Navigate to SearchScreen
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const HomeScreen(username: '',)),
     );
@@ -53,14 +54,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _navigateToWishlistScreen(BuildContext context) {
     // Navigate to WishlistScreen
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const WishlistScreen()),
     );
   }
   void navigateToProfileScreen (BuildContext context) {
     // Navigate to WishlistScreen
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => ProfileScreen(email: FirebaseAuth.instance.currentUser?.email ?? '')),
     );
@@ -95,20 +96,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
 
 
-
+  Future<bool> onWillPop() async {
+    DateTime now = DateTime.now();
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
+      currentBackPressTime = now;
+      Fluttertoast.showToast(msg: "Double Tap to Exit");
+      return Future.value(false); // Prevent exit
+    }
+    return Future.value(true); // Allow exit
+  }
 
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return WillPopScope(
-        onWillPop: () async {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen(username: '')),
-      );
-      return true;
-    },
+      onWillPop: onWillPop,
     child: Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0.1,
@@ -436,7 +440,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ];
           },
           body: const SingleChildScrollView(
-            child: Text("hdhdh"),
+            child: Text("Welcome"),
           ),
 
         ),

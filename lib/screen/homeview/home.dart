@@ -221,7 +221,7 @@ bool featuredStatus = false;
 
   void _navigateToSearchScreen(BuildContext context) {
 
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const SearchScreen(
 
@@ -262,14 +262,14 @@ bool featuredStatus = false;
 
   void _navigateToWishlistScreen(BuildContext context) {
     // Navigate to WishlistScreen
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const WishlistScreen()),
     );
   }
   void navigateToProfileScreen (BuildContext context) {
     // Navigate to WishlistScreen
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => ProfileScreen(email: FirebaseAuth.instance.currentUser?.email ?? '')),
     );
@@ -538,7 +538,7 @@ bool featuredStatus = false;
                       SizedBox(height: 4),
                       Row(
                         children: [
-                          Text("Give us a call at +1234567890"),
+                          Text("Give us a call at 9900096030"),
                           SizedBox(width: 5),
                           // SvgPicture.asset(
                           //   'assets/images/call.svg', // Replace with your SVG asset path
@@ -1421,24 +1421,34 @@ bool featuredStatus = false;
             selectedIndex: _seletedIndex,
             showElevation: true,
             onItemSelected: (index) {
+              print("Tab selected: $index");
+              if (index == _seletedIndex) {
+                print("Same tab selected, no navigation needed");
+                return; // Prevent navigation if the same tab is selected
+              }
               if (index == 0) {
-      
+                print("Home tab selected, no navigation");
               } else {
                 setState(() {
                   _seletedIndex = index;
+                  print("New _seletedIndex: $_seletedIndex");
                   switch (_seletedIndex) {
                     case 0:
                       break;
                     case 1:
+                      print("Navigating to SearchScreen");
                       _navigateToSearchScreen(context);
                       break;
                     case 2:
+                      print("Navigating to WishlistScreen");
                       _navigateToWishlistScreen(context);
                       break;
                     case 3:
+                      print("Navigating to ProfileScreen");
                       navigateToProfileScreen(context);
-      
+                      break;
                     default:
+                      print("Default case, no navigation");
                       break;
                   }
                 });

@@ -48,7 +48,7 @@ class RegisterScreen extends GetView<RegisterController> {
               ),
               const SizedBox(height: 20),
               Text(
-                "Welcome to Space Ships",
+                "Welcome to Bhoome",
                 style: TextStyle(
                   color: ColorCodes.teal.withOpacity(0.9),
                 ),

@@ -3,6 +3,7 @@ import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:spaceships/colorcode.dart';
 import 'package:spaceships/screen/filter.dart';
@@ -156,6 +157,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Color customTeal = const Color(0xFF8F00FF);
   final FocusNode _searchFocusNode = FocusNode();
   int _selectedIndex = 1;
+  DateTime? currentBackPressTime;
   @override
   void initState() {
     super.initState();
@@ -193,28 +195,38 @@ class _SearchScreenState extends State<SearchScreen> {
   }
   void _navigateToWishlistScreen(BuildContext context) {
     // Navigate to WishlistScreen
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const WishlistScreen()),
     );
   }
+  Future<bool> onWillPop() async {
+    DateTime now = DateTime.now();
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
+      currentBackPressTime = now;
+      Fluttertoast.showToast(msg: "Double Tap to Exit");
+      return Future.value(false);
+    }
+    return Future.value(true);
+  }
   void _navigateToSearchScreen(BuildContext context) {
     // Navigate to WishlistScreen
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const SearchScreen()),
     );
   }
   void navigateToProfileScreen (BuildContext context) {
     // Navigate to WishlistScreen
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => ProfileScreen(email: FirebaseAuth.instance.currentUser?.email ?? '')),
     );
   }
   void _navigateToHomeScreen(BuildContext context) {
     // Navigate to HomeScreen
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const HomeScreen(username: '')),
     );
@@ -228,293 +240,296 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(60.0),
-        child: Container(
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.6),
-                spreadRadius: 12,
-                blurRadius: 8,
-                offset: const Offset(0, 3), // changes position of shadow
-              ),
-            ],
+    return WillPopScope(
+      onWillPop: onWillPop,
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(60.0),
+          child: Container(
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.6),
+                  spreadRadius: 12,
+                  blurRadius: 8,
+                  offset: const Offset(0, 3), // changes position of shadow
+                ),
+              ],
+            ),
+            child: AppBar(
+              backgroundColor: ColorUtils.primaryColor(),
+              iconTheme: const IconThemeData(color: Colors.white),
+              title: const Text("Search Property",style: TextStyle(color: Colors.white),),
+      
+      
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.tune, color: Colors.white,),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Screen(onApplyFilters: (Map<String, dynamic> filters) {  },
+      
+                      )),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
-          child: AppBar(
-            backgroundColor: ColorUtils.primaryColor(),
-            iconTheme: const IconThemeData(color: Colors.white),
-            title: const Text("Search Property",style: TextStyle(color: Colors.white),),
-
-
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.tune, color: Colors.white,),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Screen(onApplyFilters: (Map<String, dynamic> filters) {  },
-
-                    )),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: FocusScope(
+            node: FocusScopeNode(),
+            child: Column(
+      
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [ const SizedBox(height: 20,),
+                TextFormField(
+                  focusNode: _searchFocusNode,
+                  controller: _searchController,
+                  onChanged: _onSearchTextChanged,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Theme.of(context).colorScheme.onPrimary,
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    prefixIcon: const Icon(Icons.search),
+                    suffixIcon: _searchController.text.isNotEmpty
+                        ? IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: _clearSearch,
+                    )
+                        : null,
+                    hintText: 'Search Property',
+                  ),
+                ),
+                const SizedBox(height: 10.0),
+            Expanded(
+              child: ListView.builder(
+                itemCount: filteredProperties.length,
+                itemBuilder: (context, index) {
+                  PropertyModel property = filteredProperties[index];
+                  return ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    title: Container(
+                      height: 150,
+                      decoration: BoxDecoration(
+                        color: const Color.fromRGBO(160, 161, 164, 1000),
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 8),
+                          Stack(
+                            children: [
+                              Container(
+                                width: 140,
+                                height: 140,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  color: Colors.grey,
+                                ),
+                                child: property.propertyImages.isEmpty
+                                    ? const Center(child: Icon(Icons.image, size: 50))
+                                    : Stack(
+                                  fit: StackFit.expand,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      child: Image.network(
+                                        property.propertyImages[0],
+                                        fit: BoxFit.cover,
+                                        loadingBuilder: (context, child, progress) {
+                                          if (progress == null) {
+                                            return child;
+                                          } else {
+                                            return Center(
+                                              child: LoadingAnimationWidget.fourRotatingDots(
+                                                color: ColorUtils.primaryColor(),
+                                                size: 50,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return const Center(child: Icon(Icons.error));
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+      
+                              Positioned(
+                                bottom: 8,
+                                left: 10,
+                                child: Container(
+                                  width: 85,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: const Color.fromRGBO(143, 0, 255, 0.55),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      property.propertyType,
+                                      style: const TextStyle(color: Colors.white, fontSize: 14),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(width: 15.0),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 20),
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    property.subcategory,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: ColorUtils.primaryColor(),
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 4.0),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.location_on,
+                                      color: ColorUtils.primaryColor(),
+                                      size: 20,
+                                    ),
+                                    FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        property.area,
+                                        style: TextStyle(
+                                          color: ColorUtils.primaryColor(),
+                                          fontSize: 10,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 20.0),
+      
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Whislits(propertyId: property.propertyId,)),
+                      );
+                    },
                   );
                 },
               ),
-            ],
-          ),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: FocusScope(
-          node: FocusScopeNode(),
-          child: Column(
-
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [ const SizedBox(height: 20,),
-              TextFormField(
-                focusNode: _searchFocusNode,
-                controller: _searchController,
-                onChanged: _onSearchTextChanged,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Theme.of(context).colorScheme.onPrimary,
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  prefixIcon: const Icon(Icons.search),
-                  suffixIcon: _searchController.text.isNotEmpty
-                      ? IconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: _clearSearch,
-                  )
-                      : null,
-                  hintText: 'Search Property',
-                ),
-              ),
-              const SizedBox(height: 10.0),
-          Expanded(
-            child: ListView.builder(
-              itemCount: filteredProperties.length,
-              itemBuilder: (context, index) {
-                PropertyModel property = filteredProperties[index];
-                return ListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  title: Container(
-                    height: 150,
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(160, 161, 164, 1000),
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    child: Row(
-                      children: [
-                        const SizedBox(width: 8),
-                        Stack(
-                          children: [
-                            Container(
-                              width: 140,
-                              height: 140,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20.0),
-                                color: Colors.grey,
-                              ),
-                              child: property.propertyImages.isEmpty
-                                  ? const Center(child: Icon(Icons.image, size: 50))
-                                  : Stack(
-                                fit: StackFit.expand,
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    child: Image.network(
-                                      property.propertyImages[0],
-                                      fit: BoxFit.cover,
-                                      loadingBuilder: (context, child, progress) {
-                                        if (progress == null) {
-                                          return child;
-                                        } else {
-                                          return Center(
-                                            child: LoadingAnimationWidget.fourRotatingDots(
-                                              color: ColorUtils.primaryColor(),
-                                              size: 50,
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      errorBuilder: (context, error, stackTrace) {
-                                        return const Center(child: Icon(Icons.error));
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            Positioned(
-                              bottom: 8,
-                              left: 10,
-                              child: Container(
-                                width: 85,
-                                height: 20,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: const Color.fromRGBO(143, 0, 255, 0.55),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    property.propertyType,
-                                    style: const TextStyle(color: Colors.white, fontSize: 14),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(width: 15.0),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 20),
-                              FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Text(
-                                  property.subcategory,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: ColorUtils.primaryColor(),
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 4.0),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.location_on,
-                                    color: ColorUtils.primaryColor(),
-                                    size: 20,
-                                  ),
-                                  FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(
-                                      property.area,
-                                      style: TextStyle(
-                                        color: ColorUtils.primaryColor(),
-                                        fontSize: 10,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 20.0),
-
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Whislits(propertyId: property.propertyId,)),
-                    );
-                  },
-                );
-              },
             ),
+            
+                  ]),
           ),
-          
-                ]),
         ),
-      ),
-      bottomNavigationBar: Container(
-        color: const Color.fromRGBO(143, 0, 255, 1.0),
-        height: 55,
-        child: FlashyTabBar(
-          backgroundColor: const Color.fromRGBO(143, 0, 255, 1.0).withOpacity(0),
-          selectedIndex: _selectedIndex,
-          showElevation: true,
-          onItemSelected: (index) {
-            if (index == 1) {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => ProfileScreen(email: FirebaseAuth.instance.currentUser?.email ?? ''),
-              //   ),
-              // );
-            } else
-            {
+        bottomNavigationBar: Container(
+          color: const Color.fromRGBO(143, 0, 255, 1.0),
+          height: 55,
+          child: FlashyTabBar(
+            backgroundColor: const Color.fromRGBO(143, 0, 255, 1.0).withOpacity(0),
+            selectedIndex: _selectedIndex,
+            showElevation: true,
+            onItemSelected: (index) {
+              print("Tab selected: $index, Current _selectedIndex: $_selectedIndex");
+              if (index == _selectedIndex) {
+                print("Same tab selected, no navigation needed");
+                return;
+              }
               setState(() {
                 _selectedIndex = index;
                 switch (_selectedIndex) {
                   case 0:
+                    print("Navigating to HomeScreen");
                     _navigateToHomeScreen(context);
+                    break;
                   case 1:
-                    // _navigateToSearchScreen(context);
+                    print("Already on SearchScreen, no navigation");
                     break;
                   case 2:
+                    print("Navigating to WishlistScreen");
                     _navigateToWishlistScreen(context);
                     break;
                   case 3:
+                    print("Navigating to ProfileScreen");
                     navigateToProfileScreen(context);
                     break;
                   default:
+                    print("Default case, no navigation");
                     break;
                 }
               });
-            }
-          },
-          items: [
-            FlashyTabBarItem(
-              icon: SvgPicture.asset(
-                "assets/images/Subtract.svg",
-                height: 24,
-                color: Colors.white,
+            },
+            items: [
+              FlashyTabBarItem(
+                icon: SvgPicture.asset(
+                  "assets/images/Subtract.svg",
+                  height: 24,
+                  color: Colors.white,
+                ),
+                // inactiveColor: Colors.white,
+                title: const Text(""),
+                activeColor: Colors.white,
+      
               ),
-              // inactiveColor: Colors.white,
-              title: const Text(""),
-              activeColor: Colors.white,
-
-            ),
-            FlashyTabBarItem(
-              activeColor: Colors.white,
-              icon: SvgPicture.asset(
-                height: 24,
-                "assets/images/SearchIcon.svg",
-                color: Colors.white,
+              FlashyTabBarItem(
+                activeColor: Colors.white,
+                icon: SvgPicture.asset(
+                  height: 24,
+                  "assets/images/SearchIcon.svg",
+                  color: Colors.white,
+                ),
+                inactiveColor: Colors.white,
+                title: const Text(""),
+      
               ),
-              inactiveColor: Colors.white,
-              title: const Text(""),
-
-            ),
-            FlashyTabBarItem(
-              activeColor: Colors.white,
-              icon: SvgPicture.asset(
-                "assets/images/Heart.svg",
-                height: 24,
-
-                color: Colors.white,
+              FlashyTabBarItem(
+                activeColor: Colors.white,
+                icon: SvgPicture.asset(
+                  "assets/images/Heart.svg",
+                  height: 24,
+      
+                  color: Colors.white,
+                ),
+                inactiveColor: Colors.white,
+                title: const Text(""),
+      
               ),
-              inactiveColor: Colors.white,
-              title: const Text(""),
-
-            ),
-            FlashyTabBarItem(
-              activeColor: Colors.white,
-              icon: SvgPicture.asset(
-                "assets/images/ProfileIcon.svg",
-                height: 34,
-
-                color: Colors.white,
+              FlashyTabBarItem(
+                activeColor: Colors.white,
+                icon: SvgPicture.asset(
+                  "assets/images/ProfileIcon.svg",
+                  height: 34,
+      
+                  color: Colors.white,
+                ),
+                inactiveColor: Colors.white,
+      
+                title: const Text(""),
+      
               ),
-              inactiveColor: Colors.white,
-
-              title: const Text(""),
-
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

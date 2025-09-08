@@ -59,7 +59,7 @@ class LoginOptionScreen extends GetView<LoginOptionController> {
                     ),
                     children: const <TextSpan>[
                       TextSpan(
-                        text: ' Spaceships',
+                        text: ' Bhoome',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: ColorCodes.teal,

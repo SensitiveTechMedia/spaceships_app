@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,6 +20,20 @@ import 'package:spaceships/screen/wishlistfilter/tune.dart';
 
 import '../homeview/propertyview.dart';
 
+import 'dart:async';
+import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:spaceships/colorcode.dart';
+import 'package:spaceships/screen/homeview/home.dart';
+import 'package:spaceships/screen/profileedit/profile%20page.dart';
+import 'package:spaceships/screen/search%20screen.dart';
+import 'package:spaceships/screen/wishlistfilter/tune.dart';
+import '../homeview/propertyview.dart';
+
 class WishlistScreen extends StatefulWidget {
   const WishlistScreen({super.key});
 
@@ -31,6 +46,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
   late Query<Map<String, dynamic>> wishlistQuery;
   int _selectedIndex = 2;
   Color customTeal = const Color(0xFF8F00FF);
+  DateTime? _lastPressedAt; // Track the last back press time
 
   @override
   void initState() {
@@ -41,350 +57,335 @@ class _WishlistScreenState extends State<WishlistScreen> {
           .where('userId', isEqualTo: user!.uid);
     }
   }
-  void applyFilters(Map<String, dynamic> filters) {
 
-  }
+  void applyFilters(Map<String, dynamic> filters) {}
+
   void _navigateToSearchScreen(BuildContext context) {
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const SearchScreen()),
     );
   }
+
   void _navigateToWishlistScreen(BuildContext context) {
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const WishlistScreen()),
     );
   }
-  void navigateToProfileScreen (BuildContext context) {
-    // Navigate to WishlistScreen
-    Navigator.push(
+
+  void navigateToProfileScreen(BuildContext context) {
+    Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => ProfileScreen(email: FirebaseAuth.instance.currentUser?.email ?? '')),
+      MaterialPageRoute(
+          builder: (context) =>
+              ProfileScreen(email: FirebaseAuth.instance.currentUser?.email ?? '')),
     );
   }
 
   void _navigateToHomeScreen(BuildContext context) {
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const HomeScreen(username: '')),
     );
   }
 
+  // Handle double back press to exit
+  Future<bool> _onWillPop() async {
+    if (_lastPressedAt == null ||
+        DateTime.now().difference(_lastPressedAt!) > const Duration(seconds: 2)) {
+      // First back press or time elapsed > 2 seconds
+      _lastPressedAt = DateTime.now();
+      Fluttertoast.showToast(msg: "Double Tap to Exit");
+      return false; // Prevent exit
+    }
+    return true; // Allow exit
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white,),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        backgroundColor: customTeal,
-        title: const Text(
-          'My Wishlist',
-          style: TextStyle(color: Colors.white),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.tune, color: Colors.white,),
+    return WillPopScope(
+      onWillPop: _onWillPop, // Intercept back button
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Tune(onApplyFilters: (Map<String, dynamic> filters) {  },
-
-                )),
-              );
+              Navigator.of(context).pop();
             },
           ),
-        ],
-      ),
-      body: user != null
-          ? StreamBuilder<QuerySnapshot>(
-        stream: wishlistQuery.snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const Center(child: Text('Something went wrong'));
-          }
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(  child: LoadingAnimationWidget.dotsTriangle(
-              color: ColorUtils.primaryColor(),
-              size: 50,
-            ),);
-          }
-
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(child: Text('No properties in wishlist'));
-          }
-
-          return ListView.builder(
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (context, index) {
-              var doc = snapshot.data!.docs[index];
-              var wishlistItem = doc.data() as Map<String, dynamic>;
-
-              return Dismissible(
-                key: Key(doc.id),
-                direction: DismissDirection.endToStart,
-                background: Container(
-                  color: Colors.red,
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: const Icon(Icons.delete, color: Colors.white),
-                ),
-                confirmDismiss: (direction) async {
-                  // You can implement a confirmation dialog here if needed
-                  // Return true to dismiss, false to cancel the dismiss action
-                  return true;
-                },
-                onDismissed: (direction) {
-                  // Delete the item from Firestore
-                  FirebaseFirestore.instance.collection('wishlist').doc(doc.id).delete();
-                },
-                child: ListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Whislits(
-                          propertyId: wishlistItem['propertyId'] ?? '',
-
-
-                        ),
-                      ),
-                    );
-                  },
-                  title: Container(
-                    height: 150,
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(160, 161, 164, 1000),
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    child: Row(
-                      children: [
-                        const SizedBox(width: 8),
-                        Stack(
-                          children: [
-                            Container(
-                              width: 140,
-                              height: 140,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20.0),
-                                color: Colors.grey,
-                                image: wishlistItem['imageUrl'] != null &&
-                                    wishlistItem['imageUrl']
-                                        .isNotEmpty
-                                    ? DecorationImage(
-                                  image: NetworkImage(wishlistItem[
-                                  'imageUrl']),
-                                  fit: BoxFit.cover,
-                                )
-                                    : null,
-                              ),
-                              child: wishlistItem['imageUrl'] ==
-                                  null ||
-                                  wishlistItem['imageUrl']
-                                      .isEmpty
-                                  ? const Icon(Icons.image, size: 50)
-                                  : null,
-                            ),
-                            // Positioned(
-                            //   left: 8,
-                            //   top: 8,
-                            //   child: Container(
-                            //     width: 30,
-                            //     height: 30,
-                            //     decoration: BoxDecoration(
-                            //       color: Colors.lightGreen,
-                            //       shape: BoxShape.circle,
-                            //     ),
-                            //     child: IconButton(
-                            //       padding: EdgeInsets.zero,
-                            //       iconSize: 1,
-                            //       color: Colors.white,
-                            //       onPressed: () {},
-                            //       icon: SvgPicture.asset(
-                            //         'assets/images/HeartIcon.svg',
-                            //         color: Colors.white,
-                            //       ),
-                            //     ),
-                            //   ),
-                            // ),
-                            Positioned(
-                              bottom: 8,
-                              left: 10,
-                              child: Container(
-                                width: 85,
-                                height: 20,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: ColorUtils.primaryColor(),
-                                ),
-                                child: Text(
-                                  wishlistItem['subcategory'] ??
-                                      'cat',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(width: 15.0),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment:
-                            CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 20),
-                              FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Text(
-                                  wishlistItem['propertyType'] ??
-                                      'No Title',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: ColorUtils.primaryColor(),
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 4.0),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.location_on,
-                                    color: ColorUtils.primaryColor(),
-                                    size: 20,
-                                  ),
-                                  FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(
-                                      wishlistItem['area'] ??
-                                          'No Address',
-                                      style: TextStyle(
-                                        color: ColorUtils.primaryColor(),
-                                        fontSize: 10,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 20.0),
-
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          );
-        },
-      )
-          : const Center(child: Text('Please log in to view your wishlist')),
-      bottomNavigationBar: Container(
-        color: const Color.fromRGBO(143, 0, 255, 1.0),
-        height: 55,
-        child: FlashyTabBar(
-          backgroundColor: const Color.fromRGBO(143, 0, 255, 1.0).withOpacity(0),
-          selectedIndex: _selectedIndex,
-          showElevation: true,
-          onItemSelected: (index) {
-            if (index == 2) {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => ProfileScreen(email: FirebaseAuth.instance.currentUser?.email ?? ''),
-              //   ),
-              // );
-            } else {
-              setState(() {
-                _selectedIndex = index;
-                switch (_selectedIndex) {
-                  case 0:
-                   _navigateToHomeScreen(context);
-                  case 1:
-                    _navigateToSearchScreen(context);
-                    break;
-                  case 2:
-                    _navigateToWishlistScreen(context);
-                    break;
-                    case 3:
-                      navigateToProfileScreen(context);
-                    break;
-                  default:
-                    break;
-                }
-              });
-            }
-          },
-          items: [
-            FlashyTabBarItem(
-              icon: SvgPicture.asset(
-                "assets/images/Subtract.svg",
-                height: 24,
-                color: Colors.white,
-              ),
-              // inactiveColor: Colors.white,
-              title: const Text(""),
-              activeColor: Colors.white,
-
-            ),
-            FlashyTabBarItem(
-              activeColor: Colors.white,
-              icon: SvgPicture.asset(
-                height: 24,
-                "assets/images/SearchIcon.svg",
-                color: Colors.white,
-              ),
-              inactiveColor: Colors.white,
-              title: const Text(""),
-
-            ),
-            FlashyTabBarItem(
-              activeColor: Colors.white,
-              icon: SvgPicture.asset(
-                "assets/images/Heart.svg",
-                height: 24,
-
-                color: Colors.white,
-              ),
-              inactiveColor: Colors.white,
-              title: const Text(""),
-
-            ),
-            FlashyTabBarItem(
-              activeColor: Colors.white,
-              icon: SvgPicture.asset(
-                "assets/images/ProfileIcon.svg",
-                height: 34,
-
-                color: Colors.white,
-              ),
-              inactiveColor: Colors.white,
-
-              title: const Text(""),
-
+          backgroundColor: customTeal,
+          title: const Text(
+            'My Wishlist',
+            style: TextStyle(color: Colors.white),
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.tune, color: Colors.white),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Tune(
+                        onApplyFilters: (Map<String, dynamic> filters) {},
+                      )),
+                );
+              },
             ),
           ],
+        ),
+        body: user != null
+            ? StreamBuilder<QuerySnapshot>(
+          stream: wishlistQuery.snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return const Center(child: Text('Something went wrong'));
+            }
+
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: LoadingAnimationWidget.dotsTriangle(
+                  color: ColorUtils.primaryColor(),
+                  size: 50,
+                ),
+              );
+            }
+
+            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+              return const Center(child: Text('No properties in wishlist'));
+            }
+
+            return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                var doc = snapshot.data!.docs[index];
+                var wishlistItem = doc.data() as Map<String, dynamic>;
+
+                return Dismissible(
+                  key: Key(doc.id),
+                  direction: DismissDirection.endToStart,
+                  background: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: const Icon(Icons.delete, color: Colors.white),
+                  ),
+                  confirmDismiss: (direction) async {
+                    return true;
+                  },
+                  onDismissed: (direction) {
+                    FirebaseFirestore.instance
+                        .collection('wishlist')
+                        .doc(doc.id)
+                        .delete();
+                  },
+                  child: ListTile(
+                    contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 10.0),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Whislits(
+                            propertyId: wishlistItem['propertyId'] ?? '',
+                          ),
+                        ),
+                      );
+                    },
+                    title: Container(
+                      height: 150,
+                      decoration: BoxDecoration(
+                        color: const Color.fromRGBO(160, 161, 164, 1000),
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 8),
+                          Stack(
+                            children: [
+                              Container(
+                                width: 140,
+                                height: 140,
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                  BorderRadius.circular(20.0),
+                                  color: Colors.grey,
+                                  image: wishlistItem['imageUrl'] != null &&
+                                      wishlistItem['imageUrl']
+                                          .isNotEmpty
+                                      ? DecorationImage(
+                                    image: NetworkImage(
+                                        wishlistItem['imageUrl']),
+                                    fit: BoxFit.cover,
+                                  )
+                                      : null,
+                                ),
+                                child: wishlistItem['imageUrl'] == null ||
+                                    wishlistItem['imageUrl'].isEmpty
+                                    ? const Icon(Icons.image, size: 50)
+                                    : null,
+                              ),
+                              Positioned(
+                                bottom: 8,
+                                left: 10,
+                                child: Container(
+                                  width: 85,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                    BorderRadius.circular(5),
+                                    color: ColorUtils.primaryColor(),
+                                  ),
+                                  child: Text(
+                                    wishlistItem['subcategory'] ?? 'cat',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(width: 15.0),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 20),
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    wishlistItem['propertyType'] ??
+                                        'No Title',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: ColorUtils.primaryColor(),
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 4.0),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.location_on,
+                                      color: ColorUtils.primaryColor(),
+                                      size: 20,
+                                    ),
+                                    FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        wishlistItem['area'] ??
+                                            'No Address',
+                                        style: TextStyle(
+                                          color:
+                                          ColorUtils.primaryColor(),
+                                          fontSize: 10,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 20.0),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        )
+            : const Center(child: Text('Please log in to view your wishlist')),
+        bottomNavigationBar: Container(
+          color: const Color.fromRGBO(143, 0, 255, 1.0),
+          height: 55,
+          child: FlashyTabBar(
+            backgroundColor:
+            const Color.fromRGBO(143, 0, 255, 1.0).withOpacity(0),
+            selectedIndex: _selectedIndex,
+            showElevation: true,
+            onItemSelected: (index) {
+              if (index == 2) {
+                // No action for WishlistScreen (index 2)
+              } else {
+                setState(() {
+                  _selectedIndex = index;
+                  switch (_selectedIndex) {
+                    case 0:
+                      _navigateToHomeScreen(context);
+                      break;
+                    case 1:
+                      _navigateToSearchScreen(context);
+                      break;
+                    case 2:
+                    // _navigateToWishlistScreen(context);
+                      break;
+                    case 3:
+                      navigateToProfileScreen(context);
+                      break;
+                    default:
+                      break;
+                  }
+                });
+              }
+            },
+            items: [
+              FlashyTabBarItem(
+                icon: SvgPicture.asset(
+                  "assets/images/Subtract.svg",
+                  height: 24,
+                  color: Colors.white,
+                ),
+                title: const Text(""),
+                activeColor: Colors.white,
+              ),
+              FlashyTabBarItem(
+                activeColor: Colors.white,
+                icon: SvgPicture.asset(
+                  height: 24,
+                  "assets/images/SearchIcon.svg",
+                  color: Colors.white,
+                ),
+                inactiveColor: Colors.white,
+                title: const Text(""),
+              ),
+              FlashyTabBarItem(
+                activeColor: Colors.white,
+                icon: SvgPicture.asset(
+                  "assets/images/Heart.svg",
+                  height: 24,
+                  color: Colors.white,
+                ),
+                inactiveColor: Colors.white,
+                title: const Text(""),
+              ),
+              FlashyTabBarItem(
+                activeColor: Colors.white,
+                icon: SvgPicture.asset(
+                  "assets/images/ProfileIcon.svg",
+                  height: 34,
+                  color: Colors.white,
+                ),
+                inactiveColor: Colors.white,
+                title: const Text(""),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
-
 class Whislits extends StatefulWidget {
   final String propertyId;
   Color customTeal = const Color(0xFF8F00FF);
-  Whislits({super.key, 
+  Whislits({super.key,
     required this.propertyId,
   });
   @override
